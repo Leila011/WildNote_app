@@ -29,18 +29,27 @@ def init_db():
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+# fill the database with mock data
+def populate_mock():
+    db = get_db()
+    with current_app.open_resource('mock.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+    db.commit()
 
 # CLI command to initialize the database
+# flask --app flaskr init-db
 @click.command('init-db')
 def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
     click.echo('Initialized the database.')
+    populate_mock()
+    click.echo('Populated the database with mock data.')
 
 # Register the database functions with the application
 def init_app(app):
-    app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)
+    app.teardown_appcontext(close_db) # insure the connection is closed when the app context ends
+    app.cli.add_command(init_db_command) # add the init-db command to the CLI
 
 ########### STEP 1 : Setup the experimental design ###########
 # Add a new experiment item
