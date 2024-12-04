@@ -41,3 +41,58 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+########### STEP 1 : Setup the experimental design ###########
+# Add a new experiment item
+def add_experiment_item(name, start_date, end_date):
+    db = get_db()
+    db.execute(
+        'INSERT INTO experiment (name, start_date, end_date) VALUES (?, ?, ?)',
+        (name, start_date, end_date)
+    )
+    db.commit()
+
+# Add a new custom parameter to a table
+def add_custom_parameter(name, type, parent_table, experiment_id):
+    db = get_db()
+    db.execute(
+        'INSERT INTO custom_parameter (name, type, parent_table, experiment_id) VALUES (?, ?, ?, ?)',
+        (name, type, parent_table, experiment_id)
+    )
+    db.commit()
+
+# Add a new subject item in an experiment
+def add_subject_item(experiment_id):
+    db = get_db()
+    db.execute(
+        'INSERT INTO subject (name, experiment_id) VALUES (?, ?)',
+        (experiment_id)
+    )
+    db.commit()
+
+########### STEP 2 : Record  ###########
+# Add a new sample item in an experiment
+def add_sample_item(start, end, note, experiment_id, subject_id):
+    db = get_db()
+    db.execute(
+        'INSERT INTO sample (start, end, note, experiment_id, subject_id) VALUES (?, ?,?, ?, ?)',
+        (start, end, note, experiment_id, subject_id)
+    )
+    db.commit()
+
+def add_custom_sample_item(value, custom_attributes_id, observation_id):
+    db = get_db()
+    db.execute(
+        'INSERT INTO subject_custom (value, custom_attributes_id, observation_id) VALUES (?, ?, ?)',
+        (value, custom_attributes_id, observation_id)
+    )
+    db.commit()
+
+# Add a new observation in a sample
+def add_observation_item(start, end, note, sample_id, subject_id):
+    db = get_db()
+    db.execute(
+        'INSERT INTO observation (start, end, note, sample_id, subject_id) VALUES (?, ?, ?, ?, ?)',
+        (start, end, note, sample_id, subject_id)
+    )
+    db.commit()
