@@ -14,9 +14,8 @@ CREATE TABLE experiment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     start_date TEXT,
-    end_date TEXT,
-    status TEXT
-);
+    end_date TEXT
+    );
 
 CREATE TABLE subject (
     id INTEGER PRIMARY KEY AUTOINCREMENT
@@ -48,8 +47,8 @@ CREATE TABLE observation (
 CREATE TABLE custom_attributes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    parent_table TEXT,
     type TEXT,
+    parent_table TEXT,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(id)
 );
@@ -57,36 +56,35 @@ CREATE TABLE custom_attributes (
 -- Tables to store custom attribute values
 CREATE TABLE experiment_custom (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    type TEXT,
     value TEXT,
+    custom_attributes_id INTEGER,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(id)
 );
 
 CREATE TABLE subject_custom (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    type TEXT,
     value TEXT,
-    experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+    custom_attributes_id INTEGER,
+    subject_id INTEGER,
+    FOREIGN KEY (custom_attributes_id) REFERENCES custom_attributes(id),
+    FOREIGN KEY (subject_id) REFERENCES subject(id)
 );
 
 CREATE TABLE sample_custom (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    type TEXT,
     value TEXT,
-    experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+    custom_attributes_id INTEGER,
+    sample_id INTEGER,
+    FOREIGN KEY (custom_attributes_id) REFERENCES custom_attributes(id),
+    FOREIGN KEY (sample_id) REFERENCES sample(id)
 );
 
 CREATE TABLE observation_custom (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    type TEXT,
     value TEXT,
-    experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+    custom_attributes_id INTEGER,
+    observation_id INTEGER,
+    FOREIGN KEY (custom_attributes_id) REFERENCES custom_attributes(id),
+    FOREIGN KEY (observation_id) REFERENCES observation(id)
 );
