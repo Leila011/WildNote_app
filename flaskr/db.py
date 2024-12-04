@@ -96,3 +96,18 @@ def add_observation_item(start, end, note, sample_id, subject_id):
         (start, end, note, sample_id, subject_id)
     )
     db.commit()
+
+# Delete an item
+def delete_item(table, id):
+    db = get_db()
+    query = f'DELETE FROM {table} WHERE id = ?'  # Using f-string to safely insert table name
+    db.execute(query, (id,))
+    db.commit()
+
+# update an item
+def update_item(table, id, field, value):
+    db = get_db()
+    query = f'UPDATE {table} SET {field} = ? WHERE id = ?'  # Using f-string to safely insert table name
+    db.execute(query, (value, id,))
+    db.commit()
+
