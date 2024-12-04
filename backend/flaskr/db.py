@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 
 import click
-from flask import current_app, g
+from flask import current_app, g, jsonify
 
 # Connect to the SQLite database
 def get_db():
@@ -120,3 +120,42 @@ def update_item(table, id, field, value):
     db.execute(query, (value, id,))
     db.commit()
 
+# convert the SQLite to jsonable format
+def make_dicts(cursor, row):
+    return dict((cursor.description[idx][0], value)
+                for idx, value in enumerate(row))
+
+
+# query the database
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
+# Retrieve all items from a the experiment table
+def get_experiments():
+    db = get_db()
+    db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
+    rows = db.execute('SELECT * FROM experiment').fetchall()
+    return jsonify(rows)
+
+# Retrieve all samples from an experiment
+def get_samples(experiment_id):
+    db = get_db()
+    db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
+
+    print(f"Fetching samples for experiment_id: {experiment_id}")
+
+    rows = db.execute(f'SELECT * FROM sample WHERE experiment_id = ?', (experiment_id,)).fetchall()
+    print(f"Rows fetched: {rows}")
+
+    
+    return jsonify(rows)
+
+# Retrieve all observations from a sample
+def get_observations(sample_id):
+    db = get_db()
+    db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
+    rows = db.execute('SELECT * FROM observation WHERE sample_id = ?', (sample_id,)).fetchall()
+    return jsonify(rows)

@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 def create_app(test_config=None):
@@ -29,6 +29,22 @@ def create_app(test_config=None):
         pass
 
     from . import db
+
+    # ??
     db.init_app(app)
+
+
+    # api endpoints
+    @app.route('/api/experiments')
+    def get_experiments():
+        return db.get_experiments()
+    
+    @app.route('/api/experiments/<int:id>/samples')
+    def get_samples(id):
+        return db.get_samples(id)
+    
+    @app.route('/api/samples/<int:id>/observations')
+    def get_observations(id):
+        return db.get_observations(id)
 
     return app
