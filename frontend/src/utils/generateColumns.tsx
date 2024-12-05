@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from "@solidjs/router";
 import { ColumnDef } from "@tanstack/solid-table";
 import { createEffect } from "solid-js/types/server/reactive.js";
 import { IconDots } from "~/components/icons";
@@ -12,8 +13,12 @@ import {
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu"
 
-export const generateColumns = (schema: any): ColumnDef<any>[] => {
-    const firstColumn =  {
+export const generateColumns = (schema: any, table: string): ColumnDef<any>[] => {
+  const navigate = useNavigate();
+  const location = useLocation();
+console.log(table)
+  
+  const firstColumn =  {
       id: "select",
       header: (props) => (
         <Checkbox
@@ -58,14 +63,14 @@ export const generateColumns = (schema: any): ColumnDef<any>[] => {
     }}
 
     const startButton = {
-      id: "samples",
+      id: "button",
       cell: (props) => {
         return (
           <Button
             variant="default"
-            onClick={() => console.log(`Starting experiment ${props.row.original.id}`)}
-          >
-            See samples
+            onClick={() => navigate(`${location.pathname}/${props.row.original.id}`)}
+            >
+            {table === "sample"?"View Observations" : "View Samples"} 
           </Button>
         )
       }
@@ -76,6 +81,7 @@ export const generateColumns = (schema: any): ColumnDef<any>[] => {
     })); 
     
 
+    if(table === "observation") return [firstColumn, ...attributesColumns, dropDownDots];
     return [firstColumn, ...attributesColumns, startButton, dropDownDots];
 
   };
