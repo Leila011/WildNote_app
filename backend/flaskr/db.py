@@ -133,7 +133,7 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-# Retrieve all items from a the experiment table
+# Retrieve all items from a the experiment table (only fixed attributes)
 def get_experiments():
     db = get_db()
     db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
@@ -160,12 +160,8 @@ def get_observations(sample_id):
     rows = db.execute('SELECT * FROM observation WHERE sample_id = ?', (sample_id,)).fetchall()
     return jsonify(rows)
 
-# Retrieve the table shema
-def get_table_schema(table_name):
-    db = get_db()
+def get_table_schema(db, table_name):
     rows = db.execute(f'PRAGMA table_info({table_name})').fetchall()
-    db.close()
-    print(f"Fetching schema for table: {rows}")
     return rows
 
 def generate_column_definitions(schema):
@@ -177,9 +173,60 @@ def generate_column_definitions(schema):
         })
     return columns
 
-def get_schema(table_name):
-    schema = get_table_schema(table_name)
-    print(f"Fetching schema for table: {schema}")
+def get_schema(db, table_name):
+    schema = get_table_schema(db, table_name)
     columns = generate_column_definitions(schema)
-    print(f"Generated column definitions: {columns}")
-    return jsonify(columns)
+    return columns
+
+# Retrieve the custom attributes into jsonable format
+def get_shema_custom(db, table_name, experiment_id):
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+    rows = db.execute(f'SELECT name, type FROM {table_name} WHERE experiment_id = ?', (experiment_id,)).fetchall()
+    return rows
+
+# Merge the custom attributes with the fixed attributes
+def generate_pivot_query(parent_table, custom_attributes_table, custom_values_table, parent_id, parent_id_column):
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Get the distinct attribute names for the specified custom attributes table
+    cursor.execute(f"SELECT DISTINCT name FROM {custom_attributes_table}")
+    attributes = cursor.fetchall()
+    
+    # Generate the pivot query
+    columns = []
+    for attribute in attributes:
+        attribute_name = attribute['name']
+        columns.append(f"MAX(CASE WHEN ca.name = '{attribute_name}' THEN sc.value END) AS {attribute_name}")
+    
+    columns_str = ", ".join(columns)
+    if columns_str:
+        columns_str = ", " + columns_str
+    
+    pivot_query = f"""
+    SELECT s.*{columns_str}
+    FROM {parent_table} s
+    LEFT JOIN {custom_values_table} sc ON s.id = sc.{parent_table}_id
+    LEFT JOIN {custom_attributes_table} ca ON sc.custom_attributes_id = ca.id
+    WHERE s.{parent_id_column} = ? 
+    GROUP BY s.id
+    """
+    
+    return pivot_query
+
+def get_pivoted_custom_attributes(parent_table, custom_attributes_table, custom_values_table, parent_id, parent_id_column):
+    db = get_db()
+    try:
+        cursor = db.cursor()
+        pivot_query = generate_pivot_query(parent_table, custom_attributes_table, custom_values_table, parent_id, parent_id_column)
+        cursor.execute(pivot_query, (parent_id,))
+        rows = cursor.fetchall()
+        
+        # Convert rows to dictionaries
+        rows_dict = [dict(row) for row in rows]
+        
+        return jsonify(rows_dict)
+    except sqlite3.Error as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()

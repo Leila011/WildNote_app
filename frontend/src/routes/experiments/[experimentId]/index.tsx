@@ -7,11 +7,11 @@ import { generateColumns } from "~/utils/generateColumns"	;
 import { fetchTableSchema } from "~/api/fetchTableSchema";
 import { fetchSamples } from "~/api/fetchSamples";
  
-export default function Experiments() {
+export default function Samples() {
   const params = useParams();
-  const [samples] = createResource(    () => Number(params.experimentsId)
+  const [samples] = createResource(    () => Number(params.experimentId)
   , fetchSamples)
-  const [tableSchema] = createResource(() => fetchTableSchema('sample'))
+  const [tableSchema] = createResource(() => fetchTableSchema('sample', Number(params.experimentId)))
 
   return (
     <div class="container mx-auto py-10">

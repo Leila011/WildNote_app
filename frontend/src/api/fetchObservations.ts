@@ -9,6 +9,7 @@
 import { backendUrl } from "~/db";
 
   export async function fetchObservations(id: number): Promise<any[]> {
+    console.log("fetching observations for sample id:", id);
     try {
       const response = await fetch(`${backendUrl}/api/samples/${id}/observations`);
       if (!response.ok) {

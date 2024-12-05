@@ -9,7 +9,6 @@
 import { backendUrl } from "~/db";
 
   export async function fetchSamples(id: number): Promise<any[]> {
-    console.log("fetching samples for experiment id:", id);
     try {
       const response = await fetch(`${backendUrl}/api/experiments/${id}/samples`);
       if (!response.ok) {
