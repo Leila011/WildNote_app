@@ -16,7 +16,6 @@ export async function fetchExperiments(): Promise<any[]> {
       const data: any[] = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching experiments:", error);
       throw error;
     }
   }

@@ -17,7 +17,6 @@ import { backendUrl } from "~/db";
       const data: any[] = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching samples:", error);
       throw error;
     }
   }

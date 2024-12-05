@@ -16,7 +16,6 @@ import {
 export const generateColumns = (schema: any, table: string): ColumnDef<any>[] => {
   const navigate = useNavigate();
   const location = useLocation();
-console.log(table)
   
   const firstColumn =  {
       id: "select",

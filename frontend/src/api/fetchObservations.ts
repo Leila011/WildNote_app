@@ -9,7 +9,6 @@
 import { backendUrl } from "~/db";
 
   export async function fetchObservations(id: number): Promise<any[]> {
-    console.log("fetching observations for sample id:", id);
     try {
       const response = await fetch(`${backendUrl}/api/samples/${id}/observations`);
       if (!response.ok) {
@@ -18,7 +17,6 @@ import { backendUrl } from "~/db";
       const data: any[] = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching observations:", error);
       throw error;
     }
   }
