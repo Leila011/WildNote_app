@@ -47,4 +47,7 @@ def create_app(test_config=None):
     def get_observations(id):
         return db.get_observations(id)
 
+    @app.route('/schema/<table_name>', methods=['GET'])
+    def get_schema_route(table_name):
+        return db.get_schema(table_name)
     return app

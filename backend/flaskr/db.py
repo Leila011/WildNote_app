@@ -159,3 +159,27 @@ def get_observations(sample_id):
     db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
     rows = db.execute('SELECT * FROM observation WHERE sample_id = ?', (sample_id,)).fetchall()
     return jsonify(rows)
+
+# Retrieve the table shema
+def get_table_schema(table_name):
+    db = get_db()
+    rows = db.execute(f'PRAGMA table_info({table_name})').fetchall()
+    db.close()
+    print(f"Fetching schema for table: {rows}")
+    return rows
+
+def generate_column_definitions(schema):
+    columns = []
+    for column in schema:
+        columns.append({
+            "name": column["name"],
+            "type": column["type"]
+        })
+    return columns
+
+def get_schema(table_name):
+    schema = get_table_schema(table_name)
+    print(f"Fetching schema for table: {schema}")
+    columns = generate_column_definitions(schema)
+    print(f"Generated column definitions: {columns}")
+    return jsonify(columns)
