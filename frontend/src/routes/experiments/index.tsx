@@ -1,11 +1,10 @@
 import { DataTable } from "./data-table"
-import { backendUrl } from "../../db";
 import { createResource } from "solid-js";
 import { generateColumns } from "~/utils/generateColumns"	;
 import { fetchExperiments } from "~/api/fetchExperiments";
 import { fetchTableSchema } from "~/api/fetchTableSchema";
  
-export default function DemoPage() {
+export default function Experiments() {
   const [experiments] = createResource(fetchExperiments)
   const [tableSchema] = createResource(() => fetchTableSchema('experiment'))
   
