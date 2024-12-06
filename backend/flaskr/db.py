@@ -1,9 +1,6 @@
 import sqlite3
-from datetime import datetime
-
-import click
 from flask import current_app, g, jsonify
-
+import click
 # Connect to the SQLite database
 def get_db():
     if 'db' not in g:
@@ -29,7 +26,7 @@ def init_db():
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
-# fill the database with mock data
+# Fill the database with mock data
 def populate_mock():
     db = get_db()
     with current_app.open_resource('mock.sql') as f:
@@ -37,7 +34,6 @@ def populate_mock():
     db.commit()
 
 # CLI command to initialize the database
-# flask --app flaskr init-db
 @click.command('init-db')
 def init_db_command():
     """Clear the existing data and create new tables."""
@@ -48,67 +44,59 @@ def init_db_command():
 
 # Register the database functions with the application
 def init_app(app):
-    app.teardown_appcontext(close_db) # insure the connection is closed when the app context ends
-    app.cli.add_command(init_db_command) # add the init-db command to the CLI
+    app.teardown_appcontext(close_db)  # Ensure the connection is closed when the app context ends
+    app.cli.add_command(init_db_command)  # Add the init-db command to the CLI
 
-########### STEP 1 : Setup the experimental design ###########
-# Add a new experiment item
-def add_experiment_item(name, start_date, end_date):
-    db = get_db()
+# STEP 1: Add a new experiment
+def add_experiment(db):
     db.execute(
-        'INSERT INTO experiment (name, start_date, end_date) VALUES (?, ?, ?)',
-        (name, start_date, end_date)
+        'INSERT INTO experiment DEFAULT VALUES'
     )
     db.commit()
 
-# Add a new custom parameter to a table
-def add_custom_parameter(name, type, parent_table, experiment_id):
-    db = get_db()
+# STEP 2: Define the attribute for each level of this experiment
+def add_attribute(db, name, type, table, experiment_id):
     db.execute(
-        'INSERT INTO custom_parameter (name, type, parent_table, experiment_id) VALUES (?, ?, ?, ?)',
-        (name, type, parent_table, experiment_id)
+        f'INSERT INTO {table} (name, type, experiment_id) VALUES (?, ?, ?)',
+        (name, type, experiment_id)
     )
     db.commit()
 
-# Add a new subject item in an experiment
-def add_subject_item(experiment_id):
-    db = get_db()
+# STEP 3: Add a new item in one level of an experiment
+# Add a new subject in an experiment
+def add_subject(db, experiment_id):
     db.execute(
-        'INSERT INTO subject (name, experiment_id) VALUES (?, ?)',
-        (experiment_id)
+        'INSERT INTO subject (experiment_id) VALUES (?)',
+        (experiment_id,)
     )
     db.commit()
 
-########### STEP 2 : Record  ###########
-# Add a new sample item in an experiment
-def add_sample_item(start, end, note, experiment_id, subject_id):
-    db = get_db()
+# Add a new sample in an experiment
+def add_sample(db, experiment_id, subject_id):
     db.execute(
-        'INSERT INTO sample (start, end, note, experiment_id, subject_id) VALUES (?, ?,?, ?, ?)',
-        (start, end, note, experiment_id, subject_id)
-    )
-    db.commit()
-
-def add_custom_sample_item(value, custom_attributes_id, observation_id):
-    db = get_db()
-    db.execute(
-        'INSERT INTO subject_custom (value, custom_attributes_id, observation_id) VALUES (?, ?, ?)',
-        (value, custom_attributes_id, observation_id)
+        'INSERT INTO sample (experiment_id, subject_id) VALUES (?, ?)',
+        (experiment_id, subject_id)
     )
     db.commit()
 
 # Add a new observation in a sample
-def add_observation_item(start, end, note, sample_id, subject_id):
-    db = get_db()
+def add_observation(db, sample_id):
     db.execute(
-        'INSERT INTO observation (start, end, note, sample_id, subject_id) VALUES (?, ?, ?, ?, ?)',
-        (start, end, note, sample_id, subject_id)
+        'INSERT INTO observation (sample_id) VALUES (?)',
+        (sample_id,)
+    )
+    db.commit()
+
+# STEP 4: Add an attribute value for a given table
+def add_value(db, value, attribute_id, table):
+    db.execute(
+        f'INSERT INTO {table} (value, attribute_id) VALUES (?, ?)',
+        (value, attribute_id)
     )
     db.commit()
 
 # Delete an item
-def delete_item(table, id):
-    db = get_db()
+def delete_item(db, table, id):
     query = f'DELETE FROM {table} WHERE id = ?'  # Using f-string to safely insert table name
     db.execute(query, (id,))
     db.commit()
@@ -125,7 +113,6 @@ def make_dicts(cursor, row):
     return dict((cursor.description[idx][0], value)
                 for idx, value in enumerate(row))
 
-
 # query the database
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
@@ -133,100 +120,162 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-# Retrieve all items from a the experiment table (only fixed attributes)
+# STEP 5: Retrieve the data from the database
+# Retrieve all experiments (! only with predefined attributes)
 def get_experiments():
     db = get_db()
-    db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
-    rows = db.execute('SELECT * FROM experiment').fetchall()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+
+    # Fetch the distinct attribute names for non-custom experiments
+    attribute_names = db.execute(
+        '''
+        SELECT DISTINCT name
+        FROM experiment_attributes
+        WHERE custom = 0
+        '''
+    ).fetchall()
+
+    # Generate the pivot query
+    columns = ["e.experiment_id AS experiment_id"]
+    for attribute in attribute_names:
+        attribute_name = attribute['name']
+        # Use double quotes to handle attribute names with spaces or special characters
+        columns.append(f"MAX(CASE WHEN ea.name = '{attribute_name}' THEN av.value END) AS \"{attribute_name}\"")
+
+    columns_str = ", ".join(columns)
+    pivot_query = f"""
+    SELECT {columns_str}
+    FROM experiment e
+    LEFT JOIN experiment_attributes ea ON e.experiment_id = ea.experiment_id
+    LEFT JOIN experiment_attribute_values av ON ea.experiment_attributes_id = av.attribute_id
+    GROUP BY e.experiment_id
+    """
+
+    rows = db.execute(pivot_query).fetchall()
     return jsonify(rows)
 
-# Retrieve all samples from an experiment
+# Retrieve all samples from an experiment (all attributes + values)
 def get_samples(experiment_id):
     db = get_db()
-    db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
-    print(f"Fetching samples for experiment_id: {experiment_id}")
+    # Fetch the distinct attribute names for non-custom samples
+    attribute_names = db.execute(
+        '''
+        SELECT DISTINCT name
+        FROM sample_attributes
+        WHERE experiment_id = ?
+        ''', (experiment_id,)
+    ).fetchall()
 
-    rows = db.execute(f'SELECT * FROM sample WHERE experiment_id = ?', (experiment_id,)).fetchall()
-    print(f"Rows fetched: {rows}")
+    # Generate the pivot query
+    columns = ["s.sample_id AS sample_id"]
+    for attribute in attribute_names:
+        attribute_name = attribute['name']
+        columns.append(f"MAX(CASE WHEN sa.name = '{attribute_name}' THEN sav.value END) AS \"{attribute_name}\"")
 
-    
+    columns_str = ", ".join(columns)
+    pivot_query = f"""
+    SELECT {columns_str}
+    FROM sample s
+    LEFT JOIN sample_attributes sa ON s.experiment_id = sa.experiment_id
+    LEFT JOIN sample_attribute_values sav ON sa.sample_attributes_id = sav.attribute_id
+    WHERE s.experiment_id = ?
+    GROUP BY s.sample_id
+    """
+
+    rows = db.execute(pivot_query, (experiment_id,)).fetchall()
     return jsonify(rows)
 
-# Retrieve all observations from a sample
+# Retrieve all observations from a sample with pivoted attributes
 def get_observations(sample_id):
     db = get_db()
-    db.row_factory = make_dicts  #  insure the data is convertd to dictionaries when queried
-    rows = db.execute('SELECT * FROM observation WHERE sample_id = ?', (sample_id,)).fetchall()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+
+    # Fetch the distinct attribute names for non-custom observations
+    attribute_names = db.execute(
+        '''
+        SELECT DISTINCT name
+        FROM observation_attributes
+        WHERE experiment_id = (SELECT experiment_id FROM sample WHERE sample_id = ?)
+        ''', (sample_id,)
+    ).fetchall()
+
+    # Generate the pivot query
+    columns = ["o.observation_id AS observation_id"]
+    for attribute in attribute_names:
+        attribute_name = attribute['name']
+        columns.append(f"MAX(CASE WHEN oa.name = '{attribute_name}' THEN oav.value END) AS \"{attribute_name}\"")
+
+    columns_str = ", ".join(columns)
+    pivot_query = f"""
+    SELECT {columns_str}
+    FROM observation o
+    LEFT JOIN observation_attributes oa ON o.sample_id = oa.experiment_id
+    LEFT JOIN observation_attribute_values oav ON oa.observation_attributes_id = oav.attribute_id
+    WHERE o.sample_id = ?
+    GROUP BY o.observation_id
+    """
+
+    rows = db.execute(pivot_query, (sample_id,)).fetchall()
     return jsonify(rows)
 
-def get_table_schema(db, table_name):
+# Retrieve all subjects from an experiment with pivoted attributes
+def get_subjects(experiment_id):
+    db = get_db()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+
+    # Fetch the distinct attribute names for non-custom subjects
+    attribute_names = db.execute(
+        '''
+        SELECT DISTINCT name
+        FROM subject_attributes
+        WHERE AND experiment_id = ?
+        ''', (experiment_id,)
+    ).fetchall()
+
+    # Generate the pivot query
+    columns = ["s.subject_id AS subject_id"]
+    for attribute in attribute_names:
+        attribute_name = attribute['name']
+        columns.append(f"MAX(CASE WHEN sa.name = '{attribute_name}' THEN sav.value END) AS \"{attribute_name}\"")
+
+    columns_str = ", ".join(columns)
+    pivot_query = f"""
+    SELECT {columns_str}
+    FROM subject s
+    LEFT JOIN subject_attributes sa ON s.experiment_id = sa.experiment_id
+    LEFT JOIN subject_attribute_values sav ON sa.subject_attributes_id = sav.attribute_id
+    WHERE s.experiment_id = ?
+    GROUP BY s.subject_id
+    """
+
+    rows = db.execute(pivot_query, (experiment_id,)).fetchall()
+    return jsonify(rows)
+
+# Retrieve the attributes description for a level
+def get_attributes(table_name, experiment_id):
+    db = get_db()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+    rows = db.execute(f'SELECT * FROM {table_name} WHERE experiment_id = ?', (experiment_id,)).fetchall()
+    return rows
+
+def get_columns(table_name):
+    db = get_db()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
     rows = db.execute(f'PRAGMA table_info({table_name})').fetchall()
     return rows
 
-def generate_column_definitions(schema):
-    columns = []
-    for column in schema:
-        columns.append({
-            "name": column["name"],
-            "type": column["type"]
-        })
-    return columns
-
-def get_schema(db, table_name):
-    schema = get_table_schema(db, table_name)
-    columns = generate_column_definitions(schema)
-    return columns
-
-# Retrieve the custom attributes into jsonable format
-def get_shema_custom(db, table_name, experiment_id):
+def get_attributes_predetermined(table_name):
+    db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
-    rows = db.execute(f'SELECT name, type FROM {table_name} WHERE experiment_id = ?', (experiment_id,)).fetchall()
+    rows = db.execute(f'SELECT * FROM {table_name} WHERE custom = 0 AND experiment_id = 1').fetchall()
     return rows
 
-# Merge the custom attributes with the fixed attributes
-def generate_pivot_query(parent_table, custom_attributes_table, custom_values_table, parent_id, parent_id_column):
+# Get column names of a table
+def get_column_names(table_name):
     db = get_db()
-    cursor = db.cursor()
-    
-    # Get the distinct attribute names for the specified custom attributes table
-    cursor.execute(f"SELECT DISTINCT name FROM {custom_attributes_table}")
-    attributes = cursor.fetchall()
-    
-    # Generate the pivot query
-    columns = []
-    for attribute in attributes:
-        attribute_name = attribute['name']
-        columns.append(f"MAX(CASE WHEN ca.name = '{attribute_name}' THEN sc.value END) AS {attribute_name}")
-    
-    columns_str = ", ".join(columns)
-    if columns_str:
-        columns_str = ", " + columns_str
-    
-    pivot_query = f"""
-    SELECT s.*{columns_str}
-    FROM {parent_table} s
-    LEFT JOIN {custom_values_table} sc ON s.id = sc.{parent_table}_id
-    LEFT JOIN {custom_attributes_table} ca ON sc.custom_attributes_id = ca.id
-    WHERE s.{parent_id_column} = ? 
-    GROUP BY s.id
-    """
-    
-    return pivot_query
-
-def get_pivoted_custom_attributes(parent_table, custom_attributes_table, custom_values_table, parent_id, parent_id_column):
-    db = get_db()
-    try:
-        cursor = db.cursor()
-        pivot_query = generate_pivot_query(parent_table, custom_attributes_table, custom_values_table, parent_id, parent_id_column)
-        cursor.execute(pivot_query, (parent_id,))
-        rows = cursor.fetchall()
-        
-        # Convert rows to dictionaries
-        rows_dict = [dict(row) for row in rows]
-        
-        return jsonify(rows_dict)
-    except sqlite3.Error as e:
-        return jsonify({"error": str(e)}), 500
-    finally:
-        db.close()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+    columns_info = db.execute(f'PRAGMA table_info({table_name})').fetchall()
+    column_names = [column['name'] for column in columns_info]
+    return column_names

@@ -3,118 +3,102 @@ DROP TABLE IF EXISTS experiment;
 DROP TABLE IF EXISTS subject;
 DROP TABLE IF EXISTS sample;
 DROP TABLE IF EXISTS observation;
-DROP TABLE IF EXISTS experiment_custom_attributes;
-DROP TABLE IF EXISTS subject_custom_attributes;
-DROP TABLE IF EXISTS sample_custom_attributes;
-DROP TABLE IF EXISTS observation_custom_attributes;
-DROP TABLE IF EXISTS experiment_custom;
-DROP TABLE IF EXISTS subject_custom;
-DROP TABLE IF EXISTS sample_custom;
-DROP TABLE IF EXISTS observation_custom;
+DROP TABLE IF EXISTS experiment_attributes;
+DROP TABLE IF EXISTS subject_attributes;
+DROP TABLE IF EXISTS sample_attributes;
+DROP TABLE IF EXISTS observation_attributes;
+DROP TABLE IF EXISTS experiment_attribute_values;
+DROP TABLE IF EXISTS sample_attribute_values;
+DROP TABLE IF EXISTS observation_attribute_values;
+DROP TABLE IF EXISTS subject_attribute_values;
 
 -- Create core tables
 CREATE TABLE experiment (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    start_date TEXT,
-    end_date TEXT
+    experiment_id INTEGER PRIMARY KEY AUTOINCREMENT
 );
 
 CREATE TABLE subject (
-    id INTEGER PRIMARY KEY AUTOINCREMENT
+    subject_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    experiment_id INTEGER,
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
 
 CREATE TABLE sample (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    start TEXT,
-    end TEXT,
-    note TEXT,
+    sample_id INTEGER PRIMARY KEY AUTOINCREMENT,
     experiment_id INTEGER,
     subject_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id),
-    FOREIGN KEY (subject_id) REFERENCES subject(id)
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
 );
 
 CREATE TABLE observation (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    start TEXT,
-    end TEXT,
-    note TEXT,
+    observation_id INTEGER PRIMARY KEY AUTOINCREMENT,
     sample_id INTEGER,
-    subject_id INTEGER,
-    FOREIGN KEY (sample_id) REFERENCES sample(id),
-    FOREIGN KEY (subject_id) REFERENCES subject(id)
+    FOREIGN KEY (sample_id) REFERENCES sample(sample_id) ON DELETE CASCADE
 );
 
--- Custom attributes for experiments
-CREATE TABLE experiment_custom_attributes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+-- Attribute description tables
+CREATE TABLE experiment_attributes (
+    experiment_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     type TEXT,
+    custom BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
 
--- Custom attributes for subjects
-CREATE TABLE subject_custom_attributes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE sample_attributes (
+    sample_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     type TEXT,
+    custom BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
 
--- Custom attributes for samples
-CREATE TABLE sample_custom_attributes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE observation_attributes (
+    observation_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     type TEXT,
+    custom BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
 
--- Custom attributes for observations
-CREATE TABLE observation_custom_attributes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE subject_attributes (
+    subject_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     type TEXT,
+    custom BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
 
--- Tables to store custom attribute values
-CREATE TABLE experiment_custom (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+-- Attribute value tables
+CREATE TABLE experiment_attribute_values (
+    experiment_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    attribute_id INTEGER,
     value TEXT,
-    custom_attributes_id INTEGER,
-    experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(id),
-    FOREIGN KEY (custom_attributes_id) REFERENCES experiment_custom_attributes(id)
+    FOREIGN KEY (attribute_id) REFERENCES experiment_attributes(experiment_attributes_id) ON DELETE CASCADE
 );
 
-CREATE TABLE subject_custom (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE sample_attribute_values (
+    sample_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    attribute_id INTEGER,
     value TEXT,
-    custom_attributes_id INTEGER,
-    subject_id INTEGER,
-    FOREIGN KEY (custom_attributes_id) REFERENCES subject_custom_attributes(id),
-    FOREIGN KEY (subject_id) REFERENCES subject(id)
+    FOREIGN KEY (attribute_id) REFERENCES sample_attributes(sample_attributes_id) ON DELETE CASCADE
 );
 
-CREATE TABLE sample_custom (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE observation_attribute_values (
+    observation_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    attribute_id INTEGER,
     value TEXT,
-    custom_attributes_id INTEGER,
-    sample_id INTEGER,
-    FOREIGN KEY (custom_attributes_id) REFERENCES sample_custom_attributes(id),
-    FOREIGN KEY (sample_id) REFERENCES sample(id)
+    FOREIGN KEY (attribute_id) REFERENCES observation_attributes(observation_attributes_id) ON DELETE CASCADE
 );
 
-CREATE TABLE observation_custom (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE subject_attribute_values (
+    subject_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    attribute_id INTEGER,
     value TEXT,
-    custom_attributes_id INTEGER,
-    observation_id INTEGER,
-    FOREIGN KEY (custom_attributes_id) REFERENCES observation_custom_attributes(id),
-    FOREIGN KEY (observation_id) REFERENCES observation(id)
+    FOREIGN KEY (attribute_id) REFERENCES subject_attributes(subject_attributes_id) ON DELETE CASCADE
 );

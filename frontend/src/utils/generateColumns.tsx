@@ -16,7 +16,7 @@ import {
 export const generateColumns = (schema: any, table: string): ColumnDef<any>[] => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+  console.log("schema", schema)
   const firstColumn =  {
       id: "select",
       header: (props) => (
@@ -64,16 +64,22 @@ export const generateColumns = (schema: any, table: string): ColumnDef<any>[] =>
     const startButton = {
       id: "button",
       cell: (props) => {
+        // Determine the correct column name based on the table type
+        const idColumnName = table === "experiment" ? "experiment_id" :
+                             table === "sample" ? "sample_id" :
+                             table === "observation" ? "observation_id" :
+                             table === "subject" ? "subject_id" : "id";
+    
         return (
           <Button
             variant="default"
-            onClick={() => navigate(`${location.pathname}/${props.row.original.id}`)}
-            >
-            {table === "sample"?"View Observations" : "View Samples"} 
+            onClick={() => navigate(`${location.pathname}/${props.row.original[idColumnName]}`)}
+          >
+            {table === "sample" ? "View Observations" : "View Samples"}
           </Button>
-        )
+        );
       }
-    }
+    };
     const attributesColumns = schema.map((column: any) => ({
       accessorKey: column.name,
       header: column.name.charAt(0).toUpperCase() + column.name.slice(1).replace('_', ' '),
