@@ -56,7 +56,8 @@ export function FormNewAttribute(props: Props) {
                 value={store[index].name}
                 onChange={(e: any) => {
                   const value = e === "" ? null : e;
-                  setStore([index], "name", value);
+                  setStore([index], "name", value.toLowerCase.replace(/\s+/g, '_'));
+                  setStore([index], "label", value);
                 }}
               >
                 <TextFieldInput

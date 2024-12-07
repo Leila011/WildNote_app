@@ -41,9 +41,15 @@ CREATE TABLE observation (
 CREATE TABLE experiment_attributes (
     experiment_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
+    label TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
     autofill BOOLEAN DEFAULT 0,
+    required BOOLEAN DEFAULT 0,
+    min INTEGER,
+    max INTEGER,
+    choices TEXT,
+    default_value TEXT,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
@@ -51,9 +57,15 @@ CREATE TABLE experiment_attributes (
 CREATE TABLE sample_attributes (
     sample_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
+    label TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
     autofill BOOLEAN DEFAULT 0,
+    required BOOLEAN DEFAULT 0,
+    min INTEGER,
+    max INTEGER,
+    choices TEXT,
+    default_value TEXT,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
@@ -61,9 +73,15 @@ CREATE TABLE sample_attributes (
 CREATE TABLE observation_attributes (
     observation_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
+    label TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
     autofill BOOLEAN DEFAULT 0,
+    required BOOLEAN DEFAULT 0,
+    min INTEGER,
+    max INTEGER,
+    choices TEXT,
+    default_value TEXT,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
@@ -71,9 +89,15 @@ CREATE TABLE observation_attributes (
 CREATE TABLE subject_attributes (
     subject_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
+    label TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
     autofill BOOLEAN DEFAULT 0,
+    required BOOLEAN DEFAULT 0,
+    min INTEGER,
+    max INTEGER,
+    choices TEXT,
+    default_value TEXT,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );

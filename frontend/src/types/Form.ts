@@ -1,5 +1,6 @@
 export type TableAttribute = {
   name: string;
+  label: string;
   type: string;
   value?: any;
   typeJS?: string;
