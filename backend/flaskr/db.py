@@ -1,6 +1,9 @@
+import os
 import sqlite3
-from flask import current_app, g, jsonify
+from flask import current_app, g, json, jsonify
 import click
+
+############################### UTILS ###############################
 # Connect to the SQLite database
 def get_db():
     if 'db' not in g:
@@ -47,67 +50,6 @@ def init_app(app):
     app.teardown_appcontext(close_db)  # Ensure the connection is closed when the app context ends
     app.cli.add_command(init_db_command)  # Add the init-db command to the CLI
 
-# STEP 1: Add a new experiment
-def add_experiment(db):
-    db.execute(
-        'INSERT INTO experiment DEFAULT VALUES'
-    )
-    db.commit()
-
-# STEP 2: Define the attribute for each level of this experiment
-def add_attribute(db, name, type, table, experiment_id):
-    db.execute(
-        f'INSERT INTO {table} (name, type, experiment_id) VALUES (?, ?, ?)',
-        (name, type, experiment_id)
-    )
-    db.commit()
-
-# STEP 3: Add a new item in one level of an experiment
-# Add a new subject in an experiment
-def add_subject(db, experiment_id):
-    db.execute(
-        'INSERT INTO subject (experiment_id) VALUES (?)',
-        (experiment_id,)
-    )
-    db.commit()
-
-# Add a new sample in an experiment
-def add_sample(db, experiment_id, subject_id):
-    db.execute(
-        'INSERT INTO sample (experiment_id, subject_id) VALUES (?, ?)',
-        (experiment_id, subject_id)
-    )
-    db.commit()
-
-# Add a new observation in a sample
-def add_observation(db, sample_id):
-    db.execute(
-        'INSERT INTO observation (sample_id) VALUES (?)',
-        (sample_id,)
-    )
-    db.commit()
-
-# STEP 4: Add an attribute value for a given table
-def add_value(db, value, attribute_id, table):
-    db.execute(
-        f'INSERT INTO {table} (value, attribute_id) VALUES (?, ?)',
-        (value, attribute_id)
-    )
-    db.commit()
-
-# Delete an item
-def delete_item(db, table, id):
-    query = f'DELETE FROM {table} WHERE id = ?'  # Using f-string to safely insert table name
-    db.execute(query, (id,))
-    db.commit()
-
-# update an item
-def update_item(table, id, field, value):
-    db = get_db()
-    query = f'UPDATE {table} SET {field} = ? WHERE id = ?'  # Using f-string to safely insert table name
-    db.execute(query, (value, id,))
-    db.commit()
-
 # convert the SQLite to jsonable format
 def make_dicts(cursor, row):
     return dict((cursor.description[idx][0], value)
@@ -120,18 +62,101 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-# STEP 5: Retrieve the data from the database
-# Retrieve all experiments (! only with predefined attributes)
+############################### WRITE ###############################
+def add_experiment(db):
+    """Add a new experiment to the database
+
+    Returns: The ID of the newly created experiment
+    """
+    cursor = db.execute(
+        'INSERT INTO experiment DEFAULT VALUES'
+    )
+    db.commit()
+    return cursor.lastrowid
+
+def add_attribute(db, name, type, table, experiment_id):
+    """Add a new attribute to a given table
+    
+        Returns: The ID of the newly created experiment
+    """
+    cursor = db.execute(
+        f'INSERT INTO {table} (name, type, experiment_id) VALUES (?, ?, ?)',
+        (name, type, experiment_id)
+    )
+    db.commit()
+    return cursor.lastrowid
+
+
+def add_predefined_attributes(db, table_name, experiment_id):
+    """Add predefined attributes from a JSON file to a given attribute table"""
+
+    with open('predefined_attributes.json') as f:
+        data = json.load(f)
+        for attribute in data.get(f'{table_name}_attributes', []):
+            db.execute(
+                f'INSERT INTO {table_name+"_attributes"} (name, type, custom, experiment_id) VALUES (?, ?, ?, ?)',
+                (attribute['name'], attribute['type'], attribute['custom'], attribute['autofill'], experiment_id)
+            )
+    db.commit()
+
+def add_subject(db, experiment_id):
+    """Add a new subject in the subject table"""
+    db.execute(
+        'INSERT INTO subject (experiment_id) VALUES (?)',
+        (experiment_id,)
+    )
+    db.commit()
+
+def add_sample(db, experiment_id, subject_id):
+    """Add a new sample in the sample table"""
+    db.execute(
+        'INSERT INTO sample (experiment_id, subject_id) VALUES (?, ?)',
+        (experiment_id, subject_id)
+    )
+    db.commit()
+
+def add_observation(db, sample_id):
+    """Add a new observation in the observation table"""
+    db.execute(
+        'INSERT INTO observation (sample_id) VALUES (?)',
+        (sample_id,)
+    )
+    db.commit()
+
+def add_value(db, value, attribute_id, attribute_table):
+    """Add a new value in the attribute value table"""
+    db.execute(
+        f'INSERT INTO {attribute_table} (value, attribute_id) VALUES (?, ?)',
+        (value, attribute_id)
+    )
+    db.commit()
+
+def delete_row(db, table, id):
+    """Delete a row from a given table"""
+    query = f'DELETE FROM {table} WHERE id = ?'  # Using f-string to safely insert table name
+    db.execute(query, (id,))
+    db.commit()
+
+def update_value(table, id, field, value):
+    """Update the value a field in a row from a given table"""
+    db = get_db()
+    query = f'UPDATE {table} SET {field} = ? WHERE id = ?'  # Using f-string to safely insert table name
+    db.execute(query, (value, id,))
+    db.commit()
+
+############################### READ VALUE ###############################
+
 def get_experiments():
+    """Retrieve all experiments from the database (predefined attributes + values)"""
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
-    # Fetch the distinct attribute names for non-custom experiments
+    # Fetch the distinct attribute names for predefined attributes
     attribute_names = db.execute(
         '''
         SELECT DISTINCT name
         FROM experiment_attributes
-        WHERE custom = 0
+        WHERE custom = 0 
         '''
     ).fetchall()
 
@@ -154,8 +179,8 @@ def get_experiments():
     rows = db.execute(pivot_query).fetchall()
     return jsonify(rows)
 
-# Retrieve all samples from an experiment (all attributes + values)
 def get_samples(experiment_id):
+    """Retrieve all samples from an experiment (attributes + values)"""
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
@@ -187,8 +212,8 @@ def get_samples(experiment_id):
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
     return jsonify(rows)
 
-# Retrieve all observations from a sample with pivoted attributes
 def get_observations(sample_id):
+    """Retrieve all observations from a sample (attributes + values)"""	
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
@@ -220,8 +245,8 @@ def get_observations(sample_id):
     rows = db.execute(pivot_query, (sample_id,)).fetchall()
     return jsonify(rows)
 
-# Retrieve all subjects from an experiment with pivoted attributes
 def get_subjects(experiment_id):
+    """Retrieve all subjects from an experiment (attributes + values)"""
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
@@ -253,24 +278,29 @@ def get_subjects(experiment_id):
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
     return jsonify(rows)
 
-# Retrieve the attributes description for a level
-def get_attributes(table_name, experiment_id):
+############################### READ ATTRIBUTES ###############################
+def get_attributes(attribute_table, experiment_id):
+    """Retrieve the attributes for a given table"""
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
-    rows = db.execute(f'SELECT * FROM {table_name} WHERE experiment_id = ?', (experiment_id,)).fetchall()
+    rows = db.execute(f'SELECT * FROM {attribute_table} WHERE experiment_id = ?', (experiment_id,)).fetchall()
     return rows
 
 def get_columns(table_name):
+    """Retrieve the column names of a given table"""
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
-    rows = db.execute(f'PRAGMA table_info({table_name})').fetchall()
+    query = f'PRAGMA table_info("{table_name}")'
+    rows = db.execute(query).fetchall()
     return rows
 
 def get_attributes_predetermined(table_name):
-    db = get_db()
-    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
-    rows = db.execute(f'SELECT * FROM {table_name} WHERE custom = 0 AND experiment_id = 1').fetchall()
-    return rows
+    """Retrieve the predetermined attributes for a given table"""
+    json_path = os.path.join(os.path.dirname(__file__), 'predefined_attributes.json')
+    with open(json_path) as f:
+        data = json.load(f)
+        print(data.get(table_name))
+        return data.get(table_name)
 
 # Get column names of a table
 def get_column_names(table_name):

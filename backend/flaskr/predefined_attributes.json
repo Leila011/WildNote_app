@@ -1,0 +1,16 @@
+{
+    "experiment": [
+      { "name": "Name", "type": "TEXT", "custom": false, "autofill":false},
+      { "name": "Creation_Date", "type": "TEXT", "custom": false,"autofill":true },
+      { "name": "Description", "type": "TEXT", "custom": false,"autofill":false }
+    ],
+    "sample": [
+      { "name": "subject_id", "type": "INTEGER", "custom": false,"autofill":false},
+      { "name": "start", "type": "TEXT", "custom": false,"autofill":true },
+      { "name": "end", "type": "TEXT", "custom": false,"autofill":true}
+    ],
+    "observation": [
+      { "name": "start", "type": "TEXT", "custom": false,"autofill":true },
+      { "name": "end", "type": "TEXT", "custom": false,"autofill":true}
+    ]
+  }

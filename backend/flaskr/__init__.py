@@ -35,8 +35,8 @@ def create_app(test_config=None):
 
 
     # api endpoints
-    # STEP 1: add a new record to a table
-    # add a new experiment + attributes
+    ################### Define experimental structure ###################
+    # add a new experiment + define its structure
     @app.route('/api/experiment', methods=['POST'])
     def add_experiment():
         try:
@@ -44,24 +44,24 @@ def create_app(test_config=None):
             data = request.get_json()
             if not data:
                 return jsonify({"error": "Invalid JSON format"}), 400
-
+            print(data)
             # connect to db
             con = db.get_db()
-            cursor = con.cursor()
 
             # add a new experiment & retrieve the last inserted id
-            db.add_experiment(con)
-            last_inserted_id = cursor.lastrowid
+            experiment_id = db.add_experiment(con)
 
-            # add the custom attributes for the experiment
-            for attribute in data.get('attributes', []):
-                db.add_attribute(con, attribute['name'], attribute['type'], 'experiment_attributes', last_inserted_id)
+            # add the value of the predefined attributes for the experiment
+            for attribute in data:
+                print(attribute)
+                attribute_id = db.add_attribute(con, attribute['name'], attribute['type'], 'experiment_attributes', experiment_id)
+                db.add_value(con, attribute['value'], attribute_id, 'experiment_attributes')
             return jsonify({"message": "Experiment added successfully"}), 200
     
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    # add a new sample + attributes
+    # define the structure of the the sample
     @app.route('/api/experiments/<int:id>/sample', methods=['POST'])
     def add_sample(id):
         try:
@@ -75,8 +75,11 @@ def create_app(test_config=None):
             cursor = con.cursor()
 
             # add a new sample & retrieve the last inserted id
-            db.add_sample(con, id, data.get('subject_id'))
-            last_inserted_id = cursor.lastrowid
+            #db.add_sample(con, id, data.get('subject_id'))
+            #last_inserted_id = cursor.lastrowid
+
+            # add the predefined attributes for the experiment
+            db.add_predefined_attributes(con, 'sample', id)
 
             # add the custom attributes for the experiment
             for attribute in data.get('attributes', []):
@@ -86,7 +89,7 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    # add a new subject + attributes
+    # define the structure of a subject 
     @app.route('/api/experiments/<int:id>/subject', methods=['POST'])
     def add_subject(id):
         try:
@@ -103,6 +106,9 @@ def create_app(test_config=None):
             db.add_subject(con, id)
             last_inserted_id = cursor.lastrowid
 
+            # add the predefined attributes for the experiment
+            db.add_predefined_attributes(con, 'subject', last_inserted_id)
+
             # add the custom attributes for the experiment
             for attribute in data.get('attributes', []):
                 db.add_attribute(con, attribute['name'], attribute['type'], 'subject_attributes', last_inserted_id)
@@ -111,7 +117,7 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    # add a new observation + attributes
+    # define the structure of an observation
     @app.route('/api/samples/<int:id>/observation', methods=['POST'])
     def add_observationt(id):
         try:
@@ -128,6 +134,9 @@ def create_app(test_config=None):
             db.add_observation(con, id, data.get('subject_id'))
             last_inserted_id = cursor.lastrowid
 
+            # add the predefined attributes for the experiment
+            db.add_predefined_attributes(con, 'observation', last_inserted_id)
+
             # add the custom attributes for the experiment
             for attribute in data.get('attributes', []):
                 db.add_attribute(con, attribute['name'], attribute['type'], 'observation_attributes', last_inserted_id)
@@ -136,7 +145,7 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
         
-    # STEP 2: add a new attribute value to a table
+    ############### add a attributes value to a table ###################
     @app.route('/api/<level>/values', methods=['POST'])
     def add_values(level):
         try:
@@ -156,7 +165,7 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    # STEP 5: retrieve all records from a table with attribute and value
+    ############ retrieve all records from a table (attribute + value) ############
     # get all experiments
     @app.route('/api/experiments', methods=['GET'])
     def get_experiments():
@@ -176,38 +185,40 @@ def create_app(test_config=None):
     def get_observations(id):
         return db.get_observations(id)
     
-    # STEP 6: Retrieve the attribute description for a given table
-    # get all attributes non custom for experiments
-    @app.route('/api/attributes/predetermined/experiments')
-    def get_attributes_predetermined():
-        attributes = db.get_attributes_predetermined("experiment_attributes")
+    # Retrieve the attribute description#
+    # Special one required when creating a new experiment
+    @app.route('/api/attributes/experiments')
+    def get_attributes_experiment():
+        attributes = db.get_attributes_predetermined("experiment")
         columns = db.get_columns("experiment")
         return jsonify({"columns": columns, "attributes": attributes})
     
+    # All other tables 
     @app.route('/api/attributes/<table_name>/experiment_id/<int:experiment_id>')
     def get_attributes(table_name, experiment_id):
         target_table = table_name +"_attributes"
         attributes = db.get_attributes(target_table, experiment_id)
         columns = db.get_columns(table_name)
         return jsonify({"columns": columns, "attributes": attributes})
-
-    # @app.route('/api/addRecord/<table_name>', methods=['POST'])
-    # def addRecord(table_name):
-    #     try:
-    #         data = request.get_json()
-    #         if not data:
-    #             return jsonify({"error": "Invalid JSON format"}), 400
-
-    #         db.add_record(table_name, data)
-    #         return jsonify({"message": "Record added successfully"}), 200
-    #     except Exception as e:
-    #         return jsonify({"error": str(e)}), 500
+    
+    # Retrieve the attribute description for displaying the entry #
+    # Get the predetermined attributes
+    # @app.route('/api/attributes/predetermined/<table_name>')
+    # def get_attributes_predetermined(table_name):
+    #     attributes = db.get_attributes_predetermined(table_name)
+    #     return jsonify(attributes)
+    
+    # # Get the main table columns
+    # @app.route('/api/columnNames/<table_name>')
+    # def get_columns(table_name):
+    #     columns = db.get_columns(table_name)
+    #     return jsonify(columns)
 
     # Data manipulation
     @app.route('/api/deleteRecords/<table_name>/<int:id>', methods=['GET'])
-    def deleteRecords(table_name, id):
+    def delete_row(table_name, id):
         try:
-            db.delete_record(table_name, id)
+            db.delete_row(table_name, id)
             return jsonify({"message": "Record deleted successfully"}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500

@@ -6,11 +6,11 @@ import { backendUrl } from "~/db";
  * @returns {Promise<any>} A promise that resolves to the schema of the table
  * @throws Will throw an error if the fetch operation fails.
  */
-export async function fetchAttributeDescriptionsExperiments(): Promise<any> {
+export async function fetchColumns(table_name:string): Promise<any> {
   try {
-    const response = await fetch(`${backendUrl}/api/attributes/experiments`);
+    const response = await fetch(`${backendUrl}/api/columnNames/<${table_name}>`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch attributes descriptions: ${response.statusText}`);
+      throw new Error(`Failed to fetch columns descriptions: ${response.statusText}`);
     }
     const data: any[] = await response.json();
     return data;

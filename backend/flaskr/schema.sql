@@ -43,6 +43,7 @@ CREATE TABLE experiment_attributes (
     name TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
+    autofill BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
@@ -52,6 +53,7 @@ CREATE TABLE sample_attributes (
     name TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
+    autofill BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
@@ -61,6 +63,7 @@ CREATE TABLE observation_attributes (
     name TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
+    autofill BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
@@ -70,6 +73,7 @@ CREATE TABLE subject_attributes (
     name TEXT,
     type TEXT,
     custom BOOLEAN DEFAULT 0,
+    autofill BOOLEAN DEFAULT 0,
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
