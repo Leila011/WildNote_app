@@ -12,7 +12,7 @@ import {
 import { IconChevronDown } from "~/components/icons";
 import { Button } from "./ui/button";
 import { createEffect, For, Index, Show } from "solid-js";
-import { TableAttribute } from "~/types/Form";
+import { TableAttribute } from "~/types/db";
 import { SetStoreFunction } from "solid-js/store";
 import { typeOptions } from "~/utils/typeOptions";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
@@ -53,10 +53,11 @@ export function FormNewAttribute(props: Props) {
             <div>
               <h1>name:</h1>
               <TextField
-                value={store[index].name}
+                value={store[index].label}
                 onChange={(e: any) => {
                   const value = e === "" ? null : e;
-                  setStore([index], "name", value.toLowerCase.replace(/\s+/g, '_'));
+                  const valueClean = value.toLowerCase().replace(/ /g,"_");
+                  setStore([index], "name", valueClean);
                   setStore([index], "label", value);
                 }}
               >
@@ -78,14 +79,14 @@ export function FormNewAttribute(props: Props) {
                   variant={"ghost"}
                   class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
                 >
-                  <div class="flex-grow text-left">{store[index].typeJS}</div>
+                  <div class="flex-grow text-left">{store[index].type}</div>
                   <IconChevronDown />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <For each={typeOptions}>
                     {(choice) => (
                       <DropdownMenuItem
-                        onSelect={() => setStore([index], "typeJS", choice)}
+                        onSelect={() => setStore([index], "type", choice)}
                       >
                         <span>{choice}</span>
                       </DropdownMenuItem>
@@ -95,7 +96,7 @@ export function FormNewAttribute(props: Props) {
               </DropdownMenu>
             </div>
 
-            <Show when={store[index].typeJS === "number"}>
+            <Show when={store[index].type === "number"}>
               <div class="flex flex-row space-x-1">
                 <div>
                   <h1>min:</h1>
@@ -136,10 +137,10 @@ export function FormNewAttribute(props: Props) {
                 <div>
                   <h1>default:</h1>
                   <NumberField
-                    rawValue={store[index].default}
+                    rawValue={store[index].default_value}
                     onRawValueChange={(e: any) => {
                       const value = Number.isNaN(e) ? null : e;
-                      setStore([index], "default", value);
+                      setStore([index], "default_value", value);
                     }}
                     minValue={
                       "min" in store[index] && store[index].min !== undefined
@@ -163,7 +164,7 @@ export function FormNewAttribute(props: Props) {
                 </div>
               </div>
             </Show>
-            <Show when={store[index].typeJS === "string"}>
+            <Show when={store[index].type === "string"}>
               <div>
                 <h1>choices:</h1>
                 <Index each={store[index].choices}>
@@ -202,7 +203,7 @@ export function FormNewAttribute(props: Props) {
                       class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
                     >
                       <div class="flex-grow text-left">
-                        {store[index].default}
+                        {store[index].default_value}
                       </div>
                       <IconChevronDown />
                     </DropdownMenuTrigger>
@@ -211,7 +212,7 @@ export function FormNewAttribute(props: Props) {
                         {(choice) => (
                           <DropdownMenuItem
                             onSelect={() =>
-                              setStore([index], "default", choice)
+                              setStore([index], "default_value", choice)
                             }
                           >
                             <span>{choice}</span>
@@ -223,10 +224,10 @@ export function FormNewAttribute(props: Props) {
                 </Show>
                 <Show when={store[index].choices.length === 0}>
                   <TextField
-                    value={store[index].default}
+                    value={store[index].default_value}
                     onChange={(e: any) => {
                       const value = e === "" ? null : e;
-                      setStore([index], "default", value);
+                      setStore([index], "default_value", value);
                     }}
                   >
                     <TextFieldInput
@@ -241,12 +242,12 @@ export function FormNewAttribute(props: Props) {
                 </Show>
               </div>
             </Show>
-            <Show when={store[index].typeJS === "boolean"}>
+            <Show when={store[index].type=== "boolean"}>
               <div>
                 <h1>default:</h1>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "sm", variant: "outline" })}`}
-                  value={store[index].default}
+                  value={store[index].default_value}
                 >
                   <For each={["true", "false"]}>
                     {(option) => (
@@ -254,7 +255,7 @@ export function FormNewAttribute(props: Props) {
                         class={`${toggleVariants({ size: "sm" })}`}
                         value={option}
                         onClick={() => {
-                          setStore([index], "default", option);
+                          setStore([index], "default_value", option);
                         }}
                       >
                         {option}

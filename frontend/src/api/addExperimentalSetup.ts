@@ -1,10 +1,13 @@
 import { backendUrl } from "~/db";
+import { TableAttribute } from "~/types/db";
+import { cleanAttributes } from "~/utils/db";
 
 export async function addExperimentalSetup(
-  data: Record<string, any>,
+  data: TableAttribute[],
   experimentId: number,
   tableName: string,
 ) {
+
   const response = await fetch(
     `${backendUrl}/api/experiment/${experimentId}/${tableName}`,
     {
@@ -12,7 +15,7 @@ export async function addExperimentalSetup(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(cleanAttributes(data)),
     },
   );
   if (!response.ok) {

@@ -74,15 +74,18 @@ def add_experiment(db):
     db.commit()
     return cursor.lastrowid
 
-def add_attribute(db, name, type, table, experiment_id):
+def add_attribute(db, name, label, type, custom, autofill, required, min, max, choices, default_value, table, experiment_id):
     """Add a new attribute to a given table
     
         Returns: The ID of the newly created experiment
     """
+    print('add_attribute')
     cursor = db.execute(
-        f'INSERT INTO {table} (name, type, experiment_id) VALUES (?, ?, ?)',
-        (name, type, experiment_id)
+        f'INSERT INTO {table} (name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) '
+        'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id)
     )
+    print('execute')
     db.commit()
     return cursor.lastrowid
 

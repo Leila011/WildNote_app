@@ -2,10 +2,8 @@ import { useNavigate, useParams } from "@solidjs/router";
 import { createEffect, createResource, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
-import { Form } from "~/components/Form";
 import { Button } from "~/components/ui/button";
-import { TableAttribute } from "~/types/Form";
-import { sqlToJsType } from "~/utils/typeConvertion";
+import { TableAttribute } from "~/types/db";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
 import { newAttribute } from "~/utils/newAttribute";
@@ -27,16 +25,16 @@ export default function NewSample() {
   const [store, setStore] = createStore<TableAttribute[]>([
  {...newAttribute} 
   ]);
-
+createEffect(() => {
+  console.log(store);
+})
   const handleSubmit = async () => {
     addExperimentalSetup(
       [...store],
       Number(params.experimentId),
       "sample"
     );
-    createEffect(() => {
-      console.log(params.experimentId);
-    })
+
     navigate(
       `/newExperiment/${params.experimentId}/observationSetup`,
     );

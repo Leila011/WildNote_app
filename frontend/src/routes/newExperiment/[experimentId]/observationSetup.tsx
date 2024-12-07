@@ -3,7 +3,7 @@ import { createEffect, createResource, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Button } from "~/components/ui/button";
-import { TableAttribute } from "~/types/Form";
+import { TableAttribute } from "~/types/db";
 import { sqlToJsType } from "~/utils/typeConvertion";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";

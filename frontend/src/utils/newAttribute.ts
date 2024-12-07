@@ -1,14 +1,14 @@
-import { TableAttribute } from "~/types/Form"
+import { TableAttribute } from "~/types/db"
 
 export const newAttribute:TableAttribute = {
     name: "",
+    label: "",
     type: "",
-    typeJS: "",
     autofill: false,
-    min: undefined,
-    max: undefined,
+    min: null,
+    max: null,
     choices: [],
-    default: undefined,
+    default_value: null,
     custom: true,
     required: false,
   };

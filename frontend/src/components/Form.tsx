@@ -10,7 +10,7 @@ import {
 import { IconChevronDown } from "~/components/icons";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { toggleVariants } from "~/components/ui/toggle";
-import { TableAttribute, TableAttributeValue } from "~/types/Form";
+import { TableAttribute, TableAttributeValue } from "~/types/db";
 import {
   NumberField,
   NumberFieldDecrementTrigger,

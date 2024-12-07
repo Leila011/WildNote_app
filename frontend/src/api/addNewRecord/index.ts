@@ -8,7 +8,7 @@
 import { addNewRecord } from "~/api/addNewRecord/addNewRecord";
 import { unwrap } from "solid-js/store";
 import { setAttribute } from "solid-js/web";
-import { TableAttribute } from "~/types/Form";
+import { TableAttribute } from "~/types/db";
 
 export async function addNewRecordAll(
   store: Record<string, any>,

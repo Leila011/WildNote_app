@@ -4,7 +4,7 @@ import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
 import { Form } from "~/components/Form";
 import { Button } from "~/components/ui/button";
-import { TableAttribute } from "~/types/Form";
+import { TableAttribute } from "~/types/db";
 import { sqlToJsType } from "~/utils/typeConvertion";
 import { addNewExperiment } from "~/api/addNewExperiment";
 
@@ -26,7 +26,7 @@ export default function NewExperiment() {
   const handleSubmit = async () => {
     setStore((prevStore) =>
       prevStore.map((attribute) =>
-        attribute.name === "Creation_Date"
+        attribute.name === "creation_date"
           ? { ...attribute, value: Date.now() }
           : attribute,
       ),

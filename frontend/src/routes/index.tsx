@@ -6,7 +6,7 @@ export default function Home() {
       <a href={"/Experiments"}>View all</a>
       <a
         class="bg-black text-white hover:text-blue-800"
-        href={"/experimentSetup"}
+        href={"/newExperiment"}
       >
         Add a new experiment
       </a>
