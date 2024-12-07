@@ -53,12 +53,14 @@ def create_app(test_config=None):
 
             # add the value of the predefined attributes for the experiment
             for attribute in data:
-                print(attribute)
                 attribute_id = db.add_attribute(con, attribute['name'], attribute['type'], 'experiment_attributes', experiment_id)
-                db.add_value(con, attribute['value'], attribute_id, 'experiment_attributes')
+                print(attribute_id)
+
+                db.add_value(con, attribute['value'], attribute_id, 'experiment_attribute_values')
             return jsonify({"message": "Experiment added successfully"}), 200
     
         except Exception as e:
+            con.rollback()
             return jsonify({"error": str(e)}), 500
 
     # define the structure of the the sample
@@ -87,6 +89,7 @@ def create_app(test_config=None):
             return jsonify({"message": "Sample added successfully"}), 200
     
         except Exception as e:
+            con.rollback()
             return jsonify({"error": str(e)}), 500
 
     # define the structure of a subject 
@@ -115,6 +118,7 @@ def create_app(test_config=None):
             return jsonify({"message": "Subject added successfully"}), 200
     
         except Exception as e:
+            con.rollback()
             return jsonify({"error": str(e)}), 500
 
     # define the structure of an observation
@@ -143,6 +147,7 @@ def create_app(test_config=None):
             return jsonify({"message": "Observation added successfully"}), 200
 
         except Exception as e:
+            con.rollback()
             return jsonify({"error": str(e)}), 500
         
     ############### add a attributes value to a table ###################
@@ -163,6 +168,7 @@ def create_app(test_config=None):
             return jsonify({"message": "Attributes values added successfully"}), 200
         
         except Exception as e:
+            con.rollback()
             return jsonify({"error": str(e)}), 500
 
     ############ retrieve all records from a table (attribute + value) ############
