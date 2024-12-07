@@ -12,14 +12,24 @@ import { addNewExperiment } from "~/api/addNewExperiment";
  * A page for creating a new experiment
  * It takes as input the predetermined attributes and columns of the experiment table
  * It renders a form with the predetermined attributes with autofill is false and columns (manually filtered)
+ * Submitting the data will return the id of the new experiment and redirect to the sampleSetup page
  * @input columns: The columns of the experiment table
  * @input attributes: The predefied attributes of the experiment table
+ * @output experiment_id: The id of the new experiment
  **/
 export default function NewExperiment() {
     const navigate = useNavigate();
     const [data] = createResource(() => fetchAttributeDescriptionsExperiments())
     const [store, setStore] = createStore<TableAttribute[]>([]);
     const [storeAutofill, setStoreAutofill] = createStore<TableAttribute[]>([]);
+
+    const handleSubmit = async () => {
+      setStore(prevStore => prevStore.map(attribute =>
+        attribute.name === "Creation_Date" ? { ...attribute, value: Date.now() } : attribute
+      ));
+      const response = await addNewExperiment([...store, ...storeAutofill]);
+      navigate(`/newExperiment/${response.experiment_id}/sampleSetup`);
+    };
 
     createEffect(() => {
       if (data()) {
@@ -40,16 +50,7 @@ export default function NewExperiment() {
               store={store}
               setStore={setStore}>
         </Form>}  
-        <Button onClick={()=>{
-          const creation_date = data().attributes.filter((attribute: TableAttribute) => {attribute.name = "Creation_Date"})
-         
-           setStoreAutofill(prevStore => prevStore.map(attribute =>
-            attribute.name === "Creation_Date" ? { ...attribute, value: Date.now() } : attribute
-          ))
-          const experiment_id = addNewExperiment([...store, ...storeAutofill]);
-          console.log("experiment_id", experiment_id)
-            navigate(`/newExperiment/${experiment_id}`);	
-            }}>Submit</Button>
+        <Button onClick={handleSubmit}>Submit</Button>
         </div>
     );
 }

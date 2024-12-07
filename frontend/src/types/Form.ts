@@ -7,9 +7,8 @@ export type TableAttribute = {
     min?: number;
     max?: number;
     choices?: string[];
-    multiple?: boolean;
-    example?: string | string[];
     autofill?: boolean;
+    default?: any;
   };
 
   export type TableAttributeValue = {
