@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "@solidjs/router";
 import { createEffect, createResource, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import { fetchAttributeDescriptions} from "~/api/fetchAttributeDescriptions";
-import {Form} from "~/components/Form";
+import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
+import { Form } from "~/components/Form";
 import { Button } from "~/components/ui/button";
-import {TableAttribute} from "~/types/Form";
-import {sqlToJsType} from "~/utils/typeConvertion";
+import { TableAttribute } from "~/types/Form";
+import { sqlToJsType } from "~/utils/typeConvertion";
 import { addSampleSetup } from "~/api/addSampleSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
 
@@ -19,31 +19,50 @@ import { FormNewAttribute } from "~/components/FormNewAttribute";
  * @output The sample_id of the new sample
  **/
 export default function NewSample() {
-    const params = useParams();
-    const navigate = useNavigate();
-    const [data] = createResource(() => fetchAttributeDescriptions("sample", Number(params.experimentId)))
-    const [store, setStore] = createStore<TableAttribute[]>([{name: "", type: "", typeJS: "", autofill: false, min: undefined, max: undefined, choices: []}]);
+  const params = useParams();
+  const navigate = useNavigate();
+  const [data] = createResource(() =>
+    fetchAttributeDescriptions("sample", Number(params.experimentId)),
+  );
+  const [store, setStore] = createStore<TableAttribute[]>([
+    {
+      name: "",
+      type: "",
+      typeJS: "",
+      autofill: false,
+      min: undefined,
+      max: undefined,
+      choices: [],
+    },
+  ]);
 
-    const handleSubmit = async () => {
-      const response = await addSampleSetup([...store],Number(params.experimentId) );
-      navigate(`/newExperiment/${params.experiment_id}/sample/${response.sample_id}/observationSetup`);
-    };
+  const handleSubmit = async () => {
+    const response = await addSampleSetup(
+      [...store],
+      Number(params.experimentId),
+    );
+    navigate(
+      `/newExperiment/${params.experiment_id}/sample/${response.sample_id}/observationSetup`,
+    );
+  };
 
-    createEffect(() => {
-      if (data()) {
-          const attributesAugmented = data().attributes.map((attribute: TableAttribute) => ({
+  createEffect(() => {
+    if (data()) {
+      const attributesAugmented = data().attributes.map(
+        (attribute: TableAttribute) =>
+          ({
             ...attribute,
             typeJS: sqlToJsType(attribute.type),
-            value: ""
-          })as TableAttribute);
+            value: "",
+          }) as TableAttribute,
+      );
+    }
+  });
 
-      }
-    });
-
-    return (
-        <div>
-        <FormNewAttribute store={store} setStore={setStore}/>
-        <Button onClick={handleSubmit}>Submit</Button>
-        </div>
-    );
+  return (
+    <div>
+      <FormNewAttribute store={store} setStore={setStore} />
+      <Button onClick={handleSubmit}>Submit</Button>
+    </div>
+  );
 }

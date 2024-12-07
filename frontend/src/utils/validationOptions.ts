@@ -1,1 +1,1 @@
-export const validationOptions = ["required", "min", "max", "choices"]
+export const validationOptions = ["required", "min", "max", "choices"];

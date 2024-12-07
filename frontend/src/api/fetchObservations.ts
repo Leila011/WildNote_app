@@ -1,4 +1,3 @@
-
 /**
  * Fetches the complete list of samples from the backend for a given experiment id
  * @param id the experiment id
@@ -8,15 +7,17 @@
 
 import { backendUrl } from "~/db";
 
-  export async function fetchObservations(sampleId: number): Promise<any[]> {
-    try {
-      const response = await fetch(`${backendUrl}/api/samples/${sampleId}/observations`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch observations: ${response.statusText}`);
-      }
-      const data: any[] = await response.json();
-      return data;
-    } catch (error) {
-      throw error;
+export async function fetchObservations(sampleId: number): Promise<any[]> {
+  try {
+    const response = await fetch(
+      `${backendUrl}/api/samples/${sampleId}/observations`,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch observations: ${response.statusText}`);
     }
+    const data: any[] = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
   }
+}

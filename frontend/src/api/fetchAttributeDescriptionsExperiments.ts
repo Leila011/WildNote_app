@@ -10,7 +10,9 @@ export async function fetchAttributeDescriptionsExperiments(): Promise<any> {
   try {
     const response = await fetch(`${backendUrl}/api/attributes/experiments`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch attributes descriptions: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch attributes descriptions: ${response.statusText}`,
+      );
     }
     const data: any[] = await response.json();
     return data;

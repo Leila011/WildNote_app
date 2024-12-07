@@ -1,10 +1,14 @@
-import { TextField, TextFieldErrorMessage, TextFieldInput } from "./ui/text-field";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-  } from "~/components/ui/dropdown-menu";
+  TextField,
+  TextFieldErrorMessage,
+  TextFieldInput,
+} from "./ui/text-field";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { IconChevronDown } from "~/components/icons";
 import { Button } from "./ui/button";
 import { createEffect, For, Index, Show } from "solid-js";
@@ -14,66 +18,70 @@ import { typeOptions } from "~/utils/typeOptions";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { validationOptions } from "~/utils/validationOptions";
 import {
-    NumberField,
-    NumberFieldDecrementTrigger,
-    NumberFieldErrorMessage,
-    NumberFieldIncrementTrigger,
-    NumberFieldInput,
-  } from "~/components/ui/number-field";
+  NumberField,
+  NumberFieldDecrementTrigger,
+  NumberFieldErrorMessage,
+  NumberFieldIncrementTrigger,
+  NumberFieldInput,
+} from "~/components/ui/number-field";
 import { toggleVariants } from "./ui/toggle";
 
-type Props={
-    store: TableAttribute[],
-    setStore: SetStoreFunction<TableAttribute[]>
-}
+type Props = {
+  store: TableAttribute[];
+  setStore: SetStoreFunction<TableAttribute[]>;
+};
 
 export function FormNewAttribute(props: Props) {
-    const {store, setStore} = props;
-    const handleAddAttribute = () => {
-        const newAttribute = {name: "", type: "", typeJS: "", autofill: false, min: undefined, max: undefined, choices: []}
-        setStore(prev => [...prev, newAttribute] );	
-    }
+  const { store, setStore } = props;
+  const handleAddAttribute = () => {
+    const newAttribute = {
+      name: "",
+      type: "",
+      typeJS: "",
+      autofill: false,
+      min: undefined,
+      max: undefined,
+      choices: [],
+    };
+    setStore((prev) => [...prev, newAttribute]);
+  };
 
-    const handleAddChoice = (index:number) => {
-        setStore([index], "choices", choice => 
-            choice === undefined ? [""]: [...choice, ""] )	
-    }
+  const handleAddChoice = (index: number) => {
+    setStore([index], "choices", (choice) =>
+      choice === undefined ? [""] : [...choice, ""],
+    );
+  };
 
-    createEffect(() => {
-        console.log(store)
-    })
-    
-    return (
-        <div>
-        <Index each={store}>
-            {(attribute, index) => (
-                       <div class="flex flex-row space-x-1">
+  createEffect(() => {
+    console.log(store);
+  });
 
-                <div>
-          <h1>name:</h1>      
-          <TextField
+  return (
+    <div>
+      <Index each={store}>
+        {(attribute, index) => (
+          <div class="flex flex-row space-x-1">
+            <div>
+              <h1>name:</h1>
+              <TextField
                 value={store[index].name}
-
                 onChange={(e: any) => {
-                  const value = (e === "" ? null : e);
+                  const value = e === "" ? null : e;
                   setStore([index], "name", value);
                 }}
-            
               >
                 <TextFieldInput
                   type={"text"}
-                  placeholder={
-                    "Attribute name"
-                  }
+                  placeholder={"Attribute name"}
                   class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
                 />
                 <TextFieldErrorMessage>
                   This parameter is required, a value must be given.
                 </TextFieldErrorMessage>
               </TextField>
-              </div>
-              <div>
-                <h1>type:</h1>
+            </div>
+            <div>
+              <h1>type:</h1>
               <DropdownMenu>
                 <DropdownMenuTrigger
                   as={Button<"button">}
@@ -87,200 +95,189 @@ export function FormNewAttribute(props: Props) {
                   <For each={typeOptions}>
                     {(choice) => (
                       <DropdownMenuItem
-                        onSelect={() => 
-                            setStore([index], "typeJS", choice)
-
-                        }
-                        >
+                        onSelect={() => setStore([index], "typeJS", choice)}
+                      >
                         <span>{choice}</span>
                       </DropdownMenuItem>
                     )}
                   </For>
                 </DropdownMenuContent>
               </DropdownMenu>
-              </div>
+            </div>
 
-              <Show when={store[index].typeJS === "number"}>
-                    <div class="flex flex-row space-x-1">
-                <div >
-                <h1>min:</h1>
-              <NumberField
-                rawValue={store[index].min}
-                onRawValueChange={(e: any) => {
-                  const value = Number.isNaN(e) ? null : e;
-                  setStore([index], "min", value);
-                }}
-              >
-                <div class="relative">
-                  <NumberFieldInput
-                    class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                  />
-                  <NumberFieldIncrementTrigger />
-                  <NumberFieldDecrementTrigger />
-                </div>
-              </NumberField>
-              </div>
-              <div>
-                <h1>max:</h1>
-              <NumberField
-                rawValue={store[index].max}
-                onRawValueChange={(e: any) => {
-                  const value = Number.isNaN(e) ? null : e;
-                  setStore([index], "max", value);
-                }}
-              >
-                <div class="relative">
-                  <NumberFieldInput
-                    class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                  />
-                  <NumberFieldIncrementTrigger />
-                  <NumberFieldDecrementTrigger />
-                </div>
-                
-              </NumberField>
-                </div>  
-              <div>
-              <h1>default:</h1>
-              <NumberField
-                rawValue={store[index].default}
-                onRawValueChange={(e: any) => {
-                  const value = Number.isNaN(e) ? null : e;
-                  setStore([index], "default", value);
-                }}
-                minValue={
-                    "min" in store[index] && store[index].min !== undefined
-                      ? +store[index].min
-                      : Number.MIN_SAFE_INTEGER
-                  }
-                  maxValue={
-                    "max"  in store[index] && store[index].max !== undefined
-                      ? +store[index].max
-                      : Number.MAX_SAFE_INTEGER
-                  }
-              >
-                <div class="relative">
-                  <NumberFieldInput
-                    class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                  />
-                  <NumberFieldIncrementTrigger />
-                  <NumberFieldDecrementTrigger />
-                </div>
-              </NumberField>
-              </div>
-              </div>
-                </Show>
-                <Show when={store[index].typeJS === "string"}>
+            <Show when={store[index].typeJS === "number"}>
+              <div class="flex flex-row space-x-1">
                 <div>
+                  <h1>min:</h1>
+                  <NumberField
+                    rawValue={store[index].min}
+                    onRawValueChange={(e: any) => {
+                      const value = Number.isNaN(e) ? null : e;
+                      setStore([index], "min", value);
+                    }}
+                  >
+                    <div class="relative">
+                      <NumberFieldInput
+                        class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                      />
+                      <NumberFieldIncrementTrigger />
+                      <NumberFieldDecrementTrigger />
+                    </div>
+                  </NumberField>
+                </div>
+                <div>
+                  <h1>max:</h1>
+                  <NumberField
+                    rawValue={store[index].max}
+                    onRawValueChange={(e: any) => {
+                      const value = Number.isNaN(e) ? null : e;
+                      setStore([index], "max", value);
+                    }}
+                  >
+                    <div class="relative">
+                      <NumberFieldInput
+                        class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                      />
+                      <NumberFieldIncrementTrigger />
+                      <NumberFieldDecrementTrigger />
+                    </div>
+                  </NumberField>
+                </div>
+                <div>
+                  <h1>default:</h1>
+                  <NumberField
+                    rawValue={store[index].default}
+                    onRawValueChange={(e: any) => {
+                      const value = Number.isNaN(e) ? null : e;
+                      setStore([index], "default", value);
+                    }}
+                    minValue={
+                      "min" in store[index] && store[index].min !== undefined
+                        ? +store[index].min
+                        : Number.MIN_SAFE_INTEGER
+                    }
+                    maxValue={
+                      "max" in store[index] && store[index].max !== undefined
+                        ? +store[index].max
+                        : Number.MAX_SAFE_INTEGER
+                    }
+                  >
+                    <div class="relative">
+                      <NumberFieldInput
+                        class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                      />
+                      <NumberFieldIncrementTrigger />
+                      <NumberFieldDecrementTrigger />
+                    </div>
+                  </NumberField>
+                </div>
+              </div>
+            </Show>
+            <Show when={store[index].typeJS === "string"}>
+              <div>
                 <h1>choices:</h1>
                 <Index each={store[index].choices}>
-                    {(choice, choiceIndex) => (
-                        <div>
-                <TextField
-                value={store[index].choices[choiceIndex] }
-
-                onChange={(e: any) => {
-                  const value = (e === "" ? null : e);
-                  setStore([index], "choices", choiceIndex, value);
-                }}
-            
-              >
-                <TextFieldInput
-                  type={"text"}
-                  placeholder={
-                    "Attribute name"
-                  }
-                  class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                />
-                <TextFieldErrorMessage>
-                  This parameter is required, a value must be given.
-                </TextFieldErrorMessage>
-              </TextField>
-              </div>
-                    )}
+                  {(choice, choiceIndex) => (
+                    <div>
+                      <TextField
+                        value={store[index].choices[choiceIndex]}
+                        onChange={(e: any) => {
+                          const value = e === "" ? null : e;
+                          setStore([index], "choices", choiceIndex, value);
+                        }}
+                      >
+                        <TextFieldInput
+                          type={"text"}
+                          placeholder={"Attribute name"}
+                          class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                        />
+                        <TextFieldErrorMessage>
+                          This parameter is required, a value must be given.
+                        </TextFieldErrorMessage>
+                      </TextField>
+                    </div>
+                  )}
                 </Index>
-                <Button onClick={()=>handleAddChoice(index)}>Add a new choice</Button>
-
-                </div>
-                <div>
+                <Button onClick={() => handleAddChoice(index)}>
+                  Add a new choice
+                </Button>
+              </div>
+              <div>
                 <h1>default:</h1>
                 <Show when={store[index].choices.length > 0}>
-                <DropdownMenu>
-                <DropdownMenuTrigger
-                  as={Button<"button">}
-                  variant={"ghost"}
-                  class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
-                >
-                  <div class="flex-grow text-left">{store[index].default}</div>
-                  <IconChevronDown />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <For each={store[index].choices}>
-                    {(choice) => (
-                      <DropdownMenuItem
-                        onSelect={() => 
-                            setStore([index], "default", choice)
-
-                        }
-                        >
-                        <span>{choice}</span>
-                      </DropdownMenuItem>
-                    )}
-                  </For>
-                </DropdownMenuContent>
-              </DropdownMenu>
-                </Show>
-                <Show when={store[index].choices.length === 0}>
-                <TextField
-                value={store[index].default }
-
-                onChange={(e: any) => {
-                  const value = (e === "" ? null : e);
-                  setStore([index], "default", value);
-                }}
-            
-              >
-                <TextFieldInput
-                  type={"text"}
-                  placeholder={
-                    "Attribute name"
-                  }
-                  class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                />
-                <TextFieldErrorMessage>
-                  This parameter is required, a value must be given.
-                </TextFieldErrorMessage>
-              </TextField>
-              </Show>
-                </div>
-                </Show>
-                <Show when={store[index].typeJS === "boolean"}>
-                    <div>
-                <h1>default:</h1>
-                <ToggleGroup
-                      class={`${toggleVariants({ size: "sm", variant: "outline" })}`}
-                      value={store[index].default}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      as={Button<"button">}
+                      variant={"ghost"}
+                      class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
                     >
-                      <For each={["true", "false"]}>
-                        {(option) => (
-                          <ToggleGroupItem
-                            class={`${toggleVariants({ size: "sm" })}`}
-                            value={option}
-                            onClick={() => {
-                                setStore([index], "default", option);
-                            }}
+                      <div class="flex-grow text-left">
+                        {store[index].default}
+                      </div>
+                      <IconChevronDown />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <For each={store[index].choices}>
+                        {(choice) => (
+                          <DropdownMenuItem
+                            onSelect={() =>
+                              setStore([index], "default", choice)
+                            }
                           >
-                            {option}
-                          </ToggleGroupItem>
+                            <span>{choice}</span>
+                          </DropdownMenuItem>
                         )}
                       </For>
-                    </ToggleGroup>
-                    </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </Show>
-                
+                <Show when={store[index].choices.length === 0}>
+                  <TextField
+                    value={store[index].default}
+                    onChange={(e: any) => {
+                      const value = e === "" ? null : e;
+                      setStore([index], "default", value);
+                    }}
+                  >
+                    <TextFieldInput
+                      type={"text"}
+                      placeholder={"Attribute name"}
+                      class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                    />
+                    <TextFieldErrorMessage>
+                      This parameter is required, a value must be given.
+                    </TextFieldErrorMessage>
+                  </TextField>
+                </Show>
               </div>
-                )}
-        </Index>
-        <Button onClick={handleAddAttribute}>Add a new attribute</Button>
-        </div>
-    );
+            </Show>
+            <Show when={store[index].typeJS === "boolean"}>
+              <div>
+                <h1>default:</h1>
+                <ToggleGroup
+                  class={`${toggleVariants({ size: "sm", variant: "outline" })}`}
+                  value={store[index].default}
+                >
+                  <For each={["true", "false"]}>
+                    {(option) => (
+                      <ToggleGroupItem
+                        class={`${toggleVariants({ size: "sm" })}`}
+                        value={option}
+                        onClick={() => {
+                          setStore([index], "default", option);
+                        }}
+                      >
+                        {option}
+                      </ToggleGroupItem>
+                    )}
+                  </For>
+                </ToggleGroup>
+              </div>
+            </Show>
+          </div>
+        )}
+      </Index>
+      <Button onClick={handleAddAttribute}>Add a new attribute</Button>
+    </div>
+  );
 }

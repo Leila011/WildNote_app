@@ -2,10 +2,10 @@ import { useNavigate, useParams } from "@solidjs/router";
 import { createEffect, createResource, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
-import {Form} from "~/components/Form";
+import { Form } from "~/components/Form";
 import { Button } from "~/components/ui/button";
-import {TableAttribute} from "~/types/Form";
-import {sqlToJsType} from "~/utils/typeConvertion";
+import { TableAttribute } from "~/types/Form";
+import { sqlToJsType } from "~/utils/typeConvertion";
 import { addNewExperiment } from "~/api/addNewExperiment";
 
 /**
@@ -18,39 +18,51 @@ import { addNewExperiment } from "~/api/addNewExperiment";
  * @output experiment_id: The id of the new experiment
  **/
 export default function NewExperiment() {
-    const navigate = useNavigate();
-    const [data] = createResource(() => fetchAttributeDescriptionsExperiments())
-    const [store, setStore] = createStore<TableAttribute[]>([]);
-    const [storeAutofill, setStoreAutofill] = createStore<TableAttribute[]>([]);
+  const navigate = useNavigate();
+  const [data] = createResource(() => fetchAttributeDescriptionsExperiments());
+  const [store, setStore] = createStore<TableAttribute[]>([]);
+  const [storeAutofill, setStoreAutofill] = createStore<TableAttribute[]>([]);
 
-    const handleSubmit = async () => {
-      setStore(prevStore => prevStore.map(attribute =>
-        attribute.name === "Creation_Date" ? { ...attribute, value: Date.now() } : attribute
-      ));
-      const response = await addNewExperiment([...store, ...storeAutofill]);
-      navigate(`/newExperiment/${response.experiment_id}/sampleSetup`);
-    };
+  const handleSubmit = async () => {
+    setStore((prevStore) =>
+      prevStore.map((attribute) =>
+        attribute.name === "Creation_Date"
+          ? { ...attribute, value: Date.now() }
+          : attribute,
+      ),
+    );
+    const response = await addNewExperiment([...store, ...storeAutofill]);
+    navigate(`/newExperiment/${response.experiment_id}/sampleSetup`);
+  };
 
-    createEffect(() => {
-      if (data()) {
-          const attributesAugmented = data().attributes.map((attribute: TableAttribute) => ({
+  createEffect(() => {
+    if (data()) {
+      const attributesAugmented = data().attributes.map(
+        (attribute: TableAttribute) =>
+          ({
             ...attribute,
             typeJS: sqlToJsType(attribute.type),
-            value: ""
-          })as TableAttribute);
+            value: "",
+          }) as TableAttribute,
+      );
 
-        setStore(attributesAugmented.filter((attribute: TableAttribute) => attribute.autofill === false))
-        setStoreAutofill(attributesAugmented.filter((attribute: TableAttribute) => attribute.autofill === true));
-      }
-    });
+      setStore(
+        attributesAugmented.filter(
+          (attribute: TableAttribute) => attribute.autofill === false,
+        ),
+      );
+      setStoreAutofill(
+        attributesAugmented.filter(
+          (attribute: TableAttribute) => attribute.autofill === true,
+        ),
+      );
+    }
+  });
 
-    return (
-        <div>
-           {store.length && <Form
-              store={store}
-              setStore={setStore}>
-        </Form>}  
-        <Button onClick={handleSubmit}>Submit</Button>
-        </div>
-    );
+  return (
+    <div>
+      {store.length && <Form store={store} setStore={setStore}></Form>}
+      <Button onClick={handleSubmit}>Submit</Button>
+    </div>
+  );
 }

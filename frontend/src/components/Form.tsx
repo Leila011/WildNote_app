@@ -61,7 +61,10 @@ export function isValid(argConfig: TableAttribute, argValue: any): boolean {
  * @param argValue - The value to be validated.
  * @returns `true` if the value is within the specified range, otherwise `false`.
  */
-export function isValidNumber(argConfig: TableAttribute, argValue: any): boolean {
+export function isValidNumber(
+  argConfig: TableAttribute,
+  argValue: any,
+): boolean {
   const isBelowMin =
     "min" in argConfig &&
     argConfig.min !== undefined &&
@@ -86,8 +89,6 @@ export function invalidNumberMessage(argConfig: TableAttribute): string {
 
   return `Parameter value must be ${minText}${minMaxText}${maxText}`;
 }
-
-
 
 /**
  * Generates the options for the boolean toggle based on the parameter config.
@@ -121,14 +122,14 @@ export function booleanToggleOptions(
 }
 
 export const Form = (props: Props) => {
-  const {store, setStore } = props;
+  const { store, setStore } = props;
 
   const handleChange = (name: string, value: any) => {
     console.log(name, value);
-    setStore(prevStore =>
-      prevStore.map(attribute =>
-        attribute.name === name ? { ...attribute, value } : attribute
-      )
+    setStore((prevStore) =>
+      prevStore.map((attribute) =>
+        attribute.name === name ? { ...attribute, value } : attribute,
+      ),
     );
     console.log(store);
   };
@@ -138,13 +139,11 @@ export const Form = (props: Props) => {
     field: TableAttribute,
     key: string,
     store: TableAttribute[],
-    handleChange: (name: string, value: any) => void
-
+    handleChange: (name: string, value: any) => void,
   ) => {
     return (
       <div class="flex flex-row">
         <div class="flex flex-col w-full">
-    
           <Switch>
             {/* Dropdown */}
             <Match when={"choices" in field}>
@@ -152,19 +151,22 @@ export const Form = (props: Props) => {
                 <DropdownMenuTrigger
                   as={Button<"button">}
                   variant={"ghost"}
-                  class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start ${isValid(field, store.filter(attribute => attribute.name === key)[0].value) ? "border-secondary" : "border-warning-foreground"} w-full`}
+                  class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start ${isValid(field, store.filter((attribute) => attribute.name === key)[0].value) ? "border-secondary" : "border-warning-foreground"} w-full`}
                 >
-                  <div class="flex-grow text-left">{store.filter(attribute => attribute.name === key)[0].value}</div>
+                  <div class="flex-grow text-left">
+                    {
+                      store.filter((attribute) => attribute.name === key)[0]
+                        .value
+                    }
+                  </div>
                   <IconChevronDown />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <For each={"choices" in field ? field.choices : []}>
                     {(choice) => (
                       <DropdownMenuItem
-                        onSelect={() => 
-                          handleChange(key, choice)
-                        }
-                        >
+                        onSelect={() => handleChange(key, choice)}
+                      >
                         <span>{choice}</span>
                       </DropdownMenuItem>
                     )}
@@ -174,20 +176,33 @@ export const Form = (props: Props) => {
             </Match>
 
             {/* Number input */}
-            <Match
-              when={
-                field.typeJS === "number" 
-              }
-            >
+            <Match when={field.typeJS === "number"}>
               <NumberField
-                rawValue={Array.isArray(store.filter(attribute => attribute.name === key)[0].value) ? store.filter(attribute => attribute.name === key)[0].value[0] : store.filter(attribute => attribute.name === key)[0].value}
+                rawValue={
+                  Array.isArray(
+                    store.filter((attribute) => attribute.name === key)[0]
+                      .value,
+                  )
+                    ? store.filter((attribute) => attribute.name === key)[0]
+                        .value[0]
+                    : store.filter((attribute) => attribute.name === key)[0]
+                        .value
+                }
                 onRawValueChange={(e: any) => {
                   const value = Number.isNaN(e) ? null : e;
                   handleChange(key, value);
                 }}
                 validationState={
-                  isValid(field, store.filter(attribute => attribute.name === key)[0].value) &&
-                  isValidNumber(field, store.filter(attribute => attribute.name === key)[0].value)
+                  isValid(
+                    field,
+                    store.filter((attribute) => attribute.name === key)[0]
+                      .value,
+                  ) &&
+                  isValidNumber(
+                    field,
+                    store.filter((attribute) => attribute.name === key)[0]
+                      .value,
+                  )
                     ? "valid"
                     : "invalid"
                 }
@@ -209,12 +224,28 @@ export const Form = (props: Props) => {
                   <NumberFieldIncrementTrigger />
                   <NumberFieldDecrementTrigger />
                 </div>
-                <Show when={!isValidNumber(field, store.filter(attribute => attribute.name === key)[0].value)}>
+                <Show
+                  when={
+                    !isValidNumber(
+                      field,
+                      store.filter((attribute) => attribute.name === key)[0]
+                        .value,
+                    )
+                  }
+                >
                   <NumberFieldErrorMessage>
                     {invalidNumberMessage(field)}
                   </NumberFieldErrorMessage>
                 </Show>
-                <Show when={!isValid(field, store.filter(attribute => attribute.name === key)[0].value)}>
+                <Show
+                  when={
+                    !isValid(
+                      field,
+                      store.filter((attribute) => attribute.name === key)[0]
+                        .value,
+                    )
+                  }
+                >
                   <NumberFieldErrorMessage>
                     This parameter is required, a value must be given.
                   </NumberFieldErrorMessage>
@@ -223,18 +254,31 @@ export const Form = (props: Props) => {
             </Match>
 
             {/* Text input */}
-            <Match
-              when={field.typeJS === "string"}
-            >
+            <Match when={field.typeJS === "string"}>
               <TextField
-                value={Array.isArray(store.filter(attribute => attribute.name === key)[0].value) ? store.filter(attribute => attribute.name === key)[0].value.join(", ") : store.filter(attribute => attribute.name === key)[0].value}
-
+                value={
+                  Array.isArray(
+                    store.filter((attribute) => attribute.name === key)[0]
+                      .value,
+                  )
+                    ? store
+                        .filter((attribute) => attribute.name === key)[0]
+                        .value.join(", ")
+                    : store.filter((attribute) => attribute.name === key)[0]
+                        .value
+                }
                 onChange={(e: any) => {
-                  const value = (e === "" ? null : e);
+                  const value = e === "" ? null : e;
                   handleChange(key, value);
                 }}
                 validationState={
-                  isValid(field, store.filter(attribute => attribute.name === key)[0].value) ? "valid" : "invalid"
+                  isValid(
+                    field,
+                    store.filter((attribute) => attribute.name === key)[0]
+                      .value,
+                  )
+                    ? "valid"
+                    : "invalid"
                 }
               >
                 <TextFieldInput
@@ -255,23 +299,21 @@ export const Form = (props: Props) => {
             </Match>
 
             {/* Boolean toggle */}
-            <Match
-              when={
-                field.typeJS === "boolean"
-              }
-            >
+            <Match when={field.typeJS === "boolean"}>
               <div>
                 {/* Toggle button */}
                 <ToggleGroup
                   class={`${toggleVariants({ size: "sm", variant: "outline" })} bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start border-secondary w-full md:w-auto`}
-                  value={store.filter(attribute => attribute.name === key)[0].value?.toString()}
+                  value={store
+                    .filter((attribute) => attribute.name === key)[0]
+                    .value?.toString()}
                 >
                   <For each={booleanToggleOptions(field)}>
                     {(option) => (
                       <ToggleGroupItem
                         class={`${toggleVariants({ size: "sm" })}`}
                         value={option.value.toString()}
-                        onClick={() =>   handleChange(key, option.value)}
+                        onClick={() => handleChange(key, option.value)}
                       >
                         {option.name}
                       </ToggleGroupItem>
@@ -297,154 +339,211 @@ export const Form = (props: Props) => {
               {/* Argument name */}
               <div
                 class={`col-span-12 md:col-span-3 mr-2 flex ${field().multiple ? "items-start mt-6" : "items-center"} break-all`}
-              >
-              </div>
+              ></div>
 
               {/* Argument input field(s) */}
               <div class="md:col-span-8 col-span-12 space-y-2 mr-2">
                 <p class="text-sm text-secondary">{field().name}</p>
                 <div class="flex flex-row">
-        <div class="flex flex-col w-full">
-    
-          <Switch>
-            {/* Dropdown */}
-            <Match when={"choices" in field}>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  as={Button<"button">}
-                  variant={"ghost"}
-                  class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start ${isValid(field(), store.filter(attribute => attribute.name === key)[0].value) ? "border-secondary" : "border-warning-foreground"} w-full`}
-                >
-                  <div class="flex-grow text-left">{store.filter(attribute => attribute.name === key)[0].value}</div>
-                  <IconChevronDown />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <For each={"choices" in field() ? field().choices : []}>
-                    {(choice) => (
-                      <DropdownMenuItem
-                        onSelect={() => 
-                          handleChange(key, choice)
-                        }
+                  <div class="flex flex-col w-full">
+                    <Switch>
+                      {/* Dropdown */}
+                      <Match when={"choices" in field}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
+                            as={Button<"button">}
+                            variant={"ghost"}
+                            class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start ${isValid(field(), store.filter((attribute) => attribute.name === key)[0].value) ? "border-secondary" : "border-warning-foreground"} w-full`}
+                          >
+                            <div class="flex-grow text-left">
+                              {
+                                store.filter(
+                                  (attribute) => attribute.name === key,
+                                )[0].value
+                              }
+                            </div>
+                            <IconChevronDown />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <For
+                              each={"choices" in field() ? field().choices : []}
+                            >
+                              {(choice) => (
+                                <DropdownMenuItem
+                                  onSelect={() => handleChange(key, choice)}
+                                >
+                                  <span>{choice}</span>
+                                </DropdownMenuItem>
+                              )}
+                            </For>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </Match>
+
+                      {/* Number input */}
+                      <Match when={field().typeJS === "number"}>
+                        <NumberField
+                          rawValue={
+                            Array.isArray(
+                              store.filter(
+                                (attribute) => attribute.name === key,
+                              )[0].value,
+                            )
+                              ? store.filter(
+                                  (attribute) => attribute.name === key,
+                                )[0].value[0]
+                              : store.filter(
+                                  (attribute) => attribute.name === key,
+                                )[0].value
+                          }
+                          onRawValueChange={(e: any) => {
+                            const value = Number.isNaN(e) ? null : e;
+                            handleChange(key, value);
+                          }}
+                          validationState={
+                            isValid(
+                              field(),
+                              store.filter(
+                                (attribute) => attribute.name === key,
+                              )[0].value,
+                            ) &&
+                            isValidNumber(
+                              field(),
+                              store.filter(
+                                (attribute) => attribute.name === key,
+                              )[0].value,
+                            )
+                              ? "valid"
+                              : "invalid"
+                          }
+                          minValue={
+                            "min" in field() && field().min !== undefined
+                              ? +field().min
+                              : Number.MIN_SAFE_INTEGER
+                          }
+                          maxValue={
+                            "max" in field() && field().max !== undefined
+                              ? +field().max
+                              : Number.MAX_SAFE_INTEGER
+                          }
                         >
-                        <span>{choice}</span>
-                      </DropdownMenuItem>
-                    )}
-                  </For>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </Match>
+                          <div class="relative">
+                            <NumberFieldInput
+                              class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                            />
+                            <NumberFieldIncrementTrigger />
+                            <NumberFieldDecrementTrigger />
+                          </div>
+                          <Show
+                            when={
+                              !isValidNumber(
+                                field(),
+                                store.filter(
+                                  (attribute) => attribute.name === key,
+                                )[0].value,
+                              )
+                            }
+                          >
+                            <NumberFieldErrorMessage>
+                              {invalidNumberMessage(field())}
+                            </NumberFieldErrorMessage>
+                          </Show>
+                          <Show
+                            when={
+                              !isValid(
+                                field(),
+                                store.filter(
+                                  (attribute) => attribute.name === key,
+                                )[0].value,
+                              )
+                            }
+                          >
+                            <NumberFieldErrorMessage>
+                              This parameter is required, a value must be given.
+                            </NumberFieldErrorMessage>
+                          </Show>
+                        </NumberField>
+                      </Match>
 
-            {/* Number input */}
-            <Match
-              when={
-                field().typeJS === "number" 
-              }
-            >
-              <NumberField
-                rawValue={Array.isArray(store.filter(attribute => attribute.name === key)[0].value) ? store.filter(attribute => attribute.name === key)[0].value[0] : store.filter(attribute => attribute.name === key)[0].value}
-                onRawValueChange={(e: any) => {
-                  const value = Number.isNaN(e) ? null : e;
-                  handleChange(key, value);
-                }}
-                validationState={
-                  isValid(field(), store.filter(attribute => attribute.name === key)[0].value) &&
-                  isValidNumber(field(), store.filter(attribute => attribute.name === key)[0].value)
-                    ? "valid"
-                    : "invalid"
-                }
-                minValue={
-                  "min" in field() && field().min !== undefined
-                    ? +field().min
-                    : Number.MIN_SAFE_INTEGER
-                }
-                maxValue={
-                  "max" in field() && field().max !== undefined
-                    ? +field().max
-                    : Number.MAX_SAFE_INTEGER
-                }
-              >
-                <div class="relative">
-                  <NumberFieldInput
-                    class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                  />
-                  <NumberFieldIncrementTrigger />
-                  <NumberFieldDecrementTrigger />
+                      {/* Text input */}
+                      <Match when={field().typeJS === "string"}>
+                        <TextField
+                          value={
+                            Array.isArray(
+                              store.filter(
+                                (attribute) => attribute.name === key,
+                              )[0].value,
+                            )
+                              ? store
+                                  .filter(
+                                    (attribute) => attribute.name === key,
+                                  )[0]
+                                  .value.join(", ")
+                              : store.filter(
+                                  (attribute) => attribute.name === key,
+                                )[0].value
+                          }
+                          onChange={(e: any) => {
+                            const value = e === "" ? null : e;
+                            handleChange(key, value);
+                          }}
+                          validationState={
+                            isValid(
+                              field(),
+                              store.filter(
+                                (attribute) => attribute.name === key,
+                              )[0].value,
+                            )
+                              ? "valid"
+                              : "invalid"
+                          }
+                        >
+                          <TextFieldInput
+                            type={"text"}
+                            placeholder={
+                              "example" in field()
+                                ? Array.isArray(field().example)
+                                  ? `example: ${field().example[0]}`
+                                  : `example: ${field().example}`
+                                : ""
+                            }
+                            class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                          />
+                          <TextFieldErrorMessage>
+                            This parameter is required, a value must be given.
+                          </TextFieldErrorMessage>
+                        </TextField>
+                      </Match>
+
+                      {/* Boolean toggle */}
+                      <Match when={field().typeJS === "boolean"}>
+                        <div>
+                          {/* Toggle button */}
+                          <ToggleGroup
+                            class={`${toggleVariants({ size: "sm", variant: "outline" })} bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start border-secondary w-full md:w-auto`}
+                            value={store
+                              .filter((attribute) => attribute.name === key)[0]
+                              .value?.toString()}
+                          >
+                            <For each={booleanToggleOptions(field())}>
+                              {(option) => (
+                                <ToggleGroupItem
+                                  class={`${toggleVariants({ size: "sm" })}`}
+                                  value={option.value.toString()}
+                                  onClick={() =>
+                                    handleChange(key, option.value)
+                                  }
+                                >
+                                  {option.name}
+                                </ToggleGroupItem>
+                              )}
+                            </For>
+                          </ToggleGroup>
+                        </div>
+                      </Match>
+                    </Switch>
+                  </div>
                 </div>
-                <Show when={!isValidNumber(field(), store.filter(attribute => attribute.name === key)[0].value)}>
-                  <NumberFieldErrorMessage>
-                    {invalidNumberMessage(field())}
-                  </NumberFieldErrorMessage>
-                </Show>
-                <Show when={!isValid(field(), store.filter(attribute => attribute.name === key)[0].value)}>
-                  <NumberFieldErrorMessage>
-                    This parameter is required, a value must be given.
-                  </NumberFieldErrorMessage>
-                </Show>
-              </NumberField>
-            </Match>
-
-            {/* Text input */}
-            <Match
-              when={field().typeJS === "string"}
-            >
-              <TextField
-                value={Array.isArray(store.filter(attribute => attribute.name === key)[0].value) ? store.filter(attribute => attribute.name === key)[0].value.join(", ") : store.filter(attribute => attribute.name === key)[0].value}
-
-                onChange={(e: any) => {
-                  const value = (e === "" ? null : e);
-                  handleChange(key, value);
-                }}
-                validationState={
-                  isValid(field(), store.filter(attribute => attribute.name === key)[0].value) ? "valid" : "invalid"
-                }
-              >
-                <TextFieldInput
-                  type={"text"}
-                  placeholder={
-                    "example" in field()
-                      ? Array.isArray(field().example)
-                        ? `example: ${field().example[0]}`
-                        : `example: ${field().example}`
-                      : ""
-                  }
-                  class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                />
-                <TextFieldErrorMessage>
-                  This parameter is required, a value must be given.
-                </TextFieldErrorMessage>
-              </TextField>
-            </Match>
-
-            {/* Boolean toggle */}
-            <Match
-              when={
-                field().typeJS === "boolean"
-              }
-            >
-              <div>
-                {/* Toggle button */}
-                <ToggleGroup
-                  class={`${toggleVariants({ size: "sm", variant: "outline" })} bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start border-secondary w-full md:w-auto`}
-                  value={store.filter(attribute => attribute.name === key)[0].value?.toString()}
-                >
-                  <For each={booleanToggleOptions(field())}>
-                    {(option) => (
-                      <ToggleGroupItem
-                        class={`${toggleVariants({ size: "sm" })}`}
-                        value={option.value.toString()}
-                        onClick={() =>   handleChange(key, option.value)}
-                      >
-                        {option.name}
-                      </ToggleGroupItem>
-                    )}
-                  </For>
-                </ToggleGroup>
-              </div>
-            </Match>
-          </Switch>
-        </div>
-      </div>
-
               </div>
             </div>
           );
