@@ -57,7 +57,7 @@ def create_app(test_config=None):
                 print(attribute_id)
 
                 db.add_value(con, attribute['value'], attribute_id, 'experiment_attribute_values')
-            return jsonify({"message": "Experiment added successfully"}), 200
+            return jsonify({"message": "Experiment added successfully", "experiment_id": experiment_id}), 200
     
         except Exception as e:
             con.rollback()

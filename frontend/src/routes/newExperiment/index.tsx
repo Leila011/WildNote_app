@@ -46,8 +46,9 @@ export default function NewExperiment() {
            setStoreAutofill(prevStore => prevStore.map(attribute =>
             attribute.name === "Creation_Date" ? { ...attribute, value: Date.now() } : attribute
           ))
-          addNewExperiment([...store, ...storeAutofill]);
-            navigate("/SetupSamples");	
+          const experiment_id = addNewExperiment([...store, ...storeAutofill]);
+          console.log("experiment_id", experiment_id)
+            navigate(`/newExperiment/${experiment_id}`);	
             }}>Submit</Button>
         </div>
     );
