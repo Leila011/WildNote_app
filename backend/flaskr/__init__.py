@@ -64,28 +64,25 @@ def create_app(test_config=None):
             return jsonify({"error": str(e)}), 500
 
     # define the structure of the the sample
-    @app.route('/api/experiments/<int:id>/sample', methods=['POST'])
-    def add_sample(id):
+    @app.route('/api/experiment/<int:experiment_id>/sample', methods=['POST'])
+    def add_sample(experiment_id):
+
         try:
             # get the data from the request
             data = request.get_json()
             if not data:
                 return jsonify({"error": "Invalid JSON format"}), 400
-
+            print(data)
             # connect to db
             con = db.get_db()
-            cursor = con.cursor()
-
-            # add a new sample & retrieve the last inserted id
-            #db.add_sample(con, id, data.get('subject_id'))
-            #last_inserted_id = cursor.lastrowid
 
             # add the predefined attributes for the experiment
-            db.add_predefined_attributes(con, 'sample', id)
+            #db.add_predefined_attributes(con, 'sample', experiment_id)
 
             # add the custom attributes for the experiment
-            for attribute in data.get('attributes', []):
-                db.add_attribute(con, attribute['name'], attribute['type'], 'sample_attributes', last_inserted_id)
+            for attribute in data:
+                print(attribute)
+                db.add_attribute(con, attribute['name'], attribute['type'], 'sample_attributes', experiment_id)
             return jsonify({"message": "Sample added successfully"}), 200
     
         except Exception as e:
@@ -93,8 +90,8 @@ def create_app(test_config=None):
             return jsonify({"error": str(e)}), 500
 
     # define the structure of a subject 
-    @app.route('/api/experiments/<int:id>/subject', methods=['POST'])
-    def add_subject(id):
+    @app.route('/api/experiments/<int:experiment_id>/subject', methods=['POST'])
+    def add_subject(experiment_id):
         try:
             # get the data from the request
             data = request.get_json()
@@ -103,18 +100,13 @@ def create_app(test_config=None):
 
             # connect to db
             con = db.get_db()
-            cursor = con.cursor()
-
-            # add a new sample & retrieve the last inserted id
-            db.add_subject(con, id)
-            last_inserted_id = cursor.lastrowid
 
             # add the predefined attributes for the experiment
-            db.add_predefined_attributes(con, 'subject', last_inserted_id)
+            #db.add_predefined_attributes(con, 'subject', last_inserted_id)
 
             # add the custom attributes for the experiment
-            for attribute in data.get('attributes', []):
-                db.add_attribute(con, attribute['name'], attribute['type'], 'subject_attributes', last_inserted_id)
+            for attribute in data:
+                db.add_attribute(con, attribute['name'], attribute['type'], 'subject_attributes', experiment_id)
             return jsonify({"message": "Subject added successfully"}), 200
     
         except Exception as e:
@@ -122,8 +114,8 @@ def create_app(test_config=None):
             return jsonify({"error": str(e)}), 500
 
     # define the structure of an observation
-    @app.route('/api/samples/<int:id>/observation', methods=['POST'])
-    def add_observationt(id):
+    @app.route('/api/experiment/<int:experiment_id>/observation', methods=['POST'])
+    def add_observationt(experiment_id):
         try:
             # get the data from the request
             data = request.get_json()
@@ -132,18 +124,13 @@ def create_app(test_config=None):
 
             # connect to db
             con = db.get_db()
-            cursor = con.cursor()
-
-            # add a new sample & retrieve the last inserted id
-            db.add_observation(con, id, data.get('subject_id'))
-            last_inserted_id = cursor.lastrowid
 
             # add the predefined attributes for the experiment
-            db.add_predefined_attributes(con, 'observation', last_inserted_id)
+            #db.add_predefined_attributes(con, 'observation', last_inserted_id)
 
             # add the custom attributes for the experiment
-            for attribute in data.get('attributes', []):
-                db.add_attribute(con, attribute['name'], attribute['type'], 'observation_attributes', last_inserted_id)
+            for attribute in data:
+                db.add_attribute(con, attribute['name'], attribute['type'], 'observation_attributes', experiment_id)
             return jsonify({"message": "Observation added successfully"}), 200
 
         except Exception as e:
