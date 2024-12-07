@@ -8,9 +8,9 @@
 
 import { backendUrl } from "~/db";
 
-  export async function fetchObservations(id: number): Promise<any[]> {
+  export async function fetchObservations(sampleId: number): Promise<any[]> {
     try {
-      const response = await fetch(`${backendUrl}/api/samples/${id}/observations`);
+      const response = await fetch(`${backendUrl}/api/samples/${sampleId}/observations`);
       if (!response.ok) {
         throw new Error(`Failed to fetch observations: ${response.statusText}`);
       }
