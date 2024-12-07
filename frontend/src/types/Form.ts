@@ -9,6 +9,7 @@ export type TableAttribute = {
   choices?: string[];
   autofill?: boolean;
   default?: any;
+  custom?: boolean;
 };
 
 export type TableAttributeValue = {

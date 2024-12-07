@@ -8,7 +8,7 @@ import { TableAttribute } from "~/types/Form";
 import { sqlToJsType } from "~/utils/typeConvertion";
 import { addSampleSetup } from "~/api/addSampleSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
-
+import { newAttribute } from "~/utils/newAttribute";
 /**
  * A page for setting up a new sample for an experiment
  * It takes as input the predetermined attributes and columns of the sample table
@@ -25,18 +25,11 @@ export default function NewSample() {
     fetchAttributeDescriptions("sample", Number(params.experimentId)),
   );
   const [store, setStore] = createStore<TableAttribute[]>([
-    {
-      name: "",
-      type: "",
-      typeJS: "",
-      autofill: false,
-      min: undefined,
-      max: undefined,
-      choices: [],
-    },
+ {...newAttribute} 
   ]);
 
   const handleSubmit = async () => {
+    console.log(store);
     const response = await addSampleSetup(
       [...store],
       Number(params.experimentId),

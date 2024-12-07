@@ -16,16 +16,14 @@ import { TableAttribute } from "~/types/Form";
 import { SetStoreFunction } from "solid-js/store";
 import { typeOptions } from "~/utils/typeOptions";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
-import { validationOptions } from "~/utils/validationOptions";
 import {
   NumberField,
   NumberFieldDecrementTrigger,
-  NumberFieldErrorMessage,
   NumberFieldIncrementTrigger,
   NumberFieldInput,
 } from "~/components/ui/number-field";
 import { toggleVariants } from "./ui/toggle";
-
+import { newAttribute } from "~/utils/newAttribute";
 type Props = {
   store: TableAttribute[];
   setStore: SetStoreFunction<TableAttribute[]>;
@@ -34,15 +32,6 @@ type Props = {
 export function FormNewAttribute(props: Props) {
   const { store, setStore } = props;
   const handleAddAttribute = () => {
-    const newAttribute = {
-      name: "",
-      type: "",
-      typeJS: "",
-      autofill: false,
-      min: undefined,
-      max: undefined,
-      choices: [],
-    };
     setStore((prev) => [...prev, newAttribute]);
   };
 
