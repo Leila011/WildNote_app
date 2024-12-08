@@ -31,8 +31,10 @@ type Props = {
 
 export function FormNewAttribute(props: Props) {
   const { store, setStore } = props;
+  
   const handleAddAttribute = () => {
-    setStore((prev) => [...prev, newAttribute]);
+    const newAttributeInstance = JSON.parse(JSON.stringify(newAttribute)); // Deep copy
+    setStore((prev) => [...prev, newAttributeInstance]);
   };
 
   const handleAddChoice = (index: number) => {
@@ -40,10 +42,6 @@ export function FormNewAttribute(props: Props) {
       choice === undefined ? [""] : [...choice, ""],
     );
   };
-
-  createEffect(() => {
-    console.log(store);
-  });
 
   return (
     <div>

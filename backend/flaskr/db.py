@@ -145,7 +145,7 @@ def add_sample(con, experiment_id, subject_id):
         (experiment_id, subject_id)
         )
         con.commit()
-
+        return cursor.lastrowid
     except sqlite3.Error as e:
         raise Exception(f"Error adding sample: {e}")
 
@@ -162,15 +162,16 @@ def add_observation(con, sample_id):
     except sqlite3.Error as e:
         raise Exception(f"Error adding sample: {e}")
 
-def add_value(con, value, attribute_id, attribute_table):
+def add_value(con, value, attribute_id, table_id, level):
     """Add a new values in the attribute value table"""
 
     try:
+        print(value, attribute_id, table_id)
         cursor = con.cursor()
-
-        cursor.execute(f'INSERT INTO {attribute_table} (value, attribute_id) VALUES (?, ?)', (
+        cursor.execute(f'INSERT INTO {level}_attribute_values (value, attribute_id, {level}_id) VALUES (?, ?, ?)', (
             value,
-            attribute_id
+            attribute_id,
+            table_id
         ))
         con.commit()
     except sqlite3.Error as e:
@@ -309,7 +310,7 @@ def get_subjects(experiment_id):
         '''
         SELECT DISTINCT name
         FROM subject_attributes
-        WHERE AND experiment_id = ?
+        WHERE experiment_id = ?
         ''', (experiment_id,)
     ).fetchall()
 

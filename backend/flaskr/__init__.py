@@ -54,7 +54,7 @@ def create_app(test_config=None):
             # add the value of the predefined attributes for the experiment
             for attribute in data:
                 attribute_id = db.add_attribute(con, attribute, 'experiment_attributes', experiment_id)
-                db.add_value(con, attribute['value'], attribute_id, 'experiment_attribute_values')
+                db.add_value(con, attribute['value'], attribute_id, experiment_id, 'experiment')	
 
         except Exception as e:
             con.rollback()
@@ -120,6 +120,10 @@ def create_app(test_config=None):
         except Exception as e:
             con.rollback()
             return jsonify({"error": str(e)}), 500
+    
+        finally:
+            con.close()
+            return jsonify({"message": "Sample attributes added successfully"}), 200
 
     # define the structure of an observation
     @app.route('/api/experiment/<int:experiment_id>/observation', methods=['POST'])
@@ -147,27 +151,64 @@ def create_app(test_config=None):
         except Exception as e:
             con.rollback()
             return jsonify({"error": str(e)}), 500
+    
+        finally:
+            con.close()
+            return jsonify({"message": "Sample attributes added successfully"}), 200
         
     ############### add a attributes value to a table ###################
-    @app.route('/api/<level>/values', methods=['POST'])
-    def add_values(level):
+    @app.route('/api/experiment/<int:experiment_id>/newSample', methods=['POST'])
+    def add_newSample(experiment_id):
         try:
             # get the data from the request
             data = request.get_json()
             if not data:
                 return jsonify({"error": "Invalid JSON format"}), 400
-
             # connect to db
             con = db.get_db()
 
+            # add a new sample & retrieve the last inserted id
+            sample_id = db.add_sample(con, experiment_id, data['columns']['subject']['subject_id'])
+
+            print(sample_id)
             # add the custom attributes for the experiment
-            for attribute in data.get('attributes', []):
-                db.add_value(con, attribute['value'], attribute['attribute_id'], f'{level}_attribute_values')	
+            for attribute in data['attributes']:
+                db.add_value(con, attribute['value'], attribute['sample_attributes_id'], sample_id, 'sample')	
             return jsonify({"message": "Attributes values added successfully"}), 200
         
         except Exception as e:
             con.rollback()
             return jsonify({"error": str(e)}), 500
+    
+        finally:
+            con.close()
+            return jsonify({"message": "Sample attributes values added successfully"}), 200
+        
+    @app.route('/api/sample/<int:sample_id>/newObservation', methods=['POST'])
+    def add_newObservation(sample_id):
+        try:
+            # get the data from the request
+            data = request.get_json()
+            if not data:
+                return jsonify({"error": "Invalid JSON format"}), 400
+            # connect to db
+            con = db.get_db()
+
+            # add a new sample & retrieve the last inserted id
+            observation_id = db.add_observation(con, sample_id)
+
+            # add the custom attributes for the experiment
+            for attribute in data['attributes']:
+                db.add_value(con, attribute['value'], attribute['observation_attributes_id'], observation_id, 'observation')	
+            return jsonify({"message": "Attributes values added successfully"}), 200
+        
+        except Exception as e:
+            con.rollback()
+            return jsonify({"error": str(e)}), 500
+    
+        finally:
+            con.close()
+            return jsonify({"message": "observation attributes values added successfully"}), 200
 
     ############ retrieve all records from a table (attribute + value) ############
     # get all experiments

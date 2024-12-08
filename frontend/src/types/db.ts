@@ -11,9 +11,36 @@ export type TableAttribute = {
   custom: boolean;
 };
 
-export type TableAttributeValue = {
-  [key: string]: any[];
+export type TableAttributeDb = {
+  name: string;
+  label: string;
+  type: string;
+  required: number;
+  min: number | null;
+  max: number | null;
+  choices: string;
+  autofill: number;
+  default_value: any;
+  custom: number;
 };
+
+export type TableAttributeValue = {
+  name: string;
+  label: string;
+  value: any;
+  type: string;
+  required: boolean;
+  min: number | null;
+  max: number | null;
+  choices: string[];
+  autofill: boolean;
+  default_value: any;
+  custom: boolean;
+};
+
+// export type TableAttributeValue = {
+//   [key: string]: any[];
+// };
 
 export type Experiment = {
   experiment_id: number;

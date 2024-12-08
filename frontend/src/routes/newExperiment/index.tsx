@@ -4,7 +4,7 @@ import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
 import { Form } from "~/components/Form";
 import { Button } from "~/components/ui/button";
-import { TableAttribute } from "~/types/db";
+import { TableAttribute, TableAttributeValue } from "~/types/db";
 import { sqlToJsType } from "~/utils/typeConvertion";
 import { addNewExperiment } from "~/api/addNewExperiment";
 
@@ -20,8 +20,8 @@ import { addNewExperiment } from "~/api/addNewExperiment";
 export default function NewExperiment() {
   const navigate = useNavigate();
   const [data] = createResource(() => fetchAttributeDescriptionsExperiments());
-  const [store, setStore] = createStore<TableAttribute[]>([]);
-  const [storeAutofill, setStoreAutofill] = createStore<TableAttribute[]>([]);
+  const [store, setStore] = createStore<TableAttributeValue[]>([]);
+  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>([]);
 
   const handleSubmit = async () => {
     setStore((prevStore) =>
@@ -41,19 +41,18 @@ export default function NewExperiment() {
         (attribute: TableAttribute) =>
           ({
             ...attribute,
-            typeJS: sqlToJsType(attribute.type),
             value: "",
           }) as TableAttribute,
       );
 
       setStore(
         attributesAugmented.filter(
-          (attribute: TableAttribute) => attribute.autofill === false,
+          (attribute: TableAttributeValue) => attribute.autofill === false,
         ),
       );
       setStoreAutofill(
         attributesAugmented.filter(
-          (attribute: TableAttribute) => attribute.autofill === true,
+          (attribute: TableAttributeValue) => attribute.autofill === true,
         ),
       );
     }
@@ -61,7 +60,7 @@ export default function NewExperiment() {
 
   return (
     <div>
-      {store.length && <Form store={store} setStore={setStore}></Form>}
+      {store && <Form store={store} setStore={setStore}></Form>}
       <Button onClick={handleSubmit}>Submit</Button>
     </div>
   );

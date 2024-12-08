@@ -106,27 +106,35 @@ CREATE TABLE subject_attributes (
 CREATE TABLE experiment_attribute_values (
     experiment_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
     attribute_id INTEGER,
+    experiment_id INTEGER,
     value TEXT,
-    FOREIGN KEY (attribute_id) REFERENCES experiment_attributes(experiment_attributes_id) ON DELETE CASCADE
+    FOREIGN KEY (attribute_id) REFERENCES experiment_attributes(experiment_attributes_id) ON DELETE CASCADE,
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
 
 CREATE TABLE sample_attribute_values (
     sample_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
     attribute_id INTEGER,
+    sample_id INTEGER,
     value TEXT,
-    FOREIGN KEY (attribute_id) REFERENCES sample_attributes(sample_attributes_id) ON DELETE CASCADE
+    FOREIGN KEY (attribute_id) REFERENCES sample_attributes(sample_attributes_id) ON DELETE CASCADE,
+    FOREIGN KEY (sample_id) REFERENCES sample(sample_id) ON DELETE CASCADE
 );
 
 CREATE TABLE observation_attribute_values (
     observation_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
     attribute_id INTEGER,
+    observation_id INTEGER,
     value TEXT,
-    FOREIGN KEY (attribute_id) REFERENCES observation_attributes(observation_attributes_id) ON DELETE CASCADE
+    FOREIGN KEY (attribute_id) REFERENCES observation_attributes(observation_attributes_id) ON DELETE CASCADE,
+    FOREIGN KEY (observation_id) REFERENCES observation(observation_id) ON DELETE CASCADE
 );
 
 CREATE TABLE subject_attribute_values (
     subject_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
     attribute_id INTEGER,
+    subject_id INTEGER,
     value TEXT,
-    FOREIGN KEY (attribute_id) REFERENCES subject_attributes(subject_attributes_id) ON DELETE CASCADE
+    FOREIGN KEY (attribute_id) REFERENCES subject_attributes(subject_attributes_id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subject(subject_id) ON DELETE CASCADE
 );

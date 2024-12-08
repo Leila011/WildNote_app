@@ -16,7 +16,10 @@ export default function Nav() {
           <a href="/experiments">Experiments</a>
         </li>
         <li class={`border-b-2 ${active("/experimentSetup")} mx-1.5 sm:mx-6`}>
-          <a href="/experimentSetup">New experiment</a>
+          <a href="/newExperiment">New experiment</a>
+        </li>
+        <li class={`border-b-2 ${active("/encoding")} mx-1.5 sm:mx-6`}>
+          <a href="/encoding">Start encoding</a>
         </li>
       </ul>
     </nav>
