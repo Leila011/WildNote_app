@@ -44,7 +44,7 @@ def create_app(test_config=None):
             data = request.get_json()
             if not data:
                 return jsonify({"error": "Invalid JSON format"}), 400
-            print(data)
+
             # connect to db
             con = db.get_db()
 
@@ -53,26 +53,17 @@ def create_app(test_config=None):
 
             # add the value of the predefined attributes for the experiment
             for attribute in data:
-                attribute_id = db.add_attribute(con, 
-                                attribute['name'], 
-                                attribute['label'], 
-                                attribute['type'], 
-                                attribute['custom'], 
-                                attribute['autofill'], 
-                                attribute['required'], 
-                                attribute['min'], 
-                                attribute['max'], 
-                                attribute['choices'], 
-                                attribute['default_value'], 
-                                'experiment_attributes', 
-                                experiment_id)   
-
+                attribute_id = db.add_attribute(con, attribute, 'experiment_attributes', experiment_id)
                 db.add_value(con, attribute['value'], attribute_id, 'experiment_attribute_values')
-            return jsonify({"message": "Experiment added successfully", "experiment_id": experiment_id}), 200
-    
+
         except Exception as e:
             con.rollback()
             return jsonify({"error": str(e)}), 500
+    
+        finally:
+            con.close()
+            return jsonify({"message": "Experiment added successfully", "experiment_id": experiment_id}), 200
+
 
     # define the structure of the the sample
     @app.route('/api/experiment/<int:experiment_id>/sample', methods=['POST'])
@@ -83,7 +74,7 @@ def create_app(test_config=None):
             data = request.get_json()
             if not data:
                 return jsonify({"error": "Invalid JSON format"}), 400
-            print(data)
+
             # connect to db
             con = db.get_db()
 
@@ -92,25 +83,17 @@ def create_app(test_config=None):
 
             # add the custom attributes for the experiment
             for attribute in data:
-                db.add_attribute(con, 
-                                attribute['name'], 
-                                attribute['label'], 
-                                attribute['type'], 
-                                attribute['custom'], 
-                                attribute['autofill'], 
-                                attribute['required'], 
-                                attribute['min'], 
-                                attribute['max'], 
-                                attribute['choices'], 
-                                attribute['default_value'], 
-                                'sample_attributes', 
-                                experiment_id)   
-                print('done')
-                return jsonify({"message": "Sample added successfully"}), 200
+                db.add_attribute(con, attribute, 'sample_attributes', experiment_id)  
     
         except Exception as e:
             con.rollback()
             return jsonify({"error": str(e)}), 500
+    
+        finally:
+            con.close()
+            return jsonify({"message": "Sample attributes added successfully"}), 200
+        
+
 
     # define the structure of a subject 
     @app.route('/api/experiment/<int:experiment_id>/subject', methods=['POST'])
@@ -129,17 +112,7 @@ def create_app(test_config=None):
 
             # add the custom attributes for the experiment
             for attribute in data:
-                db.add_attribute(con, 
-                                attribute['name'], 
-                                attribute['label'], 
-                                attribute['type'], 
-                                attribute['custom'], 
-                                attribute['autofill'], 
-                                attribute['required'], 
-                                attribute['min'], 
-                                attribute['max'], 
-                                attribute['choices'], 
-                                attribute['default_value'], 
+                db.add_attribute(con, attribute,                           
                                 'subject_attributes', 
                                 experiment_id)            
             return jsonify({"message": "Subject added successfully"}), 200
@@ -166,16 +139,7 @@ def create_app(test_config=None):
             # add the custom attributes for the experiment
             for attribute in data:
                 db.add_attribute(con, 
-                                attribute['name'], 
-                                attribute['label'], 
-                                attribute['type'], 
-                                attribute['custom'], 
-                                attribute['autofill'], 
-                                attribute['required'], 
-                                attribute['min'], 
-                                attribute['max'], 
-                                attribute['choices'], 
-                                attribute['default_value'], 
+                                attribute, 
                                 'observation_attributes', 
                                 experiment_id)   
                 return jsonify({"message": "Observation added successfully"}), 200
