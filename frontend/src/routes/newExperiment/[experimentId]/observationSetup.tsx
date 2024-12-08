@@ -1,13 +1,13 @@
 import { useNavigate, useParams } from "@solidjs/router";
-import { createEffect, createResource, createSignal } from "solid-js";
+import { createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Button } from "~/components/ui/button";
 import { TableAttribute } from "~/types/db";
-import { sqlToJsType } from "~/utils/typeConvertion";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
-import { newAttribute } from "~/utils/newAttribute";
+import { newAttribute } from "~/utils/db";
+import { updateValue } from "~/api/updateValue";
 /**
  * A page for setting up a new observation for an experiment
  * It takes as input the predetermined attributes and columns of the sample table
@@ -27,11 +27,12 @@ export default function NewObservation() {
   ]);
 
   const handleSubmit = async () => {
-    addExperimentalSetup(
+    await addExperimentalSetup(
       [...store],
       Number(params.experimentId),
       "observation",
     );
+    await updateValue( "experiment", "status", Number(params.experimentId), "active");
     navigate(`/newExperiment/${params.experimentId}/subjectSetup`);
   };
 

@@ -7,14 +7,14 @@
 
 import { backendUrl } from "~/db";
 
-export async function addAttributeValue(
+export async function updateValue(
   level: string,
-  attribute_id: string,
-  item_id: number,
+  column_name: string,
+  row_id: number,
   value: any,
 ) {
   const response = await fetch(
-    `${backendUrl}/api/updateAttributeValue/${level}/${attribute_id}/${item_id}`,
+    `${backendUrl}/api/updateValue/${level}/${column_name}/${row_id}`,
     {
       method: "POST",
       headers: {

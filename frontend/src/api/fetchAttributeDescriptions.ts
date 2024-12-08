@@ -20,7 +20,7 @@ export async function fetchAttributeDescriptions(
 ): Promise<props> {
   try {
     const response = await fetch(
-      `${backendUrl}/api/attributes/${tableName}/experiment_id/${experimentId}`,
+      `${backendUrl}/api/experiments/${experimentId}/${tableName}/attributes`,
     );
     if (!response.ok) {
       throw new Error(

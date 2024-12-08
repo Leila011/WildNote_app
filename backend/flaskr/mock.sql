@@ -1,8 +1,8 @@
 -- Insert mock data into experiment table
-INSERT INTO experiment (experiment_id) VALUES
-(1),
-(2),
-(3);
+INSERT INTO experiment (experiment_id, status, timestamp_start, timestamp_end) VALUES
+(1, 'active', '2023-01-01 08:00:00', '2023-01-01 18:00:00'),
+(2, 'completed', '2023-02-01 08:00:00', '2023-02-01 18:00:00'),
+(3, 'active', '2023-03-01 08:00:00', '2023-03-01 18:00:00');
 
 -- Insert mock data into subject table
 INSERT INTO subject (subject_id, experiment_id) VALUES
@@ -13,20 +13,20 @@ INSERT INTO subject (subject_id, experiment_id) VALUES
 (5, 3);
 
 -- Insert mock data into sample table
-INSERT INTO sample (sample_id, experiment_id, subject_id) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 2, 3),
-(4, 2, 4),
-(5, 3, 5);
+INSERT INTO sample (sample_id, experiment_id, subject_id, status, timestamp_start, timestamp_end) VALUES
+(1, 1, 1, 'active', '2023-01-01 08:00:00', '2023-01-01 09:00:00'),
+(2, 1, 2, 'completed', '2023-01-01 09:00:00', '2023-01-01 10:00:00'),
+(3, 2, 3, 'active', '2023-02-01 08:00:00', '2023-02-01 09:00:00'),
+(4, 2, 4, 'completed', '2023-02-01 09:00:00', '2023-02-01 10:00:00'),
+(5, 3, 5, 'active', '2023-03-01 08:00:00', '2023-03-01 09:00:00');
 
 -- Insert mock data into observation table
-INSERT INTO observation (observation_id, sample_id) VALUES
-(1, 1),
-(2, 1),
-(3, 2),
-(4, 3),
-(5, 4);
+INSERT INTO observation (observation_id, sample_id, status, timestamp_start, timestamp_end) VALUES
+(1, 1, 'active', '2023-01-01 08:30:00', '2023-01-01 09:00:00'),
+(2, 1, 'completed', '2023-01-01 09:00:00', '2023-01-01 09:30:00'),
+(3, 2, 'active', '2023-02-01 08:30:00', '2023-02-01 09:00:00'),
+(4, 3, 'completed', '2023-02-01 09:00:00', '2023-02-01 09:30:00'),
+(5, 4, 'active', '2023-03-01 08:30:00', '2023-03-01 09:00:00');
 
 -- Insert mock data into experiment_attributes table
 INSERT INTO experiment_attributes (experiment_attributes_id, name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES

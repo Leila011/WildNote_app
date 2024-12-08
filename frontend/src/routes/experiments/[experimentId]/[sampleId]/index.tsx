@@ -1,33 +1,34 @@
 import { useParams } from "@solidjs/router";
 import { createEffect, createResource, createSignal } from "solid-js";
-import { DataTable } from "~/utils/data-table";
-import { generateColumns } from "~/utils/generateColumns";
+import { DataTable } from "~/components/data-table";
+import { generateColumns } from "~/components/generateColumns";
 import { fetchObservations } from "~/api/fetchObservations";
 
 export default function Observations() {
   const params = useParams();
 
-  const [data] = createResource(
+  const [data, {refetch}] = createResource(
     () => Number(params.sampleId),
     fetchObservations,
   );
-  const [columns, setColumns] = createSignal<{ name: string }[]>([]);
 
-  createEffect(() => {
-    if (data()) {
-      const columnNames = Object.keys(data()![0]).map((key) => ({ name: key }));
-      setColumns(columnNames);
-    }
-  });
+  function getColumnNames(data: any) {
+    if (data){
+      return Object.keys(data![0]).map((key) => ({ name: key })); }
+    else {
+      return [] }
+  }
 
   return (
     <div class="container mx-auto py-10">
-      {data() && columns().length && (
+  {data()?.length  && (
         <DataTable
-          columns={generateColumns(columns(), "observation")}
-          data={data()}
+          columns={generateColumns(getColumnNames(data()), "observation", refetch)}
+          data={data()||[]}
         />
+  
       )}
+
     </div>
   );
 }

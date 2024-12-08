@@ -8,7 +8,7 @@ import { backendUrl } from "~/db";
  */
 export async function fetchAttributeDescriptionsExperiments(): Promise<any> {
   try {
-    const response = await fetch(`${backendUrl}/api/attributes/experiments`);
+    const response = await fetch(`${backendUrl}/api/experiments/attributes`);
     if (!response.ok) {
       throw new Error(
         `Failed to fetch attributes descriptions: ${response.statusText}`,

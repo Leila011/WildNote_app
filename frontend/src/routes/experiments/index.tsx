@@ -1,29 +1,32 @@
-import { DataTable } from "~/utils/data-table";
-import { createEffect, createResource, createSignal } from "solid-js";
-import { generateColumns } from "~/utils/generateColumns";
+import { DataTable } from "~/components/data-table";
+import { createEffect, createMemo, createResource, createSignal } from "solid-js";
+import { generateColumns } from "~/components/generateColumns";
 import { fetchExperiments } from "~/api/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
+import { fetchTable } from "~/api/fetchTable";
+import Counter from "~/components/Counter";
 
 export default function Experiments() {
-  const [data] = createResource(fetchExperiments);
-  const [columns, setColumns] = createSignal<{ name: string }[]>([]);
+  const [dataAttributes, {refetch}] = createResource(fetchExperiments);
 
-  createEffect(() => {
-    if (data()) {
-      const columnNames = Object.keys(data()![0]).map((key) => ({ name: key }));
-      setColumns(columnNames);
-    }
-  });
+  function getColumnNames(data: any) {
+    if (data){
+      return Object.keys(data![0]).map((key) => ({ name: key })); }
+    else {
+      return [] }
+  }
+
   return (
     <div class="container mx-auto py-10">
       <a class={buttonVariants({ variant: "default" })} href={`/newExperiment`}>
         Create a new experiment
       </a>
 
-      {data() && columns().length && (
+{dataAttributes()?.length}
+      {dataAttributes()?.length  && (
         <DataTable
-          columns={generateColumns(columns(), "experiment")}
-          data={data()}
+          columns={generateColumns(getColumnNames(dataAttributes()), "experiment", refetch)}
+          data={ dataAttributes()||[]}
         />
       )}
     </div>

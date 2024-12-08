@@ -14,7 +14,10 @@ DROP TABLE IF EXISTS subject_attribute_values;
 
 -- Create core tables
 CREATE TABLE experiment (
-    experiment_id INTEGER PRIMARY KEY AUTOINCREMENT
+    experiment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    status TEXT DEFAULT 'created',
+    timestamp_start TIMESTAMP,
+    timestamp_end TIMESTAMP
 );
 
 CREATE TABLE subject (
@@ -27,57 +30,31 @@ CREATE TABLE sample (
     sample_id INTEGER PRIMARY KEY AUTOINCREMENT,
     experiment_id INTEGER,
     subject_id INTEGER,
+    status TEXT DEFAULT 'active',
+    timestamp_start TIMESTAMP,
+    timestamp_end TIMESTAMP,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE,
-    FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
+    FOREIGN KEY (subject_id) REFERENCES subject(subject_id) ON DELETE CASCADE
 );
 
 CREATE TABLE observation (
     observation_id INTEGER PRIMARY KEY AUTOINCREMENT,
     sample_id INTEGER,
+    status TEXT DEFAULT 'active',
+    timestamp_start TIMESTAMP,
+    timestamp_end TIMESTAMP,
     FOREIGN KEY (sample_id) REFERENCES sample(sample_id) ON DELETE CASCADE
 );
 
--- Attribute description tables
+-- Create attribute tables
 CREATE TABLE experiment_attributes (
     experiment_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     label TEXT,
     type TEXT,
-    custom BOOLEAN DEFAULT 0,
-    autofill BOOLEAN DEFAULT 0,
-    required BOOLEAN DEFAULT 0,
-    min INTEGER,
-    max INTEGER,
-    choices TEXT,
-    default_value TEXT,
-    experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
-);
-
-CREATE TABLE sample_attributes (
-    sample_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    label TEXT,
-    type TEXT,
-    custom BOOLEAN DEFAULT 0,
-    autofill BOOLEAN DEFAULT 0,
-    required BOOLEAN DEFAULT 0,
-    min INTEGER,
-    max INTEGER,
-    choices TEXT,
-    default_value TEXT,
-    experiment_id INTEGER,
-    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
-);
-
-CREATE TABLE observation_attributes (
-    observation_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    label TEXT,
-    type TEXT,
-    custom BOOLEAN DEFAULT 0,
-    autofill BOOLEAN DEFAULT 0,
-    required BOOLEAN DEFAULT 0,
+    custom BOOLEAN,
+    autofill BOOLEAN,
+    required BOOLEAN,
     min INTEGER,
     max INTEGER,
     choices TEXT,
@@ -91,9 +68,9 @@ CREATE TABLE subject_attributes (
     name TEXT,
     label TEXT,
     type TEXT,
-    custom BOOLEAN DEFAULT 0,
-    autofill BOOLEAN DEFAULT 0,
-    required BOOLEAN DEFAULT 0,
+    custom BOOLEAN,
+    autofill BOOLEAN,
+    required BOOLEAN,
     min INTEGER,
     max INTEGER,
     choices TEXT,
@@ -102,7 +79,39 @@ CREATE TABLE subject_attributes (
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );
 
--- Attribute value tables
+CREATE TABLE sample_attributes (
+    sample_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    label TEXT,
+    type TEXT,
+    custom BOOLEAN,
+    autofill BOOLEAN,
+    required BOOLEAN,
+    min INTEGER,
+    max INTEGER,
+    choices TEXT,
+    default_value TEXT,
+    experiment_id INTEGER,
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
+);
+
+CREATE TABLE observation_attributes (
+    observation_attributes_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    label TEXT,
+    type TEXT,
+    custom BOOLEAN,
+    autofill BOOLEAN,
+    required BOOLEAN,
+    min INTEGER,
+    max INTEGER,
+    choices TEXT,
+    default_value TEXT,
+    experiment_id INTEGER,
+    FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
+);
+
+-- Create attribute value tables
 CREATE TABLE experiment_attribute_values (
     experiment_attribute_values_id INTEGER PRIMARY KEY AUTOINCREMENT,
     attribute_id INTEGER,

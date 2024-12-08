@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/button";
 import { TableAttribute } from "~/types/db";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
-import { newAttribute } from "~/utils/newAttribute";
+import { newAttribute } from "~/utils/db";
 /**
  * A page for setting up a new sample for an experiment
  * It takes as input the predetermined attributes and columns of the sample table

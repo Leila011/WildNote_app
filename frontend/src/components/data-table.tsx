@@ -1,4 +1,4 @@
-import { For } from "solid-js";
+import { createEffect, For } from "solid-js";
 import {
   ColumnDef,
   createSolidTable,
@@ -43,7 +43,6 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const { data, columns } = props;
-
   const [sorting, setSorting] = createSignal<SortingState>([]);
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
     [],
@@ -54,8 +53,12 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = createSignal({});
 
   const table = createSolidTable({
-    data: data || [],
-    columns,
+    get data() {
+      return props.data
+    },
+    get columns() {
+      return props.columns
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -79,6 +82,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       },
     },
   });
+
 
   return (
     <div class="w-full">

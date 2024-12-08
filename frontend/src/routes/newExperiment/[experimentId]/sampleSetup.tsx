@@ -1,12 +1,12 @@
 import { useNavigate, useParams } from "@solidjs/router";
-import { createEffect, createResource, createSignal } from "solid-js";
+import { createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Button } from "~/components/ui/button";
 import { TableAttribute } from "~/types/db";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
-import { newAttribute } from "~/utils/newAttribute";
+import { newAttribute } from "~/utils/db";
 /**
  * A page for setting up a new sample for an experiment
  * It takes as input the predetermined attributes and columns of the sample table

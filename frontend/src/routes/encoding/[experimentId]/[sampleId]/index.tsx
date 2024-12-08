@@ -28,6 +28,7 @@ import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
 import { addNewObservation } from "~/api/addNewObservation";
 import { addAttributeValue } from "~/api/addAttributeValue";
+import { updateValue } from "~/api/updateValue";
 
 export default function EncodingObservation() {
   const navigate = useNavigate();
@@ -108,13 +109,7 @@ export default function EncodingObservation() {
   };
 
   const endSample = async () => {
-    // to do: add a way to set end time of sample. maybe i shoudl modify the main table
-    // const end = Date.now();
-    // const response = await addAttributeValue('sample',
-    //   Number(params.experimentId),
-    //   Number(params.sampleId),
-    //   end
-    // );
+    await updateValue( "sample", "status", Number(params.sampleId), "completed");
   };
 
   const handleSubmitNext = async () => {
@@ -129,6 +124,7 @@ export default function EncodingObservation() {
 
   const handleSubmitEnd = async () => {
     const response = await endObservation();
+    await endSample();
     navigate(`/`);
   };
 

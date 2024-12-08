@@ -1,6 +1,8 @@
 import { useLocation, useNavigate } from "@solidjs/router";
 import { ColumnDef } from "@tanstack/solid-table";
-import { createEffect } from "solid-js/types/server/reactive.js";
+import { Show } from "solid-js";
+import { deleteRow } from "~/api/deleteRow";
+import { updateValue } from "~/api/updateValue";
 import { IconDots } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -14,11 +16,13 @@ import {
 } from "~/components/ui/dropdown-menu";
 
 export const generateColumns = (
-  schema: any,
+  schema: any = [],
   table: string,
+  refetch?: ()=>void
 ): ColumnDef<any>[] => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const firstColumn = {
     id: "select",
     header: (props) => (
@@ -56,18 +60,50 @@ export const generateColumns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <Show when= {table === "experiment"}>
             <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(props.row.original.id)
-              }
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Send</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+                onClick={async () => {
+                  await updateValue("experiment", "status", props.row.original.experiment_id, "completed");
+                  refetch && refetch();
+                }}
+            >Mark as completed</DropdownMenuItem>
+            </Show>
+            <DropdownMenuItem
+            onClick={async () => {
+              const response = await deleteRow(table, props.row.original[table + "_id"]);
+              console.log(response);
+              refetch && refetch();
+            }} >Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      );
+    },
+  };
+
+  const showButton = {
+    id: "button",
+    cell: (props) => {
+      // Determine the correct column name based on the table type
+      const idColumnName =
+        table === "experiment"
+          ? "experiment_id"
+          : table === "sample"
+            ? "sample_id"
+            : table === "observation"
+              ? "observation_id"
+              : table === "subject"
+                ? "subject_id"
+                : "id";
+
+      return (
+        <Button
+          variant="default"
+          onClick={() =>
+            navigate(`${location.pathname}/${props.row.original[table + "_id"]}`)
+          }
+        >
+          {table === "sample" ? "View Observations" : "View Samples"}
+        </Button>
       );
     },
   };
@@ -88,25 +124,47 @@ export const generateColumns = (
                 : "id";
 
       return (
+        <div> 
+        <Show when={props.row.original.status === "active"}>
         <Button
           variant="default"
           onClick={() =>
-            navigate(`${location.pathname}/${props.row.original[idColumnName]}`)
+            navigate(`encoding/${props.row.original[idColumnName]}`)
           }
         >
-          {table === "sample" ? "View Observations" : "View Samples"}
+          Start encoding
         </Button>
+        </Show>
+        <Show when={props.row.original.status === "created"}>
+        <Button
+          variant="secondary"
+          onClick={() =>
+            navigate(`encoding/${props.row.original[idColumnName]}`)
+          }
+        >
+          Complete the setup
+        </Button>
+        </Show>
+        </div>
+
       );
     },
   };
-  const attributesColumns = schema.map((column: any) => ({
-    accessorKey: column.name,
-    header:
-      column.name.charAt(0).toUpperCase() +
-      column.name.slice(1).replace("_", " "),
-  }));
+
+  const attributesColumns = schema.map((column: any) => {
+    const name = column.name === "timestamp_start"? "start" : 
+                 column.name === "timestamp_end"? "end" : column.name;
+    return {
+      accessorKey: column.name,
+      header:
+        name.charAt(0).toUpperCase() +
+        name.slice(1).replace("_", " "),
+    };
+  });
 
   if (table === "observation")
     return [firstColumn, ...attributesColumns, dropDownDots];
-  return [firstColumn, ...attributesColumns, startButton, dropDownDots];
+  if (table === "experiment")
+    return [firstColumn, ...attributesColumns, showButton, startButton, dropDownDots];
+  return [firstColumn, ...attributesColumns, showButton, dropDownDots];
 };

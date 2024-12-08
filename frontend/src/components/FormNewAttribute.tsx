@@ -23,7 +23,7 @@ import {
   NumberFieldInput,
 } from "~/components/ui/number-field";
 import { toggleVariants } from "./ui/toggle";
-import { newAttribute } from "~/utils/newAttribute";
+import { newAttribute } from "~/utils/db";
 type Props = {
   store: TableAttribute[];
   setStore: SetStoreFunction<TableAttribute[]>;

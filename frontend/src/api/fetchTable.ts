@@ -7,13 +7,13 @@
 
 import { backendUrl } from "~/db";
 
-export async function fetchObservations(sampleId: number): Promise<any[]> {
+export async function fetchTable(level: string): Promise<any[]> {
   try {
     const response = await fetch(
-      `${backendUrl}/api/samples/${sampleId}/observations/attributeValues`,
+      `${backendUrl}/api/${level}`,
     );
     if (!response.ok) {
-      throw new Error(`Failed to fetch observations: ${response.statusText}`);
+      throw new Error(`Failed to fetch table ${level}: ${response.statusText}`);
     }
     const data: any[] = await response.json();
     return data;

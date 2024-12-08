@@ -179,7 +179,8 @@ def delete_row(con, table, id):
     """Delete a row from a given table"""
     try:
         cursor = con.cursor()
-        query = f'DELETE FROM {table} WHERE id = ?'  # Using f-string to safely insert table name
+        id_column = f"{table}_id"
+        query = f'DELETE FROM {table} WHERE {id_column} = ?'  # Using f-string to safely insert table name
         cursor.execute(query, (id,))
         con.commit()
 
@@ -188,9 +189,12 @@ def delete_row(con, table, id):
     
 def update_value(con, table, id, field, value):
     """Update the value a field in a row from a given table"""
+    print('updatevalue')
+    id_column = f"{table}_id"
+    print(f'UPDATE {table} SET {field} = {value} WHERE {id_column} = {id}')
     try:
         cursor = con.cursor()
-        query = f'UPDATE {table} SET {field} = ? WHERE id = ?'  # Using f-string to safely insert table name
+        query = f'UPDATE {table} SET {field} = ? WHERE {id_column} = ?'  # Using f-string to safely insert table name
         cursor.execute(query, (value, id,))
         con.commit()
 
@@ -198,6 +202,12 @@ def update_value(con, table, id, field, value):
         raise Exception(f"Error updating value: {e}")
 
 ############################### READ VALUE ###############################
+
+# def get_table(level):
+#     db = get_db()
+#     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+#     rows = db.execute(f'SELECT * FROM {level}').fetchall()
+#     return rows
 
 def get_experiments():
     """Retrieve all experiments from the database (predefined attributes + values)"""
@@ -214,7 +224,7 @@ def get_experiments():
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["e.experiment_id AS experiment_id"]
+    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         # Use double quotes to handle attribute names with spaces or special characters
@@ -247,7 +257,7 @@ def get_samples(experiment_id):
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["s.sample_id AS sample_id"]
+    columns = ["s.sample_id AS sample_id", "status", "timestamp_start", "timestamp_end"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         columns.append(f"MAX(CASE WHEN sa.name = '{attribute_name}' THEN sav.value END) AS \"{attribute_name}\"")
@@ -280,7 +290,7 @@ def get_observations(sample_id):
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["o.observation_id AS observation_id"]
+    columns = ["o.observation_id AS observation_id", "timestamp_start", "timestamp_end"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         columns.append(f"MAX(CASE WHEN oa.name = '{attribute_name}' THEN oav.value END) AS \"{attribute_name}\"")

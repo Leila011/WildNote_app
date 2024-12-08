@@ -57,9 +57,7 @@ export function IconDots(props: IconProps) {
       stroke-width="2"
       {...props}
     >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-      <path d="M8 9l4 -4l4 4"></path>
-      <path d="M16 15l-4 4l-4 -4"></path>
+<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
     </Icon>
   );
 }

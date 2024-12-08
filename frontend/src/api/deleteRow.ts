@@ -7,24 +7,15 @@
 
 import { backendUrl } from "~/db";
 
-export async function addAttributeValue(
+export async function deleteRow(
   level: string,
-  attribute_id: string,
-  item_id: number,
-  value: any,
+  row_id: number,
 ) {
   const response = await fetch(
-    `${backendUrl}/api/updateAttributeValue/${level}/${attribute_id}/${item_id}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(value),
-    },
+    `${backendUrl}/api/${level}/${row_id}/delete`
   );
   if (!response.ok) {
-    throw new Error("Failed to add record");
+    throw new Error("Failed to delete record");
   }
   return response.json();
 }
