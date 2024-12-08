@@ -26,6 +26,7 @@ import { createStore } from "solid-js/store";
 import { useNavigate, useParams } from "@solidjs/router";
 import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
+import { Title } from "~/components/title";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
@@ -125,6 +126,7 @@ export default function EncodingSample() {
   return (
     <main class="text-center mx-auto text-gray-700 p-4">
       <div>
+      <Title>Select your experiment and start an observation session</Title>
         <h1>Choose your experiment:</h1>
         <DropdownMenu>
           <DropdownMenuTrigger

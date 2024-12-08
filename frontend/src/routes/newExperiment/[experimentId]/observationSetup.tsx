@@ -8,6 +8,7 @@ import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
 import { newAttribute } from "~/utils/db";
 import { updateValue } from "~/api/updateValue";
+import { Title } from "~/components/title";
 /**
  * A page for setting up a new observation for an experiment
  * It takes as input the predetermined attributes and columns of the sample table
@@ -38,7 +39,7 @@ export default function NewObservation() {
 
   return (
     <div>
-      <h1>Create the attributes for your observations</h1>
+      <Title>Setup my observation</Title>
       <FormNewAttribute store={store} setStore={setStore} />
       <Button onClick={handleSubmit}>Submit</Button>
     </div>

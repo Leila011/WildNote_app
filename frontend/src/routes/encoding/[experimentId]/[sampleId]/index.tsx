@@ -29,6 +29,7 @@ import { fetchSubjects } from "~/api/fetchSubjects";
 import { addNewObservation } from "~/api/addNewObservation";
 import { addAttributeValue } from "~/api/addAttributeValue";
 import { updateValue } from "~/api/updateValue";
+import { Title } from "~/components/title";
 
 export default function EncodingObservation() {
   const navigate = useNavigate();
@@ -131,7 +132,7 @@ export default function EncodingObservation() {
   return (
     <main class="text-center mx-auto text-gray-700 p-4">
       <div>
-        <h1>Fill out observation info</h1>
+      <Title>Start encoding your new observation</Title>
         {store.length && <Form store={store} setStore={setStore}></Form>}
         <Button onClick={handleSubmitNext}>Next observation</Button>
         <Button onClick={handleSubmitNextSample}>

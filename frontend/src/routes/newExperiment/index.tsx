@@ -7,6 +7,7 @@ import { Button } from "~/components/ui/button";
 import { TableAttribute, TableAttributeValue } from "~/types/db";
 import { sqlToJsType } from "~/utils/typeConvertion";
 import { addNewExperiment } from "~/api/addNewExperiment";
+import { Title } from "~/components/title";
 
 /**
  * A page for creating a new experiment
@@ -62,6 +63,7 @@ export default function NewExperiment() {
 
   return (
     <div>
+      <Title>Set-up a new experiment</Title>
       {store && <Form store={store} setStore={setStore}></Form>}
       <Button onClick={handleSubmit}>Submit</Button>
     </div>

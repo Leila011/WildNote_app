@@ -5,6 +5,7 @@ import { fetchExperiments } from "~/api/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
 import { fetchTable } from "~/api/fetchTable";
 import Counter from "~/components/Counter";
+import { Title } from "~/components/title";
 
 export default function Experiments() {
   const [dataAttributes, {refetch}] = createResource(fetchExperiments);
@@ -18,6 +19,7 @@ export default function Experiments() {
 
   return (
     <div class="container mx-auto py-10">
+      <Title>My experiments</Title>
       <a class={buttonVariants({ variant: "default" })} href={`/newExperiment`}>
         Create a new experiment
       </a>

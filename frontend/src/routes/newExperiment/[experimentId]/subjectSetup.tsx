@@ -7,6 +7,7 @@ import { TableAttribute } from "~/types/db";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
 import { newAttribute } from "~/utils/db";
+import { Title } from "~/components/title";
 /**
  * A page for setting up a new sample for an experiment
  * It takes as input the predetermined attributes and columns of the sample table
@@ -34,7 +35,7 @@ export default function NewSample() {
 
   return (
     <div>
-      <h1>Create the attributes for your subjects</h1>
+      <Title>Set-up my subjects</Title>
       <FormNewAttribute store={store} setStore={setStore} />
       <div class="flex flex-row space-x-1">
         <Button onClick={handleSubmit}>Submit and go back home</Button>

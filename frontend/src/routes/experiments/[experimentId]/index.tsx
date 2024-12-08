@@ -4,6 +4,7 @@ import { DataTable } from "~/components/data-table";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchSamples } from "~/api/fetchSamples";
 import { buttonVariants } from "~/components/ui/button";
+import { Title } from "~/components/title";
 
 export default function Samples() {
   const params = useParams();
@@ -21,6 +22,7 @@ export default function Samples() {
 
   return (
     <div class="container mx-auto py-10">
+      <Title>My observation sessions</Title>
       <a
         class={buttonVariants({ variant: "default" })}
         href={`/experiment/${params.experimentId}/newSample`}
