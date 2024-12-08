@@ -11,9 +11,9 @@ import { attributeFromDb } from "~/utils/db";
  */
 
 type props = {
-  attributes: TableAttribute[],
-  columns: any[]
-}
+  attributes: TableAttribute[];
+  columns: any[];
+};
 export async function fetchAttributeDescriptions(
   tableName: string,
   experimentId?: number,
@@ -28,7 +28,10 @@ export async function fetchAttributeDescriptions(
       );
     }
     const data = await response.json();
-    return {attributes: attributeFromDb(data.attributes), columns: data.columns};
+    return {
+      attributes: attributeFromDb(data.attributes),
+      columns: data.columns,
+    };
   } catch (error) {
     throw error;
   }

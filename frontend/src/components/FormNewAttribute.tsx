@@ -31,7 +31,7 @@ type Props = {
 
 export function FormNewAttribute(props: Props) {
   const { store, setStore } = props;
-  
+
   const handleAddAttribute = () => {
     const newAttributeInstance = JSON.parse(JSON.stringify(newAttribute)); // Deep copy
     setStore((prev) => [...prev, newAttributeInstance]);
@@ -54,7 +54,7 @@ export function FormNewAttribute(props: Props) {
                 value={store[index].label}
                 onChange={(e: any) => {
                   const value = e === "" ? null : e;
-                  const valueClean = value.toLowerCase().replace(/ /g,"_");
+                  const valueClean = value.toLowerCase().replace(/ /g, "_");
                   setStore([index], "name", valueClean);
                   setStore([index], "label", value);
                 }}
@@ -240,7 +240,7 @@ export function FormNewAttribute(props: Props) {
                 </Show>
               </div>
             </Show>
-            <Show when={store[index].type=== "boolean"}>
+            <Show when={store[index].type === "boolean"}>
               <div>
                 <h1>default:</h1>
                 <ToggleGroup

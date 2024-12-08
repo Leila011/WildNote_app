@@ -23,18 +23,16 @@ export default function NewObservation() {
     fetchAttributeDescriptions("observation", Number(params.experimentId)),
   );
   const [store, setStore] = createStore<TableAttribute[]>([
- {...newAttribute} 
+    { ...newAttribute },
   ]);
 
   const handleSubmit = async () => {
     addExperimentalSetup(
       [...store],
       Number(params.experimentId),
-      "observation"
+      "observation",
     );
-    navigate(
-      `/newExperiment/${params.experimentId}/subjectSetup`
-    );
+    navigate(`/newExperiment/${params.experimentId}/subjectSetup`);
   };
 
   return (

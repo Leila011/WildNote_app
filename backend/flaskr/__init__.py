@@ -168,7 +168,6 @@ def create_app(test_config=None):
             # add a new sample & retrieve the last inserted id
             sample_id = db.add_sample(con, experiment_id, data['columns']['subject']['subject_id'])
 
-            print(sample_id)
             # add the custom attributes for the experiment
             for attribute in data['attributes']:
                 db.add_value(con, attribute['value'], attribute['sample_attributes_id'], sample_id, 'sample')	

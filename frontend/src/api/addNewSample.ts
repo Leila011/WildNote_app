@@ -12,21 +12,26 @@ import { TableAttributeValue } from "~/types/db";
 export async function addNewSample(
   data: {
     columns: {
-      subject: {subject_id: number},
-    }
-    attributes:TableAttributeValue[],
+      subject: { subject_id: number };
+    };
+    attributes: TableAttributeValue[];
   },
-  experimentId: number
-  
+  experimentId: number,
 ) {
-  const cleanData = {columns:data.columns, attributes:attributeToDb(data.attributes)}
-  const response = await fetch(`${backendUrl}/api/experiment/${experimentId}/newSample`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const cleanData = {
+    columns: data.columns,
+    attributes: attributeToDb(data.attributes),
+  };
+  const response = await fetch(
+    `${backendUrl}/api/experiment/${experimentId}/newSample`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cleanData),
     },
-    body: JSON.stringify(cleanData),
-  });
+  );
   if (!response.ok) {
     throw new Error("Failed to add record");
   }

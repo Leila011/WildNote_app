@@ -65,12 +65,8 @@ export function isValidNumber(
   argConfig: TableAttributeValue,
   argValue: number,
 ): boolean {
-  const isBelowMin =
-    argConfig.min !== null &&
-    argValue < argConfig.min;
-  const isAboveMax =
-    argConfig.max !== null &&
-    argValue > argConfig.max;
+  const isBelowMin = argConfig.min !== null && argValue < argConfig.min;
+  const isAboveMax = argConfig.max !== null && argValue > argConfig.max;
   return !isBelowMin && !isAboveMax;
 }
 
@@ -102,12 +98,11 @@ export function invalidNumberMessage(argConfig: TableAttribute): string {
 export function booleanToggleOptions(
   arg: TableAttribute,
 ): { name: string; value: any }[] {
-    return [
-      { name: "True", value: true },
-      { name: "False", value: false },
-    ];
+  return [
+    { name: "True", value: true },
+    { name: "False", value: false },
+  ];
 }
-
 
 export const Form = (props: Props) => {
   const { store, setStore } = props;
@@ -115,8 +110,6 @@ export const Form = (props: Props) => {
   const handleChange = (index: number, value: any) => {
     setStore([index], "value", value);
   };
-
-  
 
   return (
     <div class="border p-4 border-secondary bg-secondary/15 rounded-md space-y-5">
@@ -138,7 +131,11 @@ export const Form = (props: Props) => {
                   <div class="flex flex-col w-full">
                     <Switch>
                       {/* Dropdown */}
-                      <Match when={field().choices !== null && field().choices.length}>
+                      <Match
+                        when={
+                          field().choices !== null && field().choices.length
+                        }
+                      >
                         <DropdownMenu>
                           <DropdownMenuTrigger
                             as={Button<"button">}
@@ -179,26 +176,15 @@ export const Form = (props: Props) => {
                             handleChange(index, value);
                           }}
                           validationState={
-                            isValid(
-                              field(),
-                              store[index].value,
-                            ) && (
-                              (field().min !== null || field().max !== null)
-                                ? isValidNumber(
-                                    field(),
-                                    store[index].value,
-                                  )
-                                : true
-                            )
+                            isValid(field(), store[index].value) &&
+                            (field().min !== null || field().max !== null
+                              ? isValidNumber(field(), store[index].value)
+                              : true)
                               ? "valid"
                               : "invalid"
                           }
-                          minValue={
-                            field().min ?? Number.MIN_SAFE_INTEGER
-                          }
-                          maxValue={
-                            field().max ?? Number.MAX_SAFE_INTEGER
-                          }
+                          minValue={field().min ?? Number.MIN_SAFE_INTEGER}
+                          maxValue={field().max ?? Number.MAX_SAFE_INTEGER}
                         >
                           <div class="relative">
                             <NumberFieldInput
@@ -208,25 +194,13 @@ export const Form = (props: Props) => {
                             <NumberFieldDecrementTrigger />
                           </div>
                           <Show
-                            when={
-                              !isValidNumber(
-                                field(),
-                                store[index].value,
-                              )
-                            }
+                            when={!isValidNumber(field(), store[index].value)}
                           >
                             <NumberFieldErrorMessage>
                               {invalidNumberMessage(field())}
                             </NumberFieldErrorMessage>
                           </Show>
-                          <Show
-                            when={
-                              !isValid(
-                                field(),
-                                store[index].value,
-                              )
-                            }
-                          >
+                          <Show when={!isValid(field(), store[index].value)}>
                             <NumberFieldErrorMessage>
                               This parameter is required, a value must be given.
                             </NumberFieldErrorMessage>
@@ -237,24 +211,19 @@ export const Form = (props: Props) => {
                       {/* Text input */}
                       <Match when={field().type === "string"}>
                         <TextField
-                          value={store[index].value
-                          }
+                          value={store[index].value}
                           onChange={(e: any) => {
                             const value = e === "" ? null : e;
                             handleChange(index, value);
                           }}
                           validationState={
-                            isValid(
-                              field(),
-                              store[index].value,
-                            )
+                            isValid(field(), store[index].value)
                               ? "valid"
                               : "invalid"
                           }
                         >
                           <TextFieldInput
                             type={"text"}
-                            
                             class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
                           />
                           <TextFieldErrorMessage>

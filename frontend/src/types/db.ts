@@ -45,21 +45,20 @@ export type TableAttributeValue = {
 export type Experiment = {
   experiment_id: number;
   name: string;
-}
+};
 
 export type Sample = {
-sample_id: number;
-experiment_id: number;
-subject_id: number;
-}
+  sample_id: number;
+  experiment_id: number;
+  subject_id: number;
+};
 
 export type Subject = {
-subject_id: number;
-experiment_id: number;
-}
+  subject_id: number;
+  experiment_id: number;
+};
 
 export type Observation = {
-observation_id: number;
-sample_id: string;
-}
-
+  observation_id: number;
+  sample_id: string;
+};

@@ -83,7 +83,6 @@ def add_attribute(con, attribute, table_name, experiment_id):
     
         Returns: The ID of the newly created experiment
     """
-    print(attribute['name'])
     try:
         cursor = con.cursor()
         query = f'INSERT INTO {table_name} (name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
@@ -166,7 +165,6 @@ def add_value(con, value, attribute_id, table_id, level):
     """Add a new values in the attribute value table"""
 
     try:
-        print(value, attribute_id, table_id)
         cursor = con.cursor()
         cursor.execute(f'INSERT INTO {level}_attribute_values (value, attribute_id, {level}_id) VALUES (?, ?, ?)', (
             value,
@@ -354,7 +352,6 @@ def get_attributes_predetermined(table_name):
     json_path = os.path.join(os.path.dirname(__file__), 'predefined_attributes.json')
     with open(json_path) as f:
         data = json.load(f)
-        print(data.get(table_name))
         return data.get(table_name)
 
 # Get column names of a table

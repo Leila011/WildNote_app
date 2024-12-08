@@ -11,21 +11,25 @@ import { TableAttributeValue } from "~/types/db";
 
 export async function addNewObservation(
   data: {
-    columns: {
-    }
-    attributes:TableAttributeValue[],
+    columns: {};
+    attributes: TableAttributeValue[];
   },
-  sampleId: number
-  
+  sampleId: number,
 ) {
-  const cleanData = {columns:data.columns, attributes:attributeToDb(data.attributes)}
-  const response = await fetch(`${backendUrl}/api/sample/${sampleId}/newObservation`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const cleanData = {
+    columns: data.columns,
+    attributes: attributeToDb(data.attributes),
+  };
+  const response = await fetch(
+    `${backendUrl}/api/sample/${sampleId}/newObservation`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cleanData),
     },
-    body: JSON.stringify(cleanData),
-  });
+  );
   if (!response.ok) {
     throw new Error("Failed to add observation");
   }

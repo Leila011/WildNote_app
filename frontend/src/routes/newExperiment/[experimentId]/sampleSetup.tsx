@@ -23,19 +23,13 @@ export default function NewSample() {
     fetchAttributeDescriptions("sample", Number(params.experimentId)),
   );
   const [store, setStore] = createStore<TableAttribute[]>([
- {...newAttribute} 
+    { ...newAttribute },
   ]);
 
   const handleSubmit = async () => {
-    addExperimentalSetup(
-      [...store],
-      Number(params.experimentId),
-      "sample"
-    );
+    addExperimentalSetup([...store], Number(params.experimentId), "sample");
 
-    navigate(
-      `/newExperiment/${params.experimentId}/observationSetup`,
-    );
+    navigate(`/newExperiment/${params.experimentId}/observationSetup`);
   };
 
   return (

@@ -21,7 +21,9 @@ export default function NewExperiment() {
   const navigate = useNavigate();
   const [data] = createResource(() => fetchAttributeDescriptionsExperiments());
   const [store, setStore] = createStore<TableAttributeValue[]>([]);
-  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>([]);
+  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>(
+    [],
+  );
 
   const handleSubmit = async () => {
     setStore((prevStore) =>

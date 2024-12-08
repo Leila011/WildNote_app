@@ -23,19 +23,13 @@ export default function NewSample() {
     fetchAttributeDescriptions("subject", Number(params.experimentId)),
   );
   const [store, setStore] = createStore<TableAttribute[]>([
- {...newAttribute} 
+    { ...newAttribute },
   ]);
 
   const handleSubmit = async () => {
-    addExperimentalSetup(
-      [...store],
-      Number(params.experimentId),
-      "subject"
-    );
+    addExperimentalSetup([...store], Number(params.experimentId), "subject");
 
-    navigate(
-      `/`,
-    );
+    navigate(`/`);
   };
 
   return (
@@ -43,8 +37,8 @@ export default function NewSample() {
       <h1>Create the attributes for your subjects</h1>
       <FormNewAttribute store={store} setStore={setStore} />
       <div class="flex flex-row space-x-1">
-      <Button onClick={handleSubmit}>Submit and go back home</Button>
-      <Button onClick={handleSubmit}>Submit and start encoding</Button>
+        <Button onClick={handleSubmit}>Submit and go back home</Button>
+        <Button onClick={handleSubmit}>Submit and start encoding</Button>
       </div>
     </div>
   );
