@@ -19,7 +19,6 @@ export const generateColumns = (
 ): ColumnDef<any>[] => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("schema", schema);
   const firstColumn = {
     id: "select",
     header: (props) => (

@@ -158,7 +158,7 @@ def add_observation(con, sample_id):
         (sample_id,)
         )
         con.commit()
-
+        return cursor.lastrowid
     except sqlite3.Error as e:
         raise Exception(f"Error adding sample: {e}")
 

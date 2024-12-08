@@ -12,12 +12,13 @@ import { Experiment, Subject, TableAttribute, TableAttributeValue } from "~/type
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Form } from "~/components/Form";
 import { createStore } from "solid-js/store";
-import { useNavigate } from "@solidjs/router";
+import { useNavigate, useParams } from "@solidjs/router";
 import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
 
-export default function Encoding() {
+export default function EncodingSample() {
   const navigate = useNavigate();
+  const params = useParams();
 
     const [experiments] = createResource(fetchExperiments)
     const [experiment, setExperiment] = createSignal<Experiment>()
@@ -71,6 +72,13 @@ export default function Encoding() {
       }
     });
 
+    createEffect(() => {
+      if(params.experimentId && experiments()) {
+        const experimentId = Number(params.experimentId)
+        const experiment = experiments().find((experiment) => experiment.experiment_id === experimentId)
+        setExperiment(experiment)
+      }})
+
     const handleSubmit = async () => {
       setStoreAutofill((prevStore) =>
         prevStore.map((attribute) =>
@@ -85,8 +93,10 @@ export default function Encoding() {
         },
         attributes: [...store, ...storeAutofill],
       }
+
       const response = await addNewSample(data, experiment().experiment_id );
-      navigate(`/encoding/${experiment().experiment_id}/${response.sample_id}`);
+      experiment() && response && navigate(`/encoding/${experiment()!.experiment_id}/${response.sample_id}`);
+    
     };
 
     return (

@@ -25,9 +25,7 @@ export default function NewSample() {
   const [store, setStore] = createStore<TableAttribute[]>([
  {...newAttribute} 
   ]);
-createEffect(() => {
-  console.log(store);
-})
+
   const handleSubmit = async () => {
     addExperimentalSetup(
       [...store],

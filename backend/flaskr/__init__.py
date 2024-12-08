@@ -115,7 +115,6 @@ def create_app(test_config=None):
                 db.add_attribute(con, attribute,                           
                                 'subject_attributes', 
                                 experiment_id)            
-            return jsonify({"message": "Subject added successfully"}), 200
     
         except Exception as e:
             con.rollback()
@@ -146,7 +145,6 @@ def create_app(test_config=None):
                                 attribute, 
                                 'observation_attributes', 
                                 experiment_id)   
-                return jsonify({"message": "Observation added successfully"}), 200
 
         except Exception as e:
             con.rollback()
@@ -174,7 +172,6 @@ def create_app(test_config=None):
             # add the custom attributes for the experiment
             for attribute in data['attributes']:
                 db.add_value(con, attribute['value'], attribute['sample_attributes_id'], sample_id, 'sample')	
-            return jsonify({"message": "Attributes values added successfully"}), 200
         
         except Exception as e:
             con.rollback()
@@ -182,7 +179,8 @@ def create_app(test_config=None):
     
         finally:
             con.close()
-            return jsonify({"message": "Sample attributes values added successfully"}), 200
+            return jsonify({"message": "Attributes values added successfully","sample_id": sample_id}), 200
+
         
     @app.route('/api/sample/<int:sample_id>/newObservation', methods=['POST'])
     def add_newObservation(sample_id):
@@ -200,7 +198,6 @@ def create_app(test_config=None):
             # add the custom attributes for the experiment
             for attribute in data['attributes']:
                 db.add_value(con, attribute['value'], attribute['observation_attributes_id'], observation_id, 'observation')	
-            return jsonify({"message": "Attributes values added successfully"}), 200
         
         except Exception as e:
             con.rollback()
@@ -209,6 +206,27 @@ def create_app(test_config=None):
         finally:
             con.close()
             return jsonify({"message": "observation attributes values added successfully"}), 200
+
+
+    # add value of an attribute (used for attrobute that are set after sample creation for exaple end time)
+    @app.route('/api/updateValue/<level>/<attribute_id>/<item_id>', methods=['GET'])
+    def add_attribute_value(level, attribute_id, item_id):
+        try:
+
+            # get the data from the request
+            value = request.get_json()
+            if not value:
+                return jsonify({"error": "Invalid JSON format"}), 400
+            
+            # connect to db
+            con = db.get_db()
+            db.add_value(con, value, attribute_id, item_id, level )
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500    
+        
+        finally:
+            con.close()
+            return jsonify({"message": "attribute value added successfully"}), 200
 
     ############ retrieve all records from a table (attribute + value) ############
     # get all experiments
@@ -267,5 +285,5 @@ def create_app(test_config=None):
             return jsonify({"message": "Record deleted successfully"}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-        
+
     return app

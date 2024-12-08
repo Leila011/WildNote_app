@@ -32,9 +32,7 @@ export default function NewSample() {
       Number(params.experimentId),
       "subject"
     );
-    createEffect(() => {
-      console.log(params.experimentId);
-    })
+
     navigate(
       `/`,
     );
