@@ -30,44 +30,44 @@ INSERT INTO observation (observation_id, sample_id) VALUES
 
 -- Insert mock data into experiment_attributes table
 INSERT INTO experiment_attributes (experiment_attributes_id, name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES
-(1, 'name', 'Name', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
-(2, 'creation_date', 'Creation Date', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
-(3, 'name', 'Name', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
-(4, 'creation_date', 'Creation Date', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
-(5, 'name', 'Name', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
-(6, 'creation_date', 'Creation Date', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 3);
+(1, 'name', 'Name', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
+(2, 'creation_date', 'Creation Date', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
+(3, 'name', 'Name', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
+(4, 'creation_date', 'Creation Date', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
+(5, 'name', 'Name', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
+(6, 'creation_date', 'Creation Date', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 3);
 
 -- Insert mock data into sample_attributes table
 INSERT INTO sample_attributes (sample_attributes_id, name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES
-(1, 'start', 'Start', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
-(2, 'end', 'End', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
-(3, 'start', 'Start', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
-(4, 'end', 'End', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
-(5, 'start', 'Start', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
-(6, 'end', 'End', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
-(7, 'group', 'Group', 'TEXT', 1, 0, 0, NULL, NULL, NULL, NULL, 1),
-(8, 'location', 'Location', 'TEXT', 1, 0, 0, NULL, NULL, NULL, NULL, 2);
+(1, 'start', 'Start', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
+(2, 'end', 'End', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
+(3, 'start', 'Start', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
+(4, 'end', 'End', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
+(5, 'start', 'Start', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
+(6, 'end', 'End', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
+(7, 'group', 'Group', 'string', 1, 0, 0, NULL, NULL, NULL, NULL, 1),
+(8, 'location', 'Location', 'string', 1, 0, 0, NULL, NULL, NULL, NULL, 2);
 
 -- Insert mock data into observation_attributes table
 INSERT INTO observation_attributes (observation_attributes_id, name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES
-(1, 'start', 'Start', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
-(2, 'end', 'End', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
-(3, 'start', 'Start', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
-(4, 'end', 'End', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
-(5, 'start', 'Start', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
-(6, 'end', 'End', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
-(7, 'behavior', 'Behavior', 'TEXT', 1, 0, 0, NULL, NULL, NULL, NULL, 1),
-(8, 'notes', 'Notes', 'TEXT', 1, 0, 0, NULL, NULL, NULL, NULL, 2),
-(9, 'subject', 'Subject', 'TEXT', 1, 0, 0, NULL, NULL, NULL, NULL, 1);
+(1, 'start', 'Start', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
+(2, 'end', 'End', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
+(3, 'start', 'Start', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
+(4, 'end', 'End', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
+(5, 'start', 'Start', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
+(6, 'end', 'End', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
+(7, 'behavior', 'Behavior', 'string', 1, 0, 0, NULL, NULL, NULL, NULL, 1),
+(8, 'notes', 'Notes', 'string', 1, 0, 0, NULL, NULL, NULL, NULL, 2),
+(9, 'subject', 'Subject', 'string', 1, 0, 0, NULL, NULL, NULL, NULL, 1);
 
 -- Insert mock data into subject_attributes table
 INSERT INTO subject_attributes (subject_attributes_id, name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES
-(1, 'name', 'Name', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
-(2, 'name', 'Name', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
-(3, 'name', 'Name', 'TEXT', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
-(4, 'age', 'Age', 'INTEGER', 1, 0, 0, NULL, NULL, NULL, NULL, 1),
-(5, 'gender', 'Gender', 'TEXT', 1, 0, 0, NULL, NULL, NULL, NULL, 2),
-(6, 'weight', 'Weight', 'FLOAT', 1, 0, 0, NULL, NULL, NULL, NULL, 3);
+(1, 'name', 'Name', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 1),
+(2, 'name', 'Name', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 2),
+(3, 'name', 'Name', 'string', 0, 0, 0, NULL, NULL, NULL, NULL, 3),
+(4, 'age', 'Age', 'number', 1, 0, 0, NULL, NULL, NULL, NULL, 1),
+(5, 'gender', 'Gender', 'string', 1, 0, 0, NULL, NULL, NULL, NULL, 2),
+(6, 'weight', 'Weight', 'number', 1, 0, 0, NULL, NULL, NULL, NULL, 3);
 
 -- Insert mock data into experiment_attribute_values table
 INSERT INTO experiment_attribute_values (experiment_attribute_values_id, attribute_id, value) VALUES

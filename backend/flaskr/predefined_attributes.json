@@ -1,16 +1,16 @@
 {
   "experiment": [
-    { "name": "name", "label": "Name", "type": "TEXT", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
-    { "name": "creation_Date", "label": "Creation Date", "type": "TEXT", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
-    { "name": "description", "label": "Description", "type": "TEXT", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
+    { "name": "name", "label": "Name", "type": "string", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
+    { "name": "creation_Date", "label": "Creation Date", "type": "string", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
+    { "name": "description", "label": "Description", "type": "string", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
   ],
   "sample": [
-    { "name": "subject_id", "label": "Subject ID", "type": "INTEGER", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
-    { "name": "start", "label": "Start", "type": "TEXT", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
-    { "name": "end", "label": "End", "type": "TEXT", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
+    { "name": "subject_id", "label": "Subject ID", "type": "number", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
+    { "name": "start", "label": "Start", "type": "string", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
+    { "name": "end", "label": "End", "type": "string", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
   ],
   "observation": [
-    { "name": "start", "label": "Start", "type": "TEXT", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
-    { "name": "end", "label": "End", "type": "TEXT", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
+    { "name": "start", "label": "Start", "type": "string", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null },
+    { "name": "end", "label": "End", "type": "string", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
   ]
 }
