@@ -8,7 +8,7 @@ interface TitleProps {
 export function Heading(props: TitleProps) {
   return (
     <div class={`flex py-10 ${props.class}`}>
-      <h1 class="text-3xl font-bold">{props.children}</h1>
+      <h1 class="text-3xl font-bold" >{props.children}</h1>
     </div>
   );
 }
