@@ -8,22 +8,11 @@ import { TableAttribute, TableAttributeValue } from "~/types/db";
 import { addNewExperiment } from "~/api/addNewExperiment";
 import { Heading } from "~/components/Heading";
 
-/**
- * A page for creating a new experiment
- * It takes as input the predetermined attributes and columns of the experiment table
- * It renders a form with the predetermined attributes with autofill is false and columns (manually filtered)
- * Submitting the data will return the id of the new experiment and redirect to the sampleSetup page
- * @input columns: The columns of the experiment table
- * @input attributes: The predefied attributes of the experiment table
- * @output experiment_id: The id of the new experiment
- **/
 export default function NewExperiment() {
   const navigate = useNavigate();
   const [data] = createResource(() => fetchAttributeDescriptionsExperiments());
   const [store, setStore] = createStore<TableAttributeValue[]>([]);
-  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>(
-    [],
-  );
+  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>([]);
 
   const handleSubmit = async () => {
     setStore((prevStore) =>
