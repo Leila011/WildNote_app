@@ -270,9 +270,12 @@ def create_app(test_config=None):
         return db.get_subjects(id)
     
     # get all observations for a given sample
-    @app.route('/api/samples/<int:id>/observations/attributeValues', methods=['GET'])
-    def get_observations(id):
-        return db.get_observations(id)
+    @app.route('/api/experiments/<int:experiment_id>/samples/<int:sample_id>/observations/attributeValues', methods=['GET'])
+    def get_observations(experiment_id, sample_id):
+        print(experiment_id)
+        print(sample_id)
+
+        return db.get_observations(experiment_id, sample_id)
     
     # Retrieve the attribute description#
     # Special one required when creating a new experiment

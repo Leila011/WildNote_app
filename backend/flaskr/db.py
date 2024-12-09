@@ -32,7 +32,7 @@ def init_db():
 # Fill the database with mock data
 def populate_mock():
     db = get_db()
-    with current_app.open_resource('mock.sql') as f:
+    with current_app.open_resource('mock-large.sql') as f:
         db.executescript(f.read().decode('utf8'))
     db.commit()
 
@@ -256,6 +256,8 @@ def get_samples(experiment_id):
         ''', (experiment_id,)
     ).fetchall()
 
+    print('attribute_names',attribute_names)    
+
     # Generate the pivot query
     columns = ["s.sample_id AS sample_id", "status", "timestamp_start", "timestamp_end"]
     for attribute in attribute_names:
@@ -275,8 +277,9 @@ def get_samples(experiment_id):
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
     return jsonify(rows)
 
-def get_observations(sample_id):
+def get_observations(experiment_id, sample_id):
     """Retrieve all observations from a sample (attributes + values)"""	
+    
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
@@ -285,24 +288,26 @@ def get_observations(sample_id):
         '''
         SELECT DISTINCT name
         FROM observation_attributes
-        WHERE experiment_id = (SELECT experiment_id FROM sample WHERE sample_id = ?)
-        ''', (sample_id,)
+        WHERE experiment_id = ?
+        ''', (experiment_id,)
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["o.observation_id AS observation_id", "timestamp_start", "timestamp_end"]
+    columns = ["o.observation_id AS observation_id", "o.timestamp_start", "o.timestamp_end"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         columns.append(f"MAX(CASE WHEN oa.name = '{attribute_name}' THEN oav.value END) AS \"{attribute_name}\"")
 
     columns_str = ", ".join(columns)
+
     pivot_query = f"""
     SELECT {columns_str}
-    FROM observation o
-    LEFT JOIN observation_attributes oa ON o.sample_id = oa.experiment_id
-    LEFT JOIN observation_attribute_values oav ON oa.observation_attributes_id = oav.attribute_id
+     FROM observation o
+    LEFT JOIN sample s ON o.sample_id = s.sample_id
+    LEFT JOIN observation_attribute_values oav ON o.observation_id = oav.observation_id
+    LEFT JOIN observation_attributes oa ON oav.attribute_id = oa.observation_attributes_id
     WHERE o.sample_id = ?
-    GROUP BY o.observation_id
+    GROUP BY o.observation_id, o.timestamp_start, o.timestamp_end
     """
 
     rows = db.execute(pivot_query, (sample_id,)).fetchall()
