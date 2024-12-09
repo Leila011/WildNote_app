@@ -63,19 +63,21 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 ############################### WRITE ###############################
-def add_experiment(con):
+def add_experiment(con, data):
     """Add a new experiment to the database
 
     Returns: The ID of the newly created experiment
     """
+
     try:
         cursor = con.cursor()
         cursor.execute(
-            'INSERT INTO experiment DEFAULT VALUES'
+            'INSERT INTO experiment (predefine_subject) VALUES (?)',
+            ( data['predefine_subject'],)
         )
         con.commit()
         return cursor.lastrowid
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error adding experiment: {e}")
 
 def add_attribute(con, attribute, table_name, experiment_id):
@@ -103,7 +105,7 @@ def add_attribute(con, attribute, table_name, experiment_id):
         cursor.execute(query, params)
         con.commit()
         return cursor.lastrowid
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error adding attribute: {e}")
 
 
@@ -119,7 +121,7 @@ def add_attribute(con, attribute, table_name, experiment_id):
 #                     f'INSERT INTO {table_name+"_attributes"} (name, type, custom, experiment_id) VALUES (?, ?, ?, ?)',
 #                     (attribute['name'], attribute['type'], attribute['custom'], attribute['autofill'], experiment_id)
 #                 )
-#     except sqlite3.Error as e:
+#     except Exception as e:
 #         raise Exception(f"Error adding predefined attributes: {e}")
 
 def add_subject(con, experiment_id):
@@ -132,7 +134,7 @@ def add_subject(con, experiment_id):
         )
         con.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error adding subject: {e}")
     
 def add_sample(con, experiment_id, subject_id):
@@ -145,7 +147,7 @@ def add_sample(con, experiment_id, subject_id):
         )
         con.commit()
         return cursor.lastrowid
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error adding sample: {e}")
 
 def add_observation(con, sample_id):
@@ -158,7 +160,7 @@ def add_observation(con, sample_id):
         )
         con.commit()
         return cursor.lastrowid
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error adding sample: {e}")
 
 def add_value(con, value, attribute_id, table_id, level):
@@ -172,7 +174,7 @@ def add_value(con, value, attribute_id, table_id, level):
             table_id
         ))
         con.commit()
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error adding value: {e}")
 
 def delete_row(con, table, id):
@@ -184,21 +186,19 @@ def delete_row(con, table, id):
         cursor.execute(query, (id,))
         con.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error deleting row: {e}")
     
 def update_value(con, table, id, field, value):
     """Update the value a field in a row from a given table"""
-    print('updatevalue')
     id_column = f"{table}_id"
-    print(f'UPDATE {table} SET {field} = {value} WHERE {id_column} = {id}')
     try:
         cursor = con.cursor()
         query = f'UPDATE {table} SET {field} = ? WHERE {id_column} = ?'  # Using f-string to safely insert table name
         cursor.execute(query, (value, id,))
         con.commit()
 
-    except sqlite3.Error as e:
+    except Exception as e:
         raise Exception(f"Error updating value: {e}")
 
 ############################### READ VALUE ###############################

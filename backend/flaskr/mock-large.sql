@@ -1,5 +1,5 @@
 -- Insert mock data into experiment table
-INSERT INTO experiment (status, timestamp_start, timestamp_end,  predefinedSubject)
+INSERT INTO experiment (status, timestamp_start, timestamp_end,  predefine_subject)
 VALUES 
 ('active', '2024-12-01 08:00:00', '2024-12-01 18:00:00', 0);
 

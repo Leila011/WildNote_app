@@ -52,11 +52,16 @@ export function FormNewAttribute(props: Props) {
               <h1>name:</h1>
               <TextField
                 value={store[index].label}
+                validationState={
+                  store[index].name !== "" && store[index].name !== undefined
+                    ? "valid"
+                    : "invalid"
+                }
                 onChange={(e: any) => {
-                  const value = e === "" ? null : e;
-                  const valueClean = value.toLowerCase().replace(/ /g, "_");
+                  
+                  const valueClean = e.toLowerCase().replace(/ /g, "_");
                   setStore([index], "name", valueClean);
-                  setStore([index], "label", value);
+                  setStore([index], "label", e);
                 }}
               >
                 <TextFieldInput

@@ -49,10 +49,10 @@ def create_app(test_config=None):
             con = db.get_db()
 
             # add a new experiment & retrieve the last inserted id
-            experiment_id = db.add_experiment(con)
+            experiment_id = db.add_experiment(con, data['columns'])
 
             # add the value of the predefined attributes for the experiment
-            for attribute in data:
+            for attribute in data['attributes']:
                 attribute_id = db.add_attribute(con, attribute, 'experiment_attributes', experiment_id)
                 db.add_value(con, attribute['value'], attribute_id, experiment_id, 'experiment')	
 
@@ -272,9 +272,6 @@ def create_app(test_config=None):
     # get all observations for a given sample
     @app.route('/api/experiments/<int:experiment_id>/samples/<int:sample_id>/observations/attributeValues', methods=['GET'])
     def get_observations(experiment_id, sample_id):
-        print(experiment_id)
-        print(sample_id)
-
         return db.get_observations(experiment_id, sample_id)
     
     # Retrieve the attribute description#

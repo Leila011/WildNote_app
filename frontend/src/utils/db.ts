@@ -1,10 +1,22 @@
-import { TableAttribute, TableAttributeDb } from "~/types/db";
+import { TableAttribute, TableAttributeDb, TableAttributeValue } from "~/types/db";
 
-export function attributeToDb(attributes: TableAttribute[]) {
+
+export function dataToDb(data: Record<string, any>): Record<string, any> {
+  const cleanData: Record<string, any> = {};
+  Object.entries(data).forEach(([key, value]) => {
+    cleanData[key] = typeof value === "boolean" ? (value ? 1 : 0) : value;
+  });
+  return cleanData;
+}
+   
+export function attributeToDb(attributes: TableAttribute[] ) {
   const cleanAttributes = attributes.map((attribute) => {
     const newAttribute = {
       ...attribute,
       choices: attribute.choices.join("|"),
+      autofill: attribute.autofill ? 1 : 0,
+      custom: attribute.custom ? 1 : 0,
+      required: attribute.required ? 1 : 0,
     };
     return newAttribute;
   });
@@ -45,3 +57,4 @@ export const statusOptions = [
   { value: "active", label: "Active" },
   { value: "completed", label: "Completed" },
 ];
+

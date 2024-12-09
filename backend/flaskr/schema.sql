@@ -17,7 +17,8 @@ CREATE TABLE experiment (
     experiment_id INTEGER PRIMARY KEY AUTOINCREMENT,
     status TEXT DEFAULT 'created',
     timestamp_start TIMESTAMP,
-    timestamp_end TIMESTAMP
+    timestamp_end TIMESTAMP,
+    predefine_subject BOOLEAN DEFAULT 0
 );
 
 CREATE TABLE subject (
@@ -29,7 +30,7 @@ CREATE TABLE subject (
 CREATE TABLE sample (
     sample_id INTEGER PRIMARY KEY AUTOINCREMENT,
     experiment_id INTEGER,
-    subject_id INTEGER,
+    subject_id INTEGER NULL,
     status TEXT DEFAULT 'active',
     timestamp_start TIMESTAMP,
     timestamp_end TIMESTAMP,
