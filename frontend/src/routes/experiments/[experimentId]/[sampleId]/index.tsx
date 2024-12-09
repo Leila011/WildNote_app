@@ -9,9 +9,16 @@ export default function Observations() {
   const params = useParams();
 
   const [data, { refetch }] = createResource(
-    () => Number(params.sampleId),
+    () => ({
+      experimentId: Number(params.experimentId),
+      sampleId: Number(params.sampleId)
+    }),
     fetchObservations,
   );
+
+  createEffect(() => {
+    console.log(params.sampleId)
+    data()  && console.log(data())});
 
   function getColumnNames(data: any) {
     if (data) {
