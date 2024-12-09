@@ -107,3 +107,203 @@ INSERT INTO subject_attribute_values (subject_attribute_values_id, attribute_id,
 (4, 4, 4, '25'),
 (5, 5, 5, 'Male'),
 (6, 6, 6, '70.0');
+
+-- For observation 201
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 201, 'Female'),
+(2, 201, '3'),
+(3, 201, 'good'),
+(4, 201, 'adult'),
+(5, 201, 'Aggressive level 3'),
+(6, 201, 'true');
+
+-- For observation 202
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 202, 'Male'),
+(2, 202, '1'),
+(3, 202, 'good'),
+(4, 202, 'teenage'),
+(5, 202, 'Physical contact'),
+(6, 202, 'false');
+
+-- For observation 203
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 203, 'Female'),
+(2, 203, '2'),
+(3, 203, 'good'),
+(4, 203, 'child'),
+(5, 203, 'Aggressive level 1'),
+(6, 203, 'true');
+
+-- For observation 204
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 204, 'Male'),
+(2, 204, '3'),
+(3, 204, 'good'),
+(4, 204, 'adult'),
+(5, 204, 'Aggressive level 2'),
+(6, 204, 'false');
+
+-- For observation 205
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 205, 'Female'),
+(2, 205, '1'),
+(3, 205, 'good'),
+(4, 205, 'teenage'),
+(5, 205, 'Aggressive level 3'),
+(6, 205, 'true');
+
+-- For observation 206
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 206, 'Male'),
+(2, 206, '2'),
+(3, 206, 'injured'),
+(4, 206, 'child'),
+(5, 206, 'Physical contact'),
+(6, 206, 'false');
+
+-- For observation 207
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 207, 'Female'),
+(2, 207, '3'),
+(3, 207, 'good'),
+(4, 207, 'adult'),
+(5, 207, 'Aggressive level 1'),
+(6, 207, 'true');
+
+-- For observation 208
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 208, 'Male'),
+(2, 208, '1'),
+(3, 208, 'good'),
+(4, 208, 'teenage'),
+(5, 208, 'Aggressive level 2'),
+(6, 208, 'false');
+
+-- For observation 209
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 209, 'Female'),
+(2, 209, '2'),
+(3, 209, 'good'),
+(4, 209, 'child'),
+(5, 209, 'Aggressive level 3'),
+(6, 209, 'true');
+
+-- For observation 210
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 210, 'Male'),
+(2, 210, '3'),
+(3, 210, 'good'),
+(4, 210, 'adult'),
+(5, 210, 'Physical contact'),
+(6, 210, 'false');
+
+-- For observation 211
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 211, 'Female'),
+(2, 211, '1'),
+(3, 211, 'good'),
+(4, 211, 'teenage'),
+(5, 211, 'Aggressive level 1'),
+(6, 211, 'true');
+
+-- For observation 212
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 212, 'Male'),
+(2, 212, '2'),
+(3, 212, 'good'),
+(4, 212, 'child'),
+(5, 212, 'Aggressive level 2'),
+(6, 212, 'false');
+
+-- For observation 213
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 213, 'Female'),
+(2, 213, '3'),
+(3, 213, 'good'),
+(4, 213, 'adult'),
+(5, 213, 'Aggressive level 3'),
+(6, 213, 'true');
+
+-- For observation 214
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 214, 'Male'),
+(2, 214, '1'),
+(3, 214, 'injured'),
+(4, 214, 'teenage'),
+(5, 214, 'Physical contact'),
+(6, 214, 'false');
+
+-- For observation 215
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 215, 'Female'),
+(2, 215, '2'),
+(3, 215, 'good'),
+(4, 215, 'child'),
+(5, 215, 'Aggressive level 1'),
+(6, 215, 'true');
+
+-- For observation 216
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 216, 'Male'),
+(2, 216, '3'),
+(3, 216, 'good'),
+(4, 216, 'adult'),
+(5, 216, 'Aggressive level 2'),
+(6, 216, 'false');
+
+-- For observation 217
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 217, 'Female'),
+(2, 217, '1'),
+(3, 217, 'good'),
+(4, 217, 'teenage'),
+(5, 217, 'Aggressive level 3'),
+(6, 217, 'true');
+
+-- For observation 218
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 218, 'Male'),
+(2, 218, '2'),
+(3, 218, 'good'),
+(4, 218, 'child'),
+(5, 218, 'Physical contact'),
+(6, 218, 'false');
+
+-- For observation 219
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 219, 'Female'),
+(2, 219, '3'),
+(3, 219, 'good'),
+(4, 219, 'adult'),
+(5, 219, 'Aggressive level 1'),
+(6, 219, 'true');
+
+-- For observation 220
+INSERT INTO observation_attribute_values (attribute_id, observation_id, value)
+VALUES
+(1, 220, 'Male'),
+(2, 220, '1'),
+(3, 220, 'good'),
+(4, 220, 'teenage'),
+(5, 220, 'Aggressive level 2'),
+(6, 220, 'false');
