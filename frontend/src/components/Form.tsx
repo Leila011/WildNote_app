@@ -112,20 +112,17 @@ export const Form = (props: Props) => {
   };
 
   return (
-    <div class="border p-4 border-secondary bg-secondary/15 rounded-md space-y-5">
+    <div class="flex flex-col  space-y-5 pb-6 pt-2 items-left justify-left">
       <Index each={store}>
         {(field, index) => {
           const key = field().name;
           return (
             // Argument
-            <div class="grid grid-cols-12 gap-2 ml-3 pr-2 space-y-4">
+            <div class=" gap-2 space-y-4 px-5 w-full">
               {/* Argument name */}
-              <div
-                class={`col-span-12 md:col-span-3 mr-2 flex break-all`}
-              ></div>
 
               {/* Argument input field(s) */}
-              <div class="md:col-span-8 col-span-12 space-y-2 mr-2">
+              <div class="md:col-span-8 col-span-12 space-y-2">
                 <p class="text-sm text-secondary">{field().name}</p>
                 <div class="flex flex-row">
                   <div class="flex flex-col w-full">

@@ -1,35 +1,13 @@
-import {
-  createEffect,
-  createResource,
-  createSignal,
-  For,
-  Show,
-} from "solid-js";
-import { fetchExperiments } from "~/api/fetchExperiments";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+import { createEffect, createResource } from "solid-js";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { IconChevronDown } from "~/components/icons";
-import {
-  Experiment,
-  Subject,
-  TableAttribute,
-  TableAttributeValue,
-} from "~/types/db";
+import { TableAttribute, TableAttributeValue } from "~/types/db";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Form } from "~/components/Form";
 import { createStore } from "solid-js/store";
 import { useNavigate, useParams } from "@solidjs/router";
-import { addNewSample } from "~/api/addNewSample";
-import { fetchSubjects } from "~/api/fetchSubjects";
 import { addNewObservation } from "~/api/addNewObservation";
-import { addAttributeValue } from "~/api/addAttributeValue";
 import { updateValue } from "~/api/updateValue";
-import { Title } from "~/components/title";
+import { Heading } from "~/components/Heading";
 
 export default function EncodingObservation() {
   const navigate = useNavigate();
@@ -110,7 +88,7 @@ export default function EncodingObservation() {
   };
 
   const endSample = async () => {
-    await updateValue( "sample", "status", Number(params.sampleId), "completed");
+    await updateValue("sample", "status", Number(params.sampleId), "completed");
   };
 
   const handleSubmitNext = async () => {
@@ -130,16 +108,30 @@ export default function EncodingObservation() {
   };
 
   return (
-    <main class="text-center mx-auto text-gray-700 p-4">
+    <div class="container mx-auto">
       <div>
-      <Title>Start encoding your new observation</Title>
-        {store.length && <Form store={store} setStore={setStore}></Form>}
-        <Button onClick={handleSubmitNext}>Next observation</Button>
-        <Button onClick={handleSubmitNextSample}>
-          Next observation session
-        </Button>
-        <Button onClick={handleSubmitEnd}>End observation session</Button>
+        <Heading>Start encoding your new observation</Heading>
+        <div class="flex flex-col space-y-2">
+          <div class="border border-primary rounded-md item-center bg-primary/10">
+            {store.length && <Form store={store} setStore={setStore}></Form>}
+          </div>
+
+          <div class="flex flex-row space-x-2">
+            <Button
+              class={buttonVariants({ variant: "accent" })}
+              onClick={handleSubmitNext}
+            >
+              Next observation
+            </Button>
+            <Button
+              class={buttonVariants({ variant: "outline" })}
+              onClick={handleSubmitNextSample}
+            >
+              Next observation session
+            </Button>
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

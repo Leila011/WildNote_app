@@ -54,10 +54,10 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
 
   const table = createSolidTable({
     get data() {
-      return props.data
+      return props.data;
     },
     get columns() {
-      return props.columns
+      return props.columns;
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -82,7 +82,6 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       },
     },
   });
-
 
   return (
     <div class="w-full">
@@ -118,7 +117,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
       </div>
       <div class="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader class="bg-secondary">
             <For each={table.getHeaderGroups()}>
               {(headerGroup) => (
                 <TableRow>

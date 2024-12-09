@@ -9,9 +9,7 @@ import { backendUrl } from "~/db";
 
 export async function fetchTable(level: string): Promise<any[]> {
   try {
-    const response = await fetch(
-      `${backendUrl}/api/${level}`,
-    );
+    const response = await fetch(`${backendUrl}/api/${level}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch table ${level}: ${response.statusText}`);
     }

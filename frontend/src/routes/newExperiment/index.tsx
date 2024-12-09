@@ -1,13 +1,12 @@
-import { useNavigate, useParams } from "@solidjs/router";
-import { createEffect, createResource, createSignal } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+import { createEffect, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
 import { Form } from "~/components/Form";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { TableAttribute, TableAttributeValue } from "~/types/db";
-import { sqlToJsType } from "~/utils/typeConvertion";
 import { addNewExperiment } from "~/api/addNewExperiment";
-import { Title } from "~/components/title";
+import { Heading } from "~/components/Heading";
 
 /**
  * A page for creating a new experiment
@@ -62,10 +61,22 @@ export default function NewExperiment() {
   });
 
   return (
-    <div>
-      <Title>Set-up a new experiment</Title>
-      {store && <Form store={store} setStore={setStore}></Form>}
-      <Button onClick={handleSubmit}>Submit</Button>
+    <div class="container mx-auto">
+      <Heading>New experiment</Heading>
+
+      <div class="flex flex-col space-y-2">
+        <div class="border border-primary rounded-md item-center bg-primary/10">
+          {store && <Form store={store} setStore={setStore}></Form>}
+        </div>
+        <div>
+          <Button
+            class={buttonVariants({ variant: "accent" })}
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

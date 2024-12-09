@@ -2,12 +2,12 @@ import { useNavigate, useParams } from "@solidjs/router";
 import { createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { TableAttribute } from "~/types/db";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
 import { newAttribute } from "~/utils/db";
-import { Title } from "~/components/title";
+import { Heading } from "~/components/Heading";
 /**
  * A page for setting up a new sample for an experiment
  * It takes as input the predetermined attributes and columns of the sample table
@@ -34,10 +34,22 @@ export default function NewSample() {
   };
 
   return (
-    <div>
-      <Title>Set-up my observation sessions</Title>
-      <FormNewAttribute store={store} setStore={setStore} />
-      <Button onClick={handleSubmit}>Submit</Button>
+    <div class="container mx-auto">
+      <Heading>New experiment / Observation sessions</Heading>
+      <div class="flex flex-col space-y-2">
+        <div class="border border-primary rounded-md item-center bg-primary/10">
+          <FormNewAttribute store={store} setStore={setStore} />
+          <div></div>
+        </div>
+        <div>
+          <Button
+            class={buttonVariants({ variant: "accent" })}
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

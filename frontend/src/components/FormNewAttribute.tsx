@@ -44,10 +44,10 @@ export function FormNewAttribute(props: Props) {
   };
 
   return (
-    <div>
+    <div class=" flex flex-col  space-y-5 pb-6 pt-2 items-left justify-left  px-5">
       <Index each={store}>
         {(attribute, index) => (
-          <div class="flex flex-row space-x-1">
+          <div class="flex flex-row space-x-4">
             <div>
               <h1>name:</h1>
               <TextField
@@ -74,8 +74,8 @@ export function FormNewAttribute(props: Props) {
               <DropdownMenu>
                 <DropdownMenuTrigger
                   as={Button<"button">}
-                  variant={"ghost"}
-                  class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
+                  variant={"outline"}
+                  class={`bg-card text-card-foreground  rounded-md h-10 pl-2 justify-start  w-full`}
                 >
                   <div class="flex-grow text-left">{store[index].type}</div>
                   <IconChevronDown />
@@ -95,7 +95,7 @@ export function FormNewAttribute(props: Props) {
             </div>
 
             <Show when={store[index].type === "number"}>
-              <div class="flex flex-row space-x-1">
+              <div class="flex flex-row space-x-5">
                 <div>
                   <h1>min:</h1>
                   <NumberField
@@ -197,8 +197,8 @@ export function FormNewAttribute(props: Props) {
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       as={Button<"button">}
-                      variant={"ghost"}
-                      class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
+                      variant={"outline"}
+                      class={`bg-card text-card-foreground  rounded-md h-10 pl-2 justify-start  w-full`}
                     >
                       <div class="flex-grow text-left">
                         {store[index].default_value}
@@ -243,8 +243,9 @@ export function FormNewAttribute(props: Props) {
             <Show when={store[index].type === "boolean"}>
               <div>
                 <h1>default:</h1>
+
                 <ToggleGroup
-                  class={`${toggleVariants({ size: "sm", variant: "outline" })}`}
+                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
                   value={store[index].default_value}
                 >
                   <For each={["true", "false"]}>
@@ -266,7 +267,9 @@ export function FormNewAttribute(props: Props) {
           </div>
         )}
       </Index>
-      <Button onClick={handleAddAttribute}>Add a new attribute</Button>
+      <div>
+        <Button onClick={handleAddAttribute}>Add a new attribute</Button>
+      </div>
     </div>
   );
 }

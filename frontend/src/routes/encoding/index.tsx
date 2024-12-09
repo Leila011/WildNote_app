@@ -26,7 +26,7 @@ import { createStore } from "solid-js/store";
 import { useNavigate, useParams } from "@solidjs/router";
 import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
-import { Title } from "~/components/title";
+import { Heading } from "~/components/Heading";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
@@ -124,68 +124,92 @@ export default function EncodingSample() {
   };
 
   return (
-    <main class="text-center mx-auto text-gray-700 p-4">
+    <div class="container mx-auto">
       <div>
-      <Title>Select your experiment and start an observation session</Title>
-        <h1>Choose your experiment:</h1>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            as={Button<"button">}
-            variant={"ghost"}
-            class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
-          >
-            <div class="flex-grow text-left">
-              {!experiment() ? "Pick your experiment" : experiment()!.name}
-            </div>
-            <IconChevronDown />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <For each={experiments()}>
-              {(option) => (
-                <DropdownMenuItem
-                  onSelect={() => {
-                    setExperiment(option);
-                  }}
+        <Heading>
+          Select your experiment and fill out your observation session
+          parameters
+        </Heading>
+        <div class="flex flex-col space-y-5">
+          <div class="grid grid-cols-2 gap-20">
+            <div>
+              <h1>Choose your experiment:</h1>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  as={Button<"button">}
+                  variant={"ghost"}
+                  class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
                 >
-                  <span>{option.name}</span>
-                </DropdownMenuItem>
-              )}
-            </For>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <Show when={experiment()}>
-          <h1>Choose your subject:</h1>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              as={Button<"button">}
-              variant={"ghost"}
-              class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
-            >
-              <div class="flex-grow text-left">
-                {!subject() ? "Pick your Subject" : subject()!.name}
-              </div>
-              <IconChevronDown />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <For each={subjects()}>
-                {(option) => (
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      setSubject(option);
-                    }}
+                  <div class="flex-grow text-left">
+                    {!experiment()
+                      ? "Pick your experiment"
+                      : experiment()!.name}
+                  </div>
+                  <IconChevronDown />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <For each={experiments()}>
+                    {(option) => (
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          setExperiment(option);
+                        }}
+                      >
+                        <span>{option.name}</span>
+                      </DropdownMenuItem>
+                    )}
+                  </For>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div>
+              <Show when={experiment()}>
+                <h1>Choose your subject:</h1>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    as={Button<"button">}
+                    variant={"ghost"}
+                    class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
                   >
-                    <span>{option.name}</span>
-                  </DropdownMenuItem>
-                )}
-              </For>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                    <div class="flex-grow text-left">
+                      {!subject() ? "Pick your Subject" : subject()!.name}
+                    </div>
+                    <IconChevronDown />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <For each={subjects()}>
+                      {(option) => (
+                        <DropdownMenuItem
+                          onSelect={() => {
+                            setSubject(option);
+                          }}
+                        >
+                          <span>{option.name}</span>
+                        </DropdownMenuItem>
+                      )}
+                    </For>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </Show>
+            </div>
+          </div>
 
-          <h1>Fill out sample info</h1>
-          {store.length && <Form store={store} setStore={setStore}></Form>}
-          <Button onClick={handleSubmit}>Submit</Button>
-        </Show>
+          <Show when={experiment()}>
+            <div class="border border-primary rounded-md item-center bg-primary/10">
+              <h1>Fill out you observation session parameters</h1>
+              {store.length && <Form store={store} setStore={setStore}></Form>}
+            </div>
+            <div>
+              <Button
+                class={buttonVariants({ variant: "accent" })}
+                onClick={handleSubmit}
+              >
+                Start an observation
+              </Button>
+            </div>
+          </Show>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

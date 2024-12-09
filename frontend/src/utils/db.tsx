@@ -27,7 +27,6 @@ export function attributeFromDb(
   return cleanAttributes;
 }
 
-
 export const newAttribute: TableAttribute = {
   name: "",
   label: "",
@@ -45,4 +44,4 @@ export const statusOptions = [
   { value: "draft", label: "Draft" },
   { value: "active", label: "Active" },
   { value: "completed", label: "Completed" },
-]
+];
