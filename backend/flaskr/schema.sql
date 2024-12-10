@@ -24,6 +24,8 @@ CREATE TABLE experiment (
 
 CREATE TABLE subject (
     subject_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp_creation TIMESTAMP NOT NULL,
+    name TEXT NOT NULL, 
     experiment_id INTEGER,
     FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id) ON DELETE CASCADE
 );

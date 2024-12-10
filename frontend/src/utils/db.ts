@@ -75,3 +75,17 @@ export function getTimestamp(): string {
   return formattedDate;
 }
 
+export function toAttributeValue(attributes: Attribute[]):AttributeValue[] {
+  return attributes.map(
+    (attribute: Attribute) =>
+      ({
+        ...attribute,
+        value: "",
+      }) as AttributeValue,
+  );
+}
+
+
+
+
+

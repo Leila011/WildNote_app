@@ -9,7 +9,7 @@ import { newAttribute } from "~/utils/db";
 import { Heading } from "~/components/Heading";
 import { isAttributesDefValid } from "~/utils/dataValidation";
 
-export default function SubjectSetup() {
+export default function newSubject() {
   const params = useParams();
   const navigate = useNavigate();
   const [ready, setReady] = createSignal<boolean>(false);
@@ -21,15 +21,14 @@ export default function SubjectSetup() {
     setReady(isAttributesDefValid(store));
 
     if (ready()) {
-      addExperimentalSetup({ data: [...store], experimentId: Number(params.experimentId), level: "subject" });
-
-      navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
+      addExperimentalSetup({ data: store, experimentId: Number(params.experimentId), level: "subject" });
+      navigate(`/newExperiment/${params.experimentId}/newSubject`);
     }
   };
 
   return (
     <div class="container mx-auto">
-      <Heading>New experiment / Subjects</Heading>
+      <Heading>New experiment / Subject's attributes</Heading>
       <div class="flex flex-col space-y-2">
         <div class="border border-primary rounded-md item-center bg-primary/10">
           <FormNewAttribute store={store} setStore={setStore} />

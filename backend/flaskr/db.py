@@ -123,13 +123,13 @@ def add_attribute(con, attribute, table_name, experiment_id):
 #     except Exception as e:
 #         raise Exception(f"Error adding predefined attributes: {e}")
 
-def add_subject(con, experiment_id):
+def add_subject(con, experiment_id, data):
     """Add a new subject in the subject table"""
     try:
         cursor = con.cursor()
         cursor.execute(
-            'INSERT INTO subject (experiment_id) VALUES (?)',
-            (experiment_id)
+            'INSERT INTO subject (experiment_id, name, timestamp_creation) VALUES (?,?,?)',
+            (experiment_id, data['name'], data['timestamp_creation'],) 
         )
         con.commit()
 

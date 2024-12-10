@@ -9,12 +9,13 @@ import { addNewExperiment } from "~/api/addNewExperiment";
 import { Heading } from "~/components/Heading";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { toggleVariants } from "~/components/ui/toggle";
-import { isAttributesValuesValid } from "~/utils/dataValidation";
+import { isAttributesValuesValid, isColumnsValuesValid } from "~/utils/dataValidation";
 import {
   TextField,
   TextFieldErrorMessage,
   TextFieldInput,
 } from "~/components/ui/text-field";
+import { toAttributeValue } from "~/utils/db";
 
 export default function NewExperiment() {
   const navigate = useNavigate();
@@ -22,25 +23,17 @@ export default function NewExperiment() {
   const [store, setStore] = createStore<AttributeValue[]>([]);
   const [predefineSubject, setPredefineSubject] = createSignal<boolean>(false);
   const [name, setName] = createSignal<string>("");
-  const [ready, setReady] = createSignal<boolean>(false);
 
   const handleSubmit = async () => {
-    setStore((prevStore) =>
-      prevStore.map((attribute) =>
-        attribute.name === "creation_date"
-          ? { ...attribute, value: Date.now() }
-          : attribute,
-      ),
-    );
-
     const dataOut = {
       attributes: store,
-      columns: { predefine_subject: predefineSubject(), name: name() },
+      columns: { predefine_subject: predefineSubject(), 
+                 name: name() },
     };
 
-    setReady(isAttributesValuesValid(dataOut.attributes));
+    const isReady = isAttributesValuesValid(dataOut.attributes) && isColumnsValuesValid(dataOut.columns)
 
-    if (ready()) {
+    if (isReady) {
       const response = await addNewExperiment({ data: dataOut });
       if (dataOut.columns.predefine_subject) {
         navigate(`/newExperiment/${response.experiment_id}/subjectSetup`);
@@ -52,19 +45,7 @@ export default function NewExperiment() {
 
   createEffect(() => {
     if (data()) {
-      const attributesAugmented = data()!.attributes.map(
-        (attribute: Attribute) =>
-          ({
-            ...attribute,
-            value: "",
-          }) as AttributeValue,
-      );
-
-      setStore(
-        attributesAugmented.filter(
-          (attribute: AttributeValue) => attribute.autofill === false,
-        ),
-      );
+      setStore( toAttributeValue(data()!.attributes));
     }
   });
 

@@ -13,16 +13,14 @@ import { isAttributesDefValid } from "~/utils/dataValidation";
 export default function ObservationSetup() {
   const params = useParams();
   const navigate = useNavigate();
-  const [ready, setReady] = createSignal<boolean>(false);
-
   const [store, setStore] = createStore<Attribute[]>([
     { ...newAttribute },
   ]);
 
-  const handleSubmit = async () => {
-    setReady(isAttributesDefValid(store));
+  const handleSubmit = async (destination:string) => {
+    const isReady = isAttributesDefValid(store)
 
-    if (ready()) {
+    if (isReady) {
       await addExperimentalSetup({
         data: store,
         experimentId: Number(params.experimentId),
@@ -34,29 +32,17 @@ export default function ObservationSetup() {
           row_id: Number(params.experimentId), 
           value: "active" }
       );
-      navigate(`/`);
-    }
-  };
-
-  const handleSubmitStart = async () => {
-    setReady(isAttributesDefValid(store));
-
-    if (ready()) {
-      await addExperimentalSetup({
-        data: store,
-        experimentId: Number(params.experimentId),
-        level: "observation",
-      });
-      await updateValue(
-        { level: "observation", column_name: "status", row_id: Number(params.experimentId), value: "active" }
-      );
-      navigate(`/encoding/experiment/${params.experimentId}`);
+      if(destination === "encoding"){
+        navigate(`/encoding/experiment/${params.experimentId}`);
+      }else if(destination === "home"){
+        navigate(`/`);
+      }
     }
   };
 
   return (
     <div class="container mx-auto">
-      <Heading>New experiment / Observations</Heading>
+      <Heading>New experiment / Observation's attributes</Heading>
       <div class="flex flex-col space-y-2">
         <div class="border border-primary rounded-md item-center bg-primary/10">
           <FormNewAttribute store={store} setStore={setStore} />
@@ -64,13 +50,13 @@ export default function ObservationSetup() {
         <div class="flex flex-row space-x-1">
           <Button
             class={buttonVariants({ variant: "accent" })}
-            onClick={handleSubmitStart}
+            onClick={()=>handleSubmit("encoding")}
           >
             Submit and start encoding
           </Button>
           <Button
             class={buttonVariants({ variant: "outline" })}
-            onClick={handleSubmit}
+            onClick={()=>handleSubmit("home")}
           >
             Submit and go back home
           </Button>

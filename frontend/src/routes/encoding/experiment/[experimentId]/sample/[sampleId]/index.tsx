@@ -8,14 +8,15 @@ import { useNavigate, useParams } from "@solidjs/router";
 import { addNewObservation } from "~/api/addNewObservation";
 import { updateValue } from "~/api/updateValue";
 import { Heading } from "~/components/Heading";
-import { getTimestamp } from "~/utils/db";
+import { getTimestamp, toAttributeValue } from "~/utils/db";
+import { isAttributesValuesValid, isColumnsValuesValid } from "~/utils/dataValidation";
 
 export default function EncodingObservation() {
   const navigate = useNavigate();
   const params = useParams();
   const [timestamp_start, setTimestamp_start] = createSignal(getTimestamp());
 
-  const [attributes] = createResource<Metadata>(() =>
+  const [data] = createResource<Metadata>(() =>
     fetchAttributeDescriptions({
       experimentId: Number(params.experimentId),
       level: "observation",
@@ -25,24 +26,13 @@ export default function EncodingObservation() {
   const [store, setStore] = createStore<AttributeValue[]>([]);
 
   createEffect(() => {
-    if (attributes()) {
-      const attributesAugmented = attributes()!.attributes.map(
-        (attribute: Attribute) =>
-          ({
-            ...attribute,
-            value: "",
-          }) as AttributeValue,
-      );
-      setStore(
-        attributesAugmented.filter(
-          (attribute: AttributeValue) => attribute.autofill === false,
-        ),
-      );
+    if (data()) {
+      setStore( toAttributeValue(data()!.attributes));
     }
   });
 
   const endObservation = async () => {
-    const data = {
+    const dataOut = {
       columns: {
         status: "completed",
         timestamp_start: timestamp_start(),
@@ -50,19 +40,13 @@ export default function EncodingObservation() {
       },
       attributes: store,
     };
+    const isReady = isAttributesValuesValid(dataOut.attributes) && isColumnsValuesValid(dataOut.columns)
 
-    const response = await addNewObservation({data:data, sampleId:Number(params.sampleId)});
-
-    // reset the stores (this vaoid a=having to refetch everything)
-    const resetStore = store.map((attribute) => {
-      return {
-        ...attribute,
-        value: "",
-      };
-    });
-    setStore(resetStore);
+    if(isReady) {
+    const response = await addNewObservation({data:dataOut, sampleId:Number(params.sampleId)});
     setTimestamp_start(getTimestamp());
     return response;
+    }
   };
 
   const endSample = async () => {
@@ -71,22 +55,33 @@ export default function EncodingObservation() {
   };
 
   const handleSubmitNext = async () => {
+    
     const response = await endObservation();
+
+    if(response){
+    // reset the stores (this vaoid a=having to refetch everything)
+    setStore(toAttributeValue(data()!.attributes));
+
     navigate(
       `/encoding/experiment/${params.experimentId}/sample/${params.sampleId}`,
     );
+  }
   };
 
   const handleSubmitNextSample = async () => {
     const response = await endObservation();
+    if(response){
     await endSample();
     navigate(`/encoding/experiment/${params.experimentId}`);
+    }
   };
 
   const handleSubmitEnd = async () => {
     const response = await endObservation();
+    if(response){
     await endSample();
     navigate(`/`);
+    }
   };
 
   return (

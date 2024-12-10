@@ -82,6 +82,8 @@ export type Sample = {
 export type Subject = {
   subject_id: number;
   experiment_id: number;
+  name: string;
+  timestamp_creation: string;
 };
 
 export type Observation = {

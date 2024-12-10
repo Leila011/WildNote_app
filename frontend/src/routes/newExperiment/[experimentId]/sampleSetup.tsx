@@ -12,23 +12,22 @@ import { isAttributesDefValid } from "~/utils/dataValidation";
 export default function SampleSetup() {
   const params = useParams();
   const navigate = useNavigate();
-  const [ready, setReady] = createSignal<boolean>(false);
   const [store, setStore] = createStore<Attribute[]>([
     { ...newAttribute },
   ]);
 
   const handleSubmit = async () => {
-    setReady(isAttributesDefValid(store));
+    const isReady =isAttributesDefValid(store)
 
-    if (ready()) {
-      addExperimentalSetup({ data: [...store], experimentId: Number(params.experimentId), level: "sample" });
-      navigate(`/newExperiment/${params.experimentId}/observationSetup`);
+    if (isReady) {
+      const reponse = await addExperimentalSetup({ data: store, experimentId: Number(params.experimentId), level: "sample" });
+      reponse && navigate(`/newExperiment/${params.experimentId}/observationSetup`);
     }
   };
 
   return (
     <div class="container mx-auto">
-      <Heading>New experiment / Observation sessions</Heading>
+      <Heading>New experiment / Observation session's attributes</Heading>
       <div class="flex flex-col space-y-2">
         <div class="border border-primary rounded-md item-center bg-primary/10">
           <FormNewAttribute store={store} setStore={setStore} />

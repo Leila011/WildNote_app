@@ -30,7 +30,8 @@ import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
 import { Heading } from "~/components/Heading";
 import { updateValue } from "~/api/updateValue";
-import { getTimestamp } from "~/utils/db";
+import { getTimestamp, toAttributeValue } from "~/utils/db";
+import { isAttributesValuesValid, isColumnsValuesValid } from "~/utils/dataValidation";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export default function EncodingSample() {
     () => experiment() && fetchSubjects({experimentId:experiment()!.experiment_id}) ,
   );
 
-  const [attributes, { refetch: refetchAttributes }] = createResource<Metadata | undefined>(
+  const [data, { refetch: refetchAttributes }] = createResource<Metadata | undefined>(
     () => experiment() && fetchAttributeDescriptions({
       experimentId: experiment()!.experiment_id,
       level: "sample",
@@ -62,15 +63,8 @@ export default function EncodingSample() {
   const [store, setStore] = createStore<AttributeValue[]>([]);
 
   createEffect(() => {
-    if (attributes()) {
-      const attributesAugmented = attributes()!.attributes.map(
-        (attribute: Attribute) =>
-          ({
-            ...attribute,
-            value: "",
-          }) as AttributeValue,
-      );
-      setStore(attributesAugmented);
+    if (data()) {
+      setStore(toAttributeValue(data()!.attributes));
     }
   });
 
@@ -86,7 +80,7 @@ export default function EncodingSample() {
 
   const handleSubmit = async () => {
     if (experiment() && (experiment()?.predefine_subject ? subject() : true)) {
-      const data = {
+      const dataOut = {
         columns: {
           subject_id: subject()?.subject_id ?? undefined,
           timestamp_start: getTimestamp(),
@@ -94,6 +88,9 @@ export default function EncodingSample() {
         attributes: store,
       };
 
+      const isReady = isAttributesValuesValid(dataOut.attributes) && isColumnsValuesValid(dataOut.columns)
+
+      if(isReady) {
       if (experiment()?.timestamp_start === null) {
         updateValue({
           level:"experiment",
@@ -104,14 +101,15 @@ export default function EncodingSample() {
         );
       }
       const response = await addNewSample({
-        data:data, 
+        data:dataOut, 
         experimentId:experiment()!.experiment_id
       });
-      experiment() &&
-        response &&
+      
+      response.sample_id &&
         navigate(
           `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
         );
+      }
     }
   };
 
