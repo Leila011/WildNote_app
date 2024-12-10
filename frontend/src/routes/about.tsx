@@ -195,11 +195,15 @@ export default function About() {
           <Heading>Future Developments</Heading>
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
-              <Card title="Enhanced Modularity">
+              <Card title="Additional functionalities">
                 <ul class = "ml-5">
                   <li class="list-disc">
                     Add study type coming with a serie of pre-defined
                     attributes.
+                  </li>
+                  <li class="list-disc">
+                    Add a map view for visualizing sample locations with
+                    GPS data.
                   </li>
                 </ul>
               </Card>
@@ -209,7 +213,7 @@ export default function About() {
                     Introduce user loggin.
                   </li>
                   <li class="list-disc">
-                    Implement multiuser collaboration for shared studies.
+                    Implement multi-user mode to collaborate on one experiment.
                   </li>
                 </ul>
               </Card>
@@ -230,13 +234,15 @@ export default function About() {
                   </li>
                 </ul>
               </Card>
-              <Card title="Advanced Features">
+              <Card title="To improve">
                 <ul class = "ml-5">
+                <li class="list-disc">
+                Create a experiment-specific id for observations session and observation.
+                </li>
                   <li class="list-disc">
-                    Incorporate a map view for visualizing sample locations with
-                    GPS data.
+                  Allow the user to modify the experiment structure after creation when no recording have been done yet.
                   </li>
-                </ul>
+                  </ul>
               </Card>
             </div>
           </div>
