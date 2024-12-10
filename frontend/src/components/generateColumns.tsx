@@ -158,16 +158,16 @@ export const generateColumns = (
               Start encoding
             </Button>
           </Show>
-          <Show when={props.row.original.status === "created"}>
+          {/* <Show when={props.row.original.status === "created"}>
             <Button
               variant="secondary"
               onClick={() =>
-                navigate(`encoding/${props.row.original[idColumnName]}`)
+                navigate(`/newExperiment/${props.row.original[idColumnName]}`)
               }
             >
               Complete the setup
             </Button>
-          </Show>
+          </Show> */}
         </div>
       );
     },
