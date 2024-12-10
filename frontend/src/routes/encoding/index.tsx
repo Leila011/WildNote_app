@@ -27,6 +27,7 @@ import { useNavigate, useParams } from "@solidjs/router";
 import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
 import { Heading } from "~/components/Heading";
+import { updateValue } from "~/api/updateValue";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
@@ -90,20 +91,14 @@ export default function EncodingSample() {
   });
 
   const handleSubmit = async () => {
-    setStoreAutofill((prevStore) =>
-      prevStore.map((attribute) =>
-        attribute.name === "creation_date"
-          ? { ...attribute, value: Date.now() }
-          : attribute,
-      ),
-    );
     const data = {
       columns: {
         subject: { subject_id: subject().subject_id },
       },
-      attributes: [...store, ...storeAutofill],
+      attributes: store,
     };
 
+    updateValue("experiment", "timestamp_start", experiment().experiment_id, Date.now());
     const response = await addNewSample(data, experiment().experiment_id);
     experiment() &&
       response &&
@@ -137,7 +132,7 @@ export default function EncodingSample() {
                   <IconChevronDown />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <For each={experiments()}>
+                  <For each={experiments()?.filter((item) => item.status !== "completed")}>
                     {(option) => (
                       <DropdownMenuItem
                         onSelect={() => {
