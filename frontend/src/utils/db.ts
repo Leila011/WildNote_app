@@ -61,9 +61,8 @@ export const statusOptions = [
   { value: "completed", label: "Completed" },
 ];
 
-export function getTimestamp(): string 
-{
-  const formattedDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+export function getTimestamp(): string {
+  const formattedDate = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   return formattedDate;
 }

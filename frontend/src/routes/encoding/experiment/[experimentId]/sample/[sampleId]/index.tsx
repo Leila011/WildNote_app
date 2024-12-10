@@ -51,7 +51,7 @@ export default function EncodingObservation() {
       columns: {
         status: "completed",
         timestamp_start: timestamp_start(),
-        timestamp_end: getTimestamp()
+        timestamp_end: getTimestamp(),
       },
       attributes: store,
     };
@@ -72,14 +72,20 @@ export default function EncodingObservation() {
 
   const endSample = async () => {
     await updateValue("sample", "status", Number(params.sampleId), "completed");
-    await updateValue("sample", "timestamp_end", Number(params.sampleId), getTimestamp());
-
+    await updateValue(
+      "sample",
+      "timestamp_end",
+      Number(params.sampleId),
+      getTimestamp(),
+    );
   };
 
   const handleSubmitNext = async () => {
     const response = await endObservation();
     console.log(response);
-    navigate(`/encoding/experiment/${params.experimentId}/sample/${params.sampleId}`);
+    navigate(
+      `/encoding/experiment/${params.experimentId}/sample/${params.sampleId}`,
+    );
   };
 
   const handleSubmitNextSample = async () => {

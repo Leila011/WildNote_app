@@ -18,7 +18,7 @@ export default function About() {
             that includes experiment, observation session, and observation
             levels.
           </div>
-          <ul class = "ml-5">
+          <ul class="ml-5">
             <li class="list-disc">
               For focal sampling: WildNote facilitates focused observations of a
               single subject over a set duration, making it easier to track
@@ -49,14 +49,14 @@ export default function About() {
                     structure to facilitate recording your data.
                   </li>
                   <li class="list-disc">
-                    Add information about the subjects you are
-                    observing ahead of time or during the observation session.
+                    Add information about the subjects you are observing ahead
+                    of time or during the observation session.
                   </li>
                 </ul>
               </Card>
               <Card title="Data validation and accuracy">
-                <ul class = "ml-5">
-                <li class="list-disc">
+                <ul class="ml-5">
+                  <li class="list-disc">
                     Define validation rules for each experimental parameters.
                   </li>
                   <li class="list-disc">
@@ -73,9 +73,10 @@ export default function About() {
                 </ul>
               </Card>
               <Card title="Secure and Accessible Data Storage">
-                <ul class = "ml-5">
+                <ul class="ml-5">
                   <li class="list-disc">
-                    All observations and session data are saved in a secure database.
+                    All observations and session data are saved in a secure
+                    database.
                   </li>
                   <li class="list-disc">
                     Access all your studies and their associated data in one
@@ -89,7 +90,7 @@ export default function About() {
               </Card>
 
               <Card title="Dashboard for Progress and Insights">
-                <ul class = "ml-5">
+                <ul class="ml-5">
                   <li class="list-disc">
                     Visualize your advancement toward observation and session
                     targets.
@@ -104,76 +105,87 @@ export default function About() {
           <Heading>Technologies</Heading>
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
-            <Card title="Flask">
-              <div class="flex flex-wrap items-center">
-                    The backend is built with{" "}
-                    <a
-                      href="https://flask.palletsprojects.com/"
-                      target="_blank"
-                      class="ml-1 inline-block"
-                    >
+              <Card title="Flask">
+                <div class="flex flex-wrap items-center">
+                  The backend is built with{" "}
+                  <a
+                    href="https://flask.palletsprojects.com/"
+                    target="_blank"
+                    class="ml-1 inline-block"
+                  >
                     Flask,
-                    </a>{" "} a lightweight and flexible web framework in Python.
-              </div>
-              Advantage:
-                <ul class = "ml-5">
+                  </a>{" "}
+                  a lightweight and flexible web framework in Python.
+                </div>
+                Advantage:
+                <ul class="ml-5">
                   <li class="list-disc">
-                    'Add what you need' type of framework: easy and fast to configure, which make it suitable for prototype developments.
+                    'Add what you need' type of framework: easy and fast to
+                    configure, which make it suitable for prototype
+                    developments.
                   </li>
                   <li class="list-disc">
-                    Grow with your needs: you can add more features and libraries along the way.
-                    </li>
+                    Grow with your needs: you can add more features and
+                    libraries along the way.
+                  </li>
                 </ul>
               </Card>
               <Card title="SQLite & SQLite3">
-                    <div class="flex flex-wrap items-center">
-                    The database is powered using:
-                    <ul class = "ml-5">
+                <div class="flex flex-wrap items-center">
+                  The database is powered using:
+                  <ul class="ml-5">
                     <li class="list-disc">
-                    <a href="https://sqlite.org/" target="_blank" class="inline-block">
-                      SQLite
-                    </a>
-                    , a lightweight yet powerful database system for secure data
-                    storage.
+                      <a
+                        href="https://sqlite.org/"
+                        target="_blank"
+                        class="inline-block"
+                      >
+                        SQLite
+                      </a>
+                      , a lightweight yet powerful database system for secure
+                      data storage.
                     </li>
                     <li class="list-disc">
-                    <a href="https://docs.python.org/3/library/sqlite3.html" target="_blank">
-                      SQLite3
-                    </a>
-                     a Python interface for SQLite databases.
-                  </li>
-                </ul>
-                     </div>
-                     Advantages:
-
-                    <ul class = "ml-5">
-                    <li class="list-disc">
-                    Lightweight disk-based database.
-                  </li>
+                      <a
+                        href="https://docs.python.org/3/library/sqlite3.html"
+                        target="_blank"
+                      >
+                        SQLite3
+                      </a>
+                      a Python interface for SQLite databases.
+                    </li>
+                  </ul>
+                </div>
+                Advantages:
+                <ul class="ml-5">
+                  <li class="list-disc">Lightweight disk-based database.</li>
                   <li class="list-disc">
-                    Easily portable to larger database (e.i., PostgreSQL or Oracle) if necessary. 
+                    Easily portable to larger database (e.i., PostgreSQL or
+                    Oracle) if necessary.
                   </li>
                 </ul>
               </Card>
 
               <Card title="Solid.js">
-              <div class="flex flex-wrap items-center">
-
-                    The UI is built with 
-                    <a href="https://solidjs.com/" target="_blank" class="ml-1 inline-block">
+                <div class="flex flex-wrap items-center">
+                  The UI is built with
+                  <a
+                    href="https://solidjs.com/"
+                    target="_blank"
+                    class="ml-1 inline-block"
+                  >
                     Solid.js,
-                    </a>
-                    a reactive JavaScript library ensuring a fast and
-                    interactive user experience.
-              </div>
-                    <ul class = "ml-5">
-                    <li class="list-disc">
-                  </li>
+                  </a>
+                  a reactive JavaScript library ensuring a fast and interactive
+                  user experience.
+                </div>
+                <ul class="ml-5">
+                  <li class="list-disc"></li>
                 </ul>
               </Card>
               <Card title="Tailwind CSS & Solid UI">
-              The UI is styled using a combination of:
-                <ul class = "ml-5">
+                The UI is styled using a combination of:
+                <ul class="ml-5">
                   <li class="list-disc">
                     <a href="https://tailwindcss.com/" target="_blank">
                       Tailwind CSS
@@ -181,7 +193,6 @@ export default function About() {
                     , an utility-first CSS framework.
                   </li>
                   <li class="list-disc">
-                    
                     <a href="https://solid-ui.com/" target="_blank">
                       Solid UI
                     </a>
@@ -196,29 +207,27 @@ export default function About() {
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
               <Card title="Additional functionalities">
-                <ul class = "ml-5">
+                <ul class="ml-5">
                   <li class="list-disc">
                     Add study type coming with a serie of pre-defined
                     attributes.
                   </li>
                   <li class="list-disc">
-                    Add a map view for visualizing sample locations with
-                    GPS data.
+                    Add a map view for visualizing sample locations with GPS
+                    data.
                   </li>
                 </ul>
               </Card>
               <Card title="User Login and Multiuser Collaboration">
-                <ul class = "ml-5">
-                  <li class="list-disc">
-                    Introduce user loggin.
-                  </li>
+                <ul class="ml-5">
+                  <li class="list-disc">Introduce user loggin.</li>
                   <li class="list-disc">
                     Implement multi-user mode to collaborate on one experiment.
                   </li>
                 </ul>
               </Card>
               <Card title="Data Management">
-                <ul class = "ml-5">
+                <ul class="ml-5">
                   <li class="list-disc">
                     Export and import experiment setups to replicate study
                     designs.
@@ -235,29 +244,31 @@ export default function About() {
                 </ul>
               </Card>
               <Card title="To improve">
-                <ul class = "ml-5">
-                <li class="list-disc">
-                Create a experiment-specific id for observations session and observation.
-                </li>
+                <ul class="ml-5">
                   <li class="list-disc">
-                  Allow the user to modify the experiment structure after creation when no recording have been done yet.
+                    Create a experiment-specific id for observations session and
+                    observation.
                   </li>
-                  </ul>
+                  <li class="list-disc">
+                    Allow the user to modify the experiment structure after
+                    creation when no recording have been done yet.
+                  </li>
+                </ul>
               </Card>
             </div>
           </div>
         </div>
         <div class="col-span-1 ">
           <div class="fixed">
-          <TableOfContent
-            content={[
-              "Introduction",
-              "Functionality",
-              "Technologies",
-              "Database structure",
-              "Future developments",
-            ]}
-          />
+            <TableOfContent
+              content={[
+                "Introduction",
+                "Functionality",
+                "Technologies",
+                "Database structure",
+                "Future developments",
+              ]}
+            />
           </div>
         </div>
       </div>

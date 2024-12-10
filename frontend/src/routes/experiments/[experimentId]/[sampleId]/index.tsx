@@ -16,7 +16,6 @@ export default function Observations() {
     fetchObservations,
   );
 
-
   function getColumnNames(data: any) {
     if (data) {
       return Object.keys(data![0]).map((key) => ({ name: key }));

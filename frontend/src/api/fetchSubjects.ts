@@ -1,4 +1,3 @@
-
 import { backendUrl } from "~/db";
 
 export async function fetchSubjects(experimentId: number): Promise<any[]> {

@@ -91,30 +91,30 @@ export default function EncodingSample() {
   });
 
   const handleSubmit = async () => {
-    if (experiment() && (experiment()?.predefine_subject? subject(): true)) {
-    const data = {
-      columns: {
-        subject_id:  subject()?.subject_id ?? null,
-        timestamp_start: getTimestamp()
-      },
-      attributes: store,
-    };
+    if (experiment() && (experiment()?.predefine_subject ? subject() : true)) {
+      const data = {
+        columns: {
+          subject_id: subject()?.subject_id ?? null,
+          timestamp_start: getTimestamp(),
+        },
+        attributes: store,
+      };
 
-    if(experiment()?.timestamp_start === null){
-    updateValue(
-      "experiment",
-      "timestamp_start",
-      experiment()!.experiment_id,
-      getTimestamp()
-    );
-  }
-    const response = await addNewSample(data, experiment()!.experiment_id);
-    console.log(response);
-    experiment() &&
-      response &&
-      navigate(
-        `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
-      );
+      if (experiment()?.timestamp_start === null) {
+        updateValue(
+          "experiment",
+          "timestamp_start",
+          experiment()!.experiment_id,
+          getTimestamp(),
+        );
+      }
+      const response = await addNewSample(data, experiment()!.experiment_id);
+      console.log(response);
+      experiment() &&
+        response &&
+        navigate(
+          `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
+        );
     }
   };
 

@@ -5,7 +5,7 @@ import { TableAttributeValue } from "~/types/db";
 export async function addNewSample(
   data: {
     columns: {
-      subject: { subject_id: number |null };
+      subject: { subject_id: number | null };
     };
     attributes: TableAttributeValue[];
   },

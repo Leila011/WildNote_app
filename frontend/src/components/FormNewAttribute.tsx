@@ -38,8 +38,8 @@ export function FormNewAttribute(props: Props) {
   };
 
   const handleRemoveAttribute = (attributeIndex: number) => {
-    const newStore =store.filter((_, index) => index !== attributeIndex);
-    setStore(newStore)
+    const newStore = store.filter((_, index) => index !== attributeIndex);
+    setStore(newStore);
   };
 
   const handleAddChoice = (index: number) => {
@@ -54,19 +54,14 @@ export function FormNewAttribute(props: Props) {
         {(attribute, index) => (
           <div class="flex flex-row space-x-4 items-bottom">
             <div class="">
-                      <Button
-                    class={`${buttonVariants({ variant: "secondary" })} mt-6`}
-                    onClick={() =>
-                      handleRemoveAttribute(index)
-                      
-                    }
-                  >
-                    <ImBin />
-                  </Button>
-                  </div>
+              <Button
+                class={`${buttonVariants({ variant: "secondary" })} mt-6`}
+                onClick={() => handleRemoveAttribute(index)}
+              >
+                <ImBin />
+              </Button>
+            </div>
             <div>
-  
-                  
               <h1>name:</h1>
               <TextField
                 value={store[index].label}
@@ -99,7 +94,9 @@ export function FormNewAttribute(props: Props) {
                   variant={"outline"}
                   class={`bg-card text-card-foreground  rounded-md h-10 pl-2 justify-start  w-full`}
                 >
-                  <div class="flex-grow text-left">{store[index].type || "string"}</div>
+                  <div class="flex-grow text-left">
+                    {store[index].type || "string"}
+                  </div>
                   <IconChevronDown />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
