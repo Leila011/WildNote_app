@@ -81,7 +81,7 @@ export function FormNewAttribute(props: Props) {
                   variant={"outline"}
                   class={`bg-card text-card-foreground  rounded-md h-10 pl-2 justify-start  w-full`}
                 >
-                  <div class="flex-grow text-left">{store[index].type}</div>
+                  <div class="flex-grow text-left">{store[index].type || "string"}</div>
                   <IconChevronDown />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
