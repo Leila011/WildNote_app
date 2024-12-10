@@ -32,7 +32,7 @@ export default function SubjectSetup() {
     if(ready()) {
     addExperimentalSetup([...store], Number(params.experimentId), "subject");
 
-    navigate(`/`);
+    navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
     }
   };
 
@@ -43,18 +43,12 @@ export default function SubjectSetup() {
         <div class="border border-primary rounded-md item-center bg-primary/10">
           <FormNewAttribute store={store} setStore={setStore} />
         </div>
-        <div class="flex flex-row space-x-1">
-          <Button
+        <div>
+        <Button
             class={buttonVariants({ variant: "accent" })}
             onClick={handleSubmit}
           >
-            Submit and start encoding
-          </Button>
-          <Button
-            class={buttonVariants({ variant: "outline" })}
-            onClick={handleSubmit}
-          >
-            Submit and go back home
+            Next
           </Button>
         </div>
       </div>

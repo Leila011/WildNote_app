@@ -1,4 +1,3 @@
-import { c } from "vinxi/dist/types/lib/logger";
 import { backendUrl } from "~/db";
 import { TableAttribute } from "~/types/db";
 import { attributeFromDb } from "~/utils/db";
@@ -19,6 +18,7 @@ export async function fetchAttributeDescriptions(
   experimentId?: number,
 ): Promise<props> {
   try {
+    console.log("fetchAttributeDescriptions");
     const response = await fetch(
       `${backendUrl}/api/experiments/${experimentId}/${tableName}/attributes`,
     );

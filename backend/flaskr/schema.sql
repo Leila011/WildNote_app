@@ -18,7 +18,8 @@ CREATE TABLE experiment (
     status TEXT DEFAULT 'created',
     timestamp_start TIMESTAMP,
     timestamp_end TIMESTAMP,
-    predefine_subject BOOLEAN DEFAULT 0
+    predefine_subject BOOLEAN DEFAULT 0,
+    name TEXT
 );
 
 CREATE TABLE subject (

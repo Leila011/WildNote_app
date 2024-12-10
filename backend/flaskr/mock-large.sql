@@ -1,7 +1,13 @@
 -- Insert mock data into experiment table
-INSERT INTO experiment (status, timestamp_start, timestamp_end,  predefine_subject)
+INSERT INTO experiment (status, timestamp_start, timestamp_end,  predefine_subject, name)
 VALUES 
-('active', '2024-12-01 08:00:00', '2024-12-01 18:00:00', 0);
+('active', '2024-12-01 08:00:00', '2024-12-01 18:00:00', 0, 'Monkey Forest Study');
+
+INSERT INTO experiment_attributes (experiment_id, name, label, type, custom, autofill, required, min, max, choices, default_value) VALUES
+(1, 'description', 'Decription', 'string', 1, 1, 1, null, null, null, null);
+
+INSERT INTO experiment_attribute_values (attribute_id, experiment_id, value) VALUES
+(1, 1, 'Mock data of a study of money-human interactions in a monkey forest setting');
 
 -- Insert mock sample attributes (e.g., localisation, weather, group size, etc.)
 INSERT INTO sample_attributes (experiment_id, name, label, type, custom, autofill, required, min, max, choices, default_value) VALUES

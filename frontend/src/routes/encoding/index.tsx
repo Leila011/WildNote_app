@@ -68,7 +68,7 @@ export default function EncodingSample() {
     [],
   );
 
-  createEffect(() => {
+   createEffect(() => {
     if (attributes()) {
       const attributesAugmented = attributes()!.attributes.map(
         (attribute: TableAttribute) =>
@@ -91,6 +91,9 @@ export default function EncodingSample() {
   });
 
   createEffect(() => {
+    console.log("experiments", experiments());
+    experiments() && console.log(experiments().name);
+
     if (params.experimentId && experiments()) {
       const experimentId = Number(params.experimentId);
       const experiment = experiments().find(
@@ -125,7 +128,7 @@ export default function EncodingSample() {
 
   return (
     <div class="container mx-auto">
-      <div>
+       <div>
         <Heading>
           Select your experiment and fill out your observation session
           parameters
@@ -163,7 +166,7 @@ export default function EncodingSample() {
               </DropdownMenu>
             </div>
             <div>
-              <Show when={experiment()}>
+              <Show when={experiment() && subject.length}>
                 <h1>Choose your subject:</h1>
                 <DropdownMenu>
                   <DropdownMenuTrigger
@@ -209,7 +212,7 @@ export default function EncodingSample() {
             </div>
           </Show>
         </div>
-      </div>
+      </div> 
     </div>
   );
 }

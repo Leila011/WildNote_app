@@ -1,6 +1,5 @@
 {
   "experiment": [
-    { "name": "name", "label": "Name", "type": "string", "custom": false, "autofill": false, "required": true, "min": null, "max": null, "choices": [], "default_value": null },
     { "name": "description", "label": "Description", "type": "string", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": [], "default_value": null }
   ],
   "sample": [

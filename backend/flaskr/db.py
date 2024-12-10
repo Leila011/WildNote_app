@@ -68,12 +68,11 @@ def add_experiment(con, data):
 
     Returns: The ID of the newly created experiment
     """
-
     try:
         cursor = con.cursor()
         cursor.execute(
-            'INSERT INTO experiment (predefine_subject) VALUES (?)',
-            ( data['predefine_subject'],)
+            'INSERT INTO experiment (predefine_subject, name) VALUES (?,?)',
+            ( data['predefine_subject'],data['name'],)
         )
         con.commit()
         return cursor.lastrowid
@@ -219,12 +218,11 @@ def get_experiments():
         '''
         SELECT DISTINCT name
         FROM experiment_attributes
-        WHERE custom = 0 
         '''
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end"]
+    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end", "e.name"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         # Use double quotes to handle attribute names with spaces or special characters

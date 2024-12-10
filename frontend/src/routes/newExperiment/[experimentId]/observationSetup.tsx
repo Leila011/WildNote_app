@@ -27,6 +27,9 @@ export default function ObservationSetup() {
     { ...newAttribute },
   ]);
 
+
+
+
   const handleSubmit = async () => {
 
     setReady(isAttributesDefValid(store));
@@ -43,9 +46,28 @@ export default function ObservationSetup() {
         Number(params.experimentId),
         "active",
       );
-    navigate(`/newExperiment/${params.experimentId}/subjectSetup`);
+    navigate(`/`);
     }
   };
+
+  const handleSubmitStart = async () => {
+setReady(isAttributesDefValid(store));
+    
+    if(ready()) {
+      await addExperimentalSetup(
+        [...store],
+        Number(params.experimentId),
+        "observation",
+      );
+      await updateValue(
+        "experiment",
+        "status",
+        Number(params.experimentId),
+        "active",
+      );
+    navigate(`/encoding/${params.experimentId}`);
+  }
+}
 
   return (
     <div class="container mx-auto">
@@ -54,12 +76,18 @@ export default function ObservationSetup() {
         <div class="border border-primary rounded-md item-center bg-primary/10">
           <FormNewAttribute store={store} setStore={setStore} />
         </div>
-        <div>
+        <div class="flex flex-row space-x-1">
           <Button
             class={buttonVariants({ variant: "accent" })}
+            onClick={handleSubmitStart}
+          >
+            Submit and start encoding
+          </Button>
+          <Button
+            class={buttonVariants({ variant: "outline" })}
             onClick={handleSubmit}
           >
-            Submit
+            Submit and go back home
           </Button>
         </div>
       </div>

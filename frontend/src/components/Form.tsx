@@ -123,7 +123,7 @@ export const Form = (props: Props) => {
 
               {/* Argument input field(s) */}
               <div class="md:col-span-8 col-span-12 space-y-2">
-                <p class="text-sm text-secondary">{field().name}</p>
+                <p class="text-sm text-secondary">{field().label}</p>
                 <div class="flex flex-row">
                   <div class="flex flex-col w-full">
                     <Switch>
@@ -141,9 +141,7 @@ export const Form = (props: Props) => {
                           >
                             <div class="flex-grow text-left">
                               {
-                                store.filter(
-                                  (attribute) => attribute.name === key,
-                                )[0].value
+                                store[index].value
                               }
                             </div>
                             <IconChevronDown />

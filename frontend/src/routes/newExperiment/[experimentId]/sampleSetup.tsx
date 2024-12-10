@@ -41,7 +41,7 @@ export default function SampleSetup() {
             class={buttonVariants({ variant: "accent" })}
             onClick={handleSubmit}
           >
-            Submit
+            Next
           </Button>
         </div>
       </div>

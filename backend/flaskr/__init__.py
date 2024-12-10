@@ -283,7 +283,7 @@ def create_app(test_config=None):
         return jsonify({"columns": columns, "attributes": attributes})
     
     # All other tables 
-    @app.route('/api/experiments/<int:experiment_id>/<table_name>/attributes')
+    @app.route('/api/experiments/<int:experiment_id>/<table_name>/attributes', methods=['GET'])
     def get_attributes(table_name, experiment_id):
         target_table = table_name +"_attributes"
         attributes = db.get_attributes(target_table, experiment_id)
