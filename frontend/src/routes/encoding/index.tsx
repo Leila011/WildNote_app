@@ -64,9 +64,7 @@ export default function EncodingSample() {
   }, fetcher);
 
   const [store, setStore] = createStore<TableAttributeValue[]>([]);
-  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>(
-    [],
-  );
+  
 
    createEffect(() => {
     if (attributes()) {
@@ -77,24 +75,12 @@ export default function EncodingSample() {
             value: "",
           }) as TableAttributeValue,
       );
-      setStore(
-        attributesAugmented.filter(
-          (attribute: TableAttributeValue) => attribute.autofill === false,
-        ),
-      );
-      setStoreAutofill(
-        attributesAugmented.filter(
-          (attribute: TableAttributeValue) => attribute.autofill === true,
-        ),
-      );
+      setStore(attributesAugmented)
     }
   });
 
   createEffect(() => {
-    console.log("experiments", experiments());
-    experiments() && console.log(experiments().name);
-
-    if (params.experimentId && experiments()) {
+      if (params.experimentId && experiments()) {
       const experimentId = Number(params.experimentId);
       const experiment = experiments().find(
         (experiment) => experiment.experiment_id === experimentId,
