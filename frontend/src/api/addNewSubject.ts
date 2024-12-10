@@ -1,9 +1,9 @@
 import { backendUrl } from "~/db";
 import { attributeToDb, columnToDb } from "~/utils/db";
-import { AttributeValue, Subject } from "~/types/db";
+import { AttributeValue, SubjectDb } from "~/types/db";
 
 type Props = {
-  data: { columns: Partial<Subject>; attributes: AttributeValue[] };
+  data: { columns: Partial<SubjectDb>; attributes: AttributeValue[] };
   experimentId: number;
 };
 

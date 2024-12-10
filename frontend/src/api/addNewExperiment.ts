@@ -1,10 +1,10 @@
 import { backendUrl } from "~/db";
-import { AttributeValue, Experiment } from "~/types/db";
+import { AttributeValue, ExperimentDb } from "~/types/db";
 import { attributeToDb, columnToDb } from "~/utils/db";
 
 type Props = {
   data: {
-    columns: Partial<Experiment>;
+    columns: Partial<ExperimentDb>;
     attributes: AttributeValue[];
   };
 };

@@ -10,7 +10,10 @@ export function isAttributesValuesValid(attributes: AttributeValue[]): boolean {
   return ready;
 }
 
-export function isColumnsValuesValid(columns: Record<string, any>, notRequired?: string[]): boolean {
+export function isColumnsValuesValid(
+  columns: Record<string, any>,
+  notRequired?: string[],
+): boolean {
   let ready = true;
   Object.keys(columns).forEach((column: string) => {
     const isValid = columns[column] !== "" && columns[column] !== undefined;

@@ -3,7 +3,7 @@ import {
   AttributeDb,
   AttributeValue,
   AttributeValueDb,
-  durationHMS,
+  DurationHMS,
 } from "~/types/db";
 
 export function columnToDb(data: Record<string, any>): Record<string, any> {
@@ -12,6 +12,14 @@ export function columnToDb(data: Record<string, any>): Record<string, any> {
     cleanData[key] = typeof value === "boolean" ? (value ? 1 : 0) : value;
     cleanData[key] = value === undefined ? null : value;
   });
+  return cleanData;
+}
+
+export function ExperimentToDb(data: Record<string, any>): Record<string, any> {
+  const cleanData = data;
+  cleanData["duration"] = toSeconds(data.duration);
+  cleanData["samples_time_goal"] = toSeconds(data.duration);
+  cleanData["obs_time_goal"] = toSeconds(data.duration);
   return cleanData;
 }
 
@@ -91,6 +99,6 @@ export function toAttributeValue(attributes: Attribute[]): AttributeValue[] {
   );
 }
 
-export function toSeconds(duration: durationHMS): number {
+export function toSeconds(duration: DurationHMS): number {
   return duration.hours * 3600 + duration.minutes * 60 + duration.seconds;
 }

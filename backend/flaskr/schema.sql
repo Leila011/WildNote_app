@@ -20,7 +20,11 @@ CREATE TABLE experiment (
     timestamp_end TIMESTAMP,
     predefine_subject BOOLEAN DEFAULT 0,
     name TEXT,
-    duration INTEGER DEFAULT 0
+    duration INTEGER DEFAULT 0,
+    samples_number_goal INTEGER,
+    samples_time_goal INTEGER, 
+    obs_number_goal INTEGER,
+    obs_time_goal INTEGER
 );
 
 CREATE TABLE subject (

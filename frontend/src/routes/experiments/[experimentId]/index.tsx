@@ -5,15 +5,15 @@ import { generateColumns } from "~/components/generateColumns";
 import { fetchSamples } from "~/api/fetchSamples";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";
-import { Sample } from "~/types/db";
+import { SampleDb } from "~/types/db";
 
 export default function Samples() {
   const params = useParams();
-  const [data, { refetch }] = createResource<Sample[]>(() =>
+  const [data, { refetch }] = createResource<SampleDb[]>(() =>
     fetchSamples({ experimentId: Number(params.experimentId) }),
   );
 
-  function getColumnNames(data: Sample[]) {
+  function getColumnNames(data: SampleDb[]) {
     if (data) {
       return Object.keys(data![0]).map((key) => ({ name: key }));
     } else {

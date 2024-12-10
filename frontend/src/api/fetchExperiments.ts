@@ -1,7 +1,7 @@
 import { backendUrl } from "~/db";
-import { Experiment } from "~/types/db";
+import { ExperimentDb } from "~/types/db";
 
-export async function fetchExperiments(): Promise<Experiment[]> {
+export async function fetchExperiments(): Promise<ExperimentDb[]> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/attributeValues`,

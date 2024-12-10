@@ -1,4 +1,4 @@
-import { durationHMS } from "~/types/db";
+import { DurationHMS } from "~/types/db";
 
 /**
  * Cleans an anchor string by converting it to lowercase, removing non-alphanumeric characters (except spaces),
@@ -16,19 +16,19 @@ export function cleanAnchor(anchor: string): string {
     .replace(/ /g, "-");
 }
 
-export function getTimePassed(start:number){
+export function getTimePassed(start: number) {
   var delta = Date.now() - start; // milliseconds elapsed since start
   //output(Math.floor(delta / 1000)); // in seconds
   // alternatively just show wall clock time:
-  return Math.floor(delta / 1000) // in seconds
+  return Math.floor(delta / 1000); // in seconds
 }
 
-export function getPercentageTimePassed(timePassed:number, duration:number){
-  console.log("duration",Math.floor((timePassed/duration)*100))
- return Math.floor((timePassed/duration)*100)
+export function getPercentageTimePassed(timePassed: number, duration: number) {
+  console.log("duration", Math.floor((timePassed / duration) * 100));
+  return Math.floor((timePassed / duration) * 100);
 }
 
-export function secondToHMS(seconds: number): durationHMS {
+export function secondToHMS(seconds: number): DurationHMS {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
@@ -37,12 +37,12 @@ export function secondToHMS(seconds: number): durationHMS {
 
 export function secondToString(seconds: number): string {
   const duration = secondToHMS(seconds);
-console.log("duration",duration)
+  console.log("duration", duration);
   if (duration.hours === 0 && duration.minutes === 0) {
     return ` ${duration.seconds}s`;
-  } else if (duration.hours === 0 ) {
+  } else if (duration.hours === 0) {
     return `${duration.minutes}m ${duration.seconds}s`;
   } else {
-  return `${duration.hours}h ${duration.minutes}m ${duration.seconds}s`;
+    return `${duration.hours}h ${duration.minutes}m ${duration.seconds}s`;
   }
 }

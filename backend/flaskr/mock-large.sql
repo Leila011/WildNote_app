@@ -1,7 +1,6 @@
 -- Insert mock data into experiment table
-INSERT INTO experiment (status, timestamp_start, timestamp_end,  predefine_subject, name, duration)
-VALUES 
-('completed', '2024-12-01 08:00:00', '2024-12-01 18:00:00', 0, 'Monkey Forest Study', 600);
+INSERT INTO experiment (status, timestamp_start, timestamp_end, predefine_subject, name, duration, samples_number_goal, samples_time_goal, obs_number_goal, obs_time_goal) VALUES 
+('completed', '2024-12-01 08:00:00', '2024-12-01 18:00:00', 0, 'Monkey Forest Study', 600, 100, 60000, 200, 30000);
 
 INSERT INTO experiment_attributes (experiment_id, name, label, type, custom, autofill, required, min, max, choices, default_value) VALUES
 (1, 'description', 'Decription', 'string', 1, 1, 1, null, null, null, null);

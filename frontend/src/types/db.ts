@@ -61,7 +61,7 @@ export type SchemaDb = {
   type: string;
 };
 
-export type Experiment = {
+export type ExperimentDb = {
   experiment_id: number;
   name: string;
   status: string;
@@ -69,9 +69,27 @@ export type Experiment = {
   timestamp_start: string;
   timestamp_end: string;
   duration: number;
+  samples_number_goal: number;
+  samples_time_goal: number;
+  obs_number_goal: number;
+  obs_time_goal: number;
 };
 
-export type Sample = {
+export type Experiment = {
+  experiment_id: number;
+  name: string;
+  status: string;
+  predefine_subject: boolean;
+  timestamp_start: string;
+  timestamp_end: string;
+  duration: DurationHMS;
+  samples_number_goal: number;
+  samples_time_goal: DurationHMS;
+  obs_number_goal: number;
+  obs_time_goal: DurationHMS;
+};
+
+export type SampleDb = {
   sample_id: number;
   experiment_id: number;
   subject_id?: number;
@@ -80,14 +98,14 @@ export type Sample = {
   timestamp_end: string;
 };
 
-export type Subject = {
+export type SubjectDb = {
   subject_id: number;
   experiment_id: number;
   name: string;
   timestamp_creation: string;
 };
 
-export type Observation = {
+export type ObservationDb = {
   observation_id: number;
   sample_id: string;
   status: string;
@@ -102,7 +120,7 @@ export type Metadata = {
   schemas: SchemaDb[];
 };
 
-export type durationHMS = {
+export type DurationHMS = {
   hours: number;
   minutes: number;
   seconds: number;

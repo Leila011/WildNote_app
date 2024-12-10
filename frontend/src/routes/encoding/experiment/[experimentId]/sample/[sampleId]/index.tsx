@@ -1,6 +1,6 @@
 import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { AttributeValue, durationHMS, Metadata } from "~/types/db";
+import { AttributeValue, DurationHMS, Metadata } from "~/types/db";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Form } from "~/components/Form";
 import { createStore } from "solid-js/store";
@@ -13,23 +13,27 @@ import {
   isAttributesValuesValid,
   isColumnsValuesValid,
 } from "~/utils/dataValidation";
-import { ProgressCircle } from "~/components/ui/progress-circle"
-import { getPercentageTimePassed, getTimePassed, secondToString } from "~/utils";
+import { ProgressCircle } from "~/components/ui/progress-circle";
+import {
+  getPercentageTimePassed,
+  getTimePassed,
+  secondToString,
+} from "~/utils";
 import { fetchDuration } from "~/api/fetchDuration";
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
-} from "~/components/ui/alert-dialog"
+} from "~/components/ui/alert-dialog";
 
 export default function EncodingObservation() {
   const navigate = useNavigate();
   const params = useParams();
   const [timestamp_start, setTimestamp_start] = createSignal(getTimestamp());
-  const startTime = Date.now(); 
+  const startTime = Date.now();
   const [timePassed, setTimePassed] = createSignal<number>(0);
-	const [open, setOpen] = createSignal<string>("closed");
+  const [open, setOpen] = createSignal<string>("closed");
 
   const [data] = createResource<Metadata>(() =>
     fetchAttributeDescriptions({
@@ -38,9 +42,9 @@ export default function EncodingObservation() {
     }),
   );
 
-  const [duration] = createResource<number>(() =>
-    fetchDuration({experimentId: Number(params.experimentId),
-    }),{initialValue: 0}
+  const [duration] = createResource<number>(
+    () => fetchDuration({ experimentId: Number(params.experimentId) }),
+    { initialValue: 0 },
   );
 
   const [store, setStore] = createStore<AttributeValue[]>([]);
@@ -52,17 +56,19 @@ export default function EncodingObservation() {
   });
 
   // calculate the time passing while the time is not expired
-  setInterval(()=>{
-    if(timePassed() < duration()){
-    setTimePassed(getTimePassed(startTime))}}, 1000)
+  setInterval(() => {
+    if (timePassed() < duration()) {
+      setTimePassed(getTimePassed(startTime));
+    }
+  }, 1000);
 
   // when time is expired: send an alert
   createEffect(() => {
-    if(duration()!==0 && timePassed() > duration() && open() === "closed"){
-      setOpen("open")	
+    if (duration() !== 0 && timePassed() > duration() && open() === "closed") {
+      setOpen("open");
     }
   });
-  
+
   const endObservation = async () => {
     const dataOut = {
       columns: {
@@ -133,27 +139,32 @@ export default function EncodingObservation() {
   return (
     <div class="container mx-auto">
       <div>
-
         <div class="flex flex-row justify-between">
-        <Heading>Start encoding your new observation</Heading>
+          <Heading>Start encoding your new observation</Heading>
 
-        <Show when={duration()!==0}>
-        <ProgressCircle value={getPercentageTimePassed(timePassed(), duration())} strokeWidth={8}
-        class="stroke-accent"
-        >
-            <span class="text-xs font-medium text-slate-700">{secondToString(timePassed())}</span>
-          </ProgressCircle>
+          <Show when={duration() !== 0}>
+            <ProgressCircle
+              value={getPercentageTimePassed(timePassed(), duration())}
+              strokeWidth={8}
+              class="stroke-accent"
+            >
+              <span class="text-xs font-medium text-slate-700">
+                {secondToString(timePassed())}
+              </span>
+            </ProgressCircle>
           </Show>
-
-</div>
-        <AlertDialog open={open()==="open"} onOpenChange={()=>setOpen("poped-up")}>
-        <AlertDialogContent>
-        <AlertDialogTitle>Timer out</AlertDialogTitle>
-        <AlertDialogDescription>
-         You timer of ${secondToString(duration())} is out!
-        </AlertDialogDescription>
-      </AlertDialogContent>
-    </AlertDialog>
+        </div>
+        <AlertDialog
+          open={open() === "open"}
+          onOpenChange={() => setOpen("poped-up")}
+        >
+          <AlertDialogContent>
+            <AlertDialogTitle>Timer out</AlertDialogTitle>
+            <AlertDialogDescription>
+              You timer of ${secondToString(duration())} is out!
+            </AlertDialogDescription>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <div class="flex flex-col space-y-2">
           <div class="border border-primary rounded-md item-center bg-primary/10">

@@ -71,8 +71,8 @@ def add_experiment(con, data):
     try:
         cursor = con.cursor()
         cursor.execute(
-            'INSERT INTO experiment (predefine_subject, name, duration) VALUES (?,?, ?)',
-            ( data['predefine_subject'],data['name'],data['duration'],)
+            'INSERT INTO experiment (predefine_subject, name, duration, samples_number_goal, samples_time_goal, obs_number_goal, obs_time_goal) VALUES (?,?, ?,?,?,?,?)',
+            ( data['predefine_subject'],data['name'],data['duration'], data['samples_number_goal'], data['samples_time_goal'], data['obs_number_goal'], data['obs_time_goal'],)
         )
         con.commit()
         return cursor.lastrowid
@@ -241,6 +241,40 @@ def get_experiments():
     """
 
     rows = db.execute(pivot_query).fetchall()
+    return jsonify(rows)
+
+def get_experiment(experiment_id):
+    """Retrieve the experiment from the database (predefined attributes + values) for the given experiment_id"""
+    db = get_db()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+
+    # Fetch the distinct attribute names for predefined attributes
+    attribute_names = db.execute(
+        '''
+        SELECT DISTINCT name
+        FROM experiment_attributes
+        WHERE experiment_id = ?
+        ''', (experiment_id,)
+    ).fetchall()
+
+    # Generate the pivot query
+    columns = ["e.experiment_id AS experiment_id", "e.status", "e.timestamp_start", "e.timestamp_end", "e.name"]
+    for attribute in attribute_names:
+        attribute_name = attribute['name']
+        # Use double quotes to handle attribute names with spaces or special characters
+        columns.append(f"MAX(CASE WHEN ea.name = '{attribute_name}' THEN av.value END) AS \"{attribute_name}\"")
+
+    columns_str = ", ".join(columns)
+    pivot_query = f"""
+    SELECT {columns_str}
+    FROM experiment e
+    LEFT JOIN experiment_attributes ea ON e.experiment_id = ea.experiment_id
+    LEFT JOIN experiment_attribute_values av ON ea.experiment_attributes_id = av.attribute_id
+    WHERE e.experiment_id = ?
+    GROUP BY e.experiment_id
+    """
+
+    rows = db.execute(pivot_query, (experiment_id,)).fetchall()
     return jsonify(rows)
 
 def get_samples(experiment_id):

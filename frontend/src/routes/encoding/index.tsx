@@ -14,14 +14,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
-import {
-  Experiment,
-  Subject,
-  Attribute,
-  AttributeValue,
-  Metadata,
-  Level,
-} from "~/types/db";
+import { ExperimentDb, SubjectDb, AttributeValue, Metadata } from "~/types/db";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Form } from "~/components/Form";
 import { createStore } from "solid-js/store";
@@ -40,12 +33,12 @@ export default function EncodingSample() {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [experiments] = createResource<Experiment[]>(fetchExperiments);
-  const [experiment, setExperiment] = createSignal<Experiment>();
-  const [subject, setSubject] = createSignal<Subject>();
+  const [experiments] = createResource<ExperimentDb[]>(fetchExperiments);
+  const [experiment, setExperiment] = createSignal<ExperimentDb>();
+  const [subject, setSubject] = createSignal<SubjectDb>();
 
   const [subjects, { refetch: refetchSubject }] = createResource<
-    Subject[] | undefined
+    SubjectDb[] | undefined
   >(
     () =>
       experiment() &&
@@ -99,9 +92,11 @@ export default function EncodingSample() {
       };
 
       console.log(isAttributesValuesValid(dataOut.attributes));
-      console.log((dataOut.columns));
+      console.log(dataOut.columns);
 
-      const isNotRequired = experiment()?.predefine_subject ? undefined: ["subject_id"]
+      const isNotRequired = experiment()?.predefine_subject
+        ? undefined
+        : ["subject_id"];
       const isReady =
         isAttributesValuesValid(dataOut.attributes) &&
         isColumnsValuesValid(dataOut.columns, isNotRequired);

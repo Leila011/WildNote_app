@@ -1,11 +1,11 @@
 import { backendUrl } from "~/db";
-import { Subject } from "~/types/db";
+import { SubjectDb } from "~/types/db";
 
 type Props = {
   experimentId: number;
 };
 
-export async function fetchSubjects(props: Props): Promise<Subject[]> {
+export async function fetchSubjects(props: Props): Promise<SubjectDb[]> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/${props.experimentId}/subjects/attributeValues`,

@@ -4,19 +4,19 @@ import { DataTable } from "~/components/data-table";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchObservations } from "~/api/fetchObservations";
 import { Heading } from "~/components/Heading";
-import { Observation } from "~/types/db";
+import { ObservationDb } from "~/types/db";
 
 export default function Observations() {
   const params = useParams();
 
-  const [data, { refetch }] = createResource<Observation[]>(() =>
+  const [data, { refetch }] = createResource<ObservationDb[]>(() =>
     fetchObservations({
       sampleId: Number(params.sampleId),
       experimentId: Number(params.experimentId),
     }),
   );
 
-  function getColumnNames(data: Observation[]) {
+  function getColumnNames(data: ObservationDb[]) {
     if (data) {
       return Object.keys(data![0]).map((key) => ({ name: key }));
     } else {

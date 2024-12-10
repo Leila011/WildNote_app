@@ -4,13 +4,13 @@ import { generateColumns } from "~/components/generateColumns";
 import { fetchExperiments } from "~/api/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";
-import { Experiment } from "~/types/db";
+import { ExperimentDb } from "~/types/db";
 
 export default function Experiments() {
   const [dataAttributes, { refetch }] =
-    createResource<Experiment[]>(fetchExperiments);
+    createResource<ExperimentDb[]>(fetchExperiments);
 
-  function getColumnNames(data: Experiment[]) {
+  function getColumnNames(data: ExperimentDb[]) {
     return Object.keys(data![0]).map((key) => ({ name: key }));
   }
 

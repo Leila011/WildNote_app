@@ -284,6 +284,11 @@ def create_app(test_config=None):
     def get_experiments():
         return db.get_experiments()
     
+    # get one specific experiment
+    @app.route('/api/experiment/<experiment_id>attributeValues', methods=['GET'])
+    def get_experiment(experiment_id):
+        return db.get_experiment(experiment_id)
+    
     # get all samples (fixed & custom attributes) for a given experiment    
     @app.route('/api/experiments/<int:id>/samples/attributeValues', methods=['GET'])
     def get_samples(id):
@@ -347,4 +352,12 @@ def create_app(test_config=None):
             con.close()
             return jsonify({"message": "row deleted successfully"}), 200
 
+    ############################ COMPUTATION #######################################
+    # get descriptive statistics for all attributes of an experiment
+    # @app.route('/api/experiment/<int:experiment_id>/statistics', methods=['GET'])
+    # def statistics(experiment_id):
+    #     data = db.get_experiment(experiment_id)
+    #     res = get_statistics(data)
+    #     return jsonify(res)
+    
     return app
