@@ -45,12 +45,17 @@ export type TableAttributeValue = {
 export type Experiment = {
   experiment_id: number;
   name: string;
+  status: string;
+  predefine_subject: boolean;
+  timestamp_start: string;
+  timestamp_end: string;
 };
 
 export type Sample = {
   sample_id: number;
   experiment_id: number;
-  subject_id: number;
+  subject_id?: number;
+  status: string;
 };
 
 export type Subject = {
@@ -61,4 +66,5 @@ export type Subject = {
 export type Observation = {
   observation_id: number;
   sample_id: string;
+  status: string;
 };
