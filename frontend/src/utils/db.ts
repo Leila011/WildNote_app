@@ -45,7 +45,7 @@ export function attributeFromDb(
 export const newAttribute: TableAttribute = {
   name: "",
   label: "",
-  type: "",
+  type: "string",
   autofill: false,
   min: null,
   max: null,

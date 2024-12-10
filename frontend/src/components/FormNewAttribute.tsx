@@ -9,8 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { IconChevronDown } from "~/components/icons";
-import { Button } from "./ui/button";
+import { IconChevronDown, ImBin } from "~/components/icons";
+import { Button, buttonVariants } from "./ui/button";
 import { For, Index, Show } from "solid-js";
 import { TableAttribute } from "~/types/db";
 import { SetStoreFunction } from "solid-js/store";
@@ -37,6 +37,11 @@ export function FormNewAttribute(props: Props) {
     setStore((prev) => [...prev, newAttributeInstance]);
   };
 
+  const handleRemoveAttribute = (attributeIndex: number) => {
+    const newStore =store.filter((_, index) => index !== attributeIndex);
+    setStore(newStore)
+  };
+
   const handleAddChoice = (index: number) => {
     setStore([index], "choices", (choice) =>
       choice === undefined ? [""] : [...choice, ""],
@@ -47,8 +52,21 @@ export function FormNewAttribute(props: Props) {
     <div class=" flex flex-col  space-y-5 pb-6 pt-2 items-left justify-left  px-5">
       <Index each={store}>
         {(attribute, index) => (
-          <div class="flex flex-row space-x-4">
+          <div class="flex flex-row space-x-4 items-bottom">
+            <div class="">
+                      <Button
+                    class={`${buttonVariants({ variant: "secondary" })} mt-6`}
+                    onClick={() =>
+                      handleRemoveAttribute(index)
+                      
+                    }
+                  >
+                    <ImBin />
+                  </Button>
+                  </div>
             <div>
+  
+                  
               <h1>name:</h1>
               <TextField
                 value={store[index].label}
