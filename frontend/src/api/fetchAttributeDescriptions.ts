@@ -12,7 +12,9 @@ type Props = {
   experimentId?: number;
 };
 
-export async function fetchAttributeDescriptions(props: Props): Promise<Metadata> {
+export async function fetchAttributeDescriptions(
+  props: Props,
+): Promise<Metadata> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/${props.experimentId}/${props.level}/attributes`,

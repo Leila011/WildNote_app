@@ -1,37 +1,60 @@
 import { useNavigate } from "@solidjs/router";
-import { createEffect, createResource, createSignal, For } from "solid-js";
+import {
+  createEffect,
+  createResource,
+  createSignal,
+  For,
+  Show,
+} from "solid-js";
 import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
 import { Form } from "~/components/Form";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { Attribute, AttributeValue, Metadata, SchemaDb } from "~/types/db";
+import { AttributeValue, durationHMS, Metadata } from "~/types/db";
 import { addNewExperiment } from "~/api/addNewExperiment";
 import { Heading } from "~/components/Heading";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { toggleVariants } from "~/components/ui/toggle";
-import { isAttributesValuesValid, isColumnsValuesValid } from "~/utils/dataValidation";
+import {
+  isAttributesValuesValid,
+  isColumnsValuesValid,
+} from "~/utils/dataValidation";
 import {
   TextField,
   TextFieldErrorMessage,
   TextFieldInput,
 } from "~/components/ui/text-field";
-import { toAttributeValue } from "~/utils/db";
+import { toAttributeValue, toSeconds } from "~/utils/db";
+import { DurationForm } from "~/components/durationForm";
 
 export default function NewExperiment() {
   const navigate = useNavigate();
-  const [data] = createResource<Metadata>(() => fetchAttributeDescriptionsExperiments());
+  const [data] = createResource<Metadata>(() =>
+    fetchAttributeDescriptionsExperiments(),
+  );
   const [store, setStore] = createStore<AttributeValue[]>([]);
   const [predefineSubject, setPredefineSubject] = createSignal<boolean>(false);
   const [name, setName] = createSignal<string>("");
+  const [hasDuration, setHasDuration] = createSignal<boolean>(true);
+  const [duration, setDuration] = createStore<durationHMS>({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   const handleSubmit = async () => {
     const dataOut = {
       attributes: store,
-      columns: { predefine_subject: predefineSubject(), 
-                 name: name() },
+      columns: {
+        predefine_subject: predefineSubject(),
+        name: name(),
+        duration: toSeconds(duration),
+      },
     };
 
-    const isReady = isAttributesValuesValid(dataOut.attributes) && isColumnsValuesValid(dataOut.columns)
+    const isReady =
+      isAttributesValuesValid(dataOut.attributes) &&
+      isColumnsValuesValid(dataOut.columns);
 
     if (isReady) {
       const response = await addNewExperiment({ data: dataOut });
@@ -45,7 +68,7 @@ export default function NewExperiment() {
 
   createEffect(() => {
     if (data()) {
-      setStore( toAttributeValue(data()!.attributes));
+      setStore(toAttributeValue(data()!.attributes));
     }
   });
 
@@ -94,6 +117,35 @@ export default function NewExperiment() {
                   )}
                 </For>
               </ToggleGroup>
+            </div>
+            <div class="flex flex-row space-x-10">
+            <div class="flex flex-row space-x-10 items-baseline">
+
+              <p>Do you want to set a duration for the observation sessions:</p>
+              <ToggleGroup
+                class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
+                value={hasDuration().toString()}
+              >
+                <For each={["true", "false"]}>
+                  {(option) => (
+                    <ToggleGroupItem
+                      class={`${toggleVariants({ size: "sm" })}`}
+                      value={option}
+                      onClick={() => {
+                        setHasDuration(option === "true");
+                      }}
+                    >
+                      {option}
+                    </ToggleGroupItem>
+                  )}
+                </For>
+              </ToggleGroup>
+              </div>
+              <div class="-m-5">
+                <Show when={hasDuration()}>
+                  <DurationForm duration={duration} setDuration={setDuration} />
+                </Show>
+              </div>
             </div>
           </div>
           {store && <Form store={store} setStore={setStore}></Form>}

@@ -13,12 +13,10 @@ import { isAttributesDefValid } from "~/utils/dataValidation";
 export default function ObservationSetup() {
   const params = useParams();
   const navigate = useNavigate();
-  const [store, setStore] = createStore<Attribute[]>([
-    { ...newAttribute },
-  ]);
+  const [store, setStore] = createStore<Attribute[]>([{ ...newAttribute }]);
 
-  const handleSubmit = async (destination:string) => {
-    const isReady = isAttributesDefValid(store)
+  const handleSubmit = async (destination: string) => {
+    const isReady = isAttributesDefValid(store);
 
     if (isReady) {
       await addExperimentalSetup({
@@ -26,15 +24,15 @@ export default function ObservationSetup() {
         experimentId: Number(params.experimentId),
         level: "observation",
       });
-      await updateValue(
-        { level: "observation", 
-          column_name: "status", 
-          row_id: Number(params.experimentId), 
-          value: "active" }
-      );
-      if(destination === "encoding"){
+      await updateValue({
+        level: "observation",
+        column_name: "status",
+        row_id: Number(params.experimentId),
+        value: "active",
+      });
+      if (destination === "encoding") {
         navigate(`/encoding/experiment/${params.experimentId}`);
-      }else if(destination === "home"){
+      } else if (destination === "home") {
         navigate(`/`);
       }
     }
@@ -50,13 +48,13 @@ export default function ObservationSetup() {
         <div class="flex flex-row space-x-1">
           <Button
             class={buttonVariants({ variant: "accent" })}
-            onClick={()=>handleSubmit("encoding")}
+            onClick={() => handleSubmit("encoding")}
           >
             Submit and start encoding
           </Button>
           <Button
             class={buttonVariants({ variant: "outline" })}
-            onClick={()=>handleSubmit("home")}
+            onClick={() => handleSubmit("home")}
           >
             Submit and go back home
           </Button>

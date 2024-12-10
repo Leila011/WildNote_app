@@ -53,13 +53,13 @@ export type AttributeValueDb = {
 };
 
 export type SchemaDb = {
-cid: number;
-dflt_value: any;
-name: string;
-notnull: number; // boolean
-pk: string; // primary key - boolean
-type: string;
-}
+  cid: number;
+  dflt_value: any;
+  name: string;
+  notnull: number; // boolean
+  pk: string; // primary key - boolean
+  type: string;
+};
 
 export type Experiment = {
   experiment_id: number;
@@ -68,6 +68,7 @@ export type Experiment = {
   predefine_subject: boolean;
   timestamp_start: string;
   timestamp_end: string;
+  duration: number;
 };
 
 export type Sample = {
@@ -96,7 +97,13 @@ export type Observation = {
 
 export type Level = "experiment" | "sample" | "observation" | "subject";
 
-export type Metadata ={
-    attributes: Attribute[];
-    schemas: SchemaDb[];
-}
+export type Metadata = {
+  attributes: Attribute[];
+  schemas: SchemaDb[];
+};
+
+export type durationHMS = {
+  hours: number;
+  minutes: number;
+  seconds: number;
+};

@@ -3,14 +3,11 @@ import { attributeToDb, columnToDb } from "~/utils/db";
 import { AttributeValue, Subject } from "~/types/db";
 
 type Props = {
-  data: {columns: Partial<Subject>;
-         attributes: AttributeValue[];
-  },
+  data: { columns: Partial<Subject>; attributes: AttributeValue[] };
   experimentId: number;
 };
 
-export async function addNewSubject(props: Props
-) {
+export async function addNewSubject(props: Props) {
   const cleanData = {
     columns: columnToDb(props.data.columns),
     attributes: attributeToDb(props.data.attributes),

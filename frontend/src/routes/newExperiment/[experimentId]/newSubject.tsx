@@ -5,7 +5,10 @@ import { Form } from "~/components/Form";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { AttributeValue, Metadata } from "~/types/db";
 import { Heading } from "~/components/Heading";
-import { isAttributesValuesValid, isColumnsValuesValid } from "~/utils/dataValidation";
+import {
+  isAttributesValuesValid,
+  isColumnsValuesValid,
+} from "~/utils/dataValidation";
 import {
   TextField,
   TextFieldErrorMessage,
@@ -18,40 +21,45 @@ import { addNewSubject } from "~/api/addNewSubject";
 export default function NewExperiment() {
   const navigate = useNavigate();
   const params = useParams();
-  const [data] = createResource<Metadata>(() => fetchAttributeDescriptions({
-    experimentId: Number(params.experimentId),
-    level: "subject"}));
+  const [data] = createResource<Metadata>(() =>
+    fetchAttributeDescriptions({
+      experimentId: Number(params.experimentId),
+      level: "subject",
+    }),
+  );
   const [store, setStore] = createStore<AttributeValue[]>([]);
   const [name, setName] = createSignal<string>("");
 
   async function endSubject() {
-    
     const dataOut = {
       attributes: store,
-      columns: { name: name(),
-        timestamp_creation: getTimestamp(),
-       },
+      columns: { name: name(), timestamp_creation: getTimestamp() },
     };
 
-    const isReady = isAttributesValuesValid(dataOut.attributes) && isColumnsValuesValid(dataOut.columns)
+    const isReady =
+      isAttributesValuesValid(dataOut.attributes) &&
+      isColumnsValuesValid(dataOut.columns);
 
-    if(isReady) {
-    const response = addNewSubject({ data: dataOut, experimentId: Number(params.experimentId) });
-    return response;
+    if (isReady) {
+      const response = addNewSubject({
+        data: dataOut,
+        experimentId: Number(params.experimentId),
+      });
+      return response;
     }
   }
   const handleSubmitToSample = async () => {
-    const response  = await endSubject()
+    const response = await endSubject();
     response && navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
   };
 
   const handleSubmitNext = async () => {
-    const response = await endSubject()
+    const response = await endSubject();
 
-    if(response){
-    // reset the stores (this vaoid a=having to refetch everything)
-    setStore(toAttributeValue(data()!.attributes));
-    navigate(`/newExperiment/${params.experimentId}/subjectSetup`);
+    if (response) {
+      // reset the stores (this vaoid a=having to refetch everything)
+      setStore(toAttributeValue(data()!.attributes));
+      navigate(`/newExperiment/${params.experimentId}/subjectSetup`);
     }
   };
 
@@ -90,7 +98,7 @@ export default function NewExperiment() {
           {store && <Form store={store} setStore={setStore}></Form>}
         </div>
         <div class="flex flex-row space-x-1">
-        <Button
+          <Button
             class={buttonVariants({ variant: "accent" })}
             onClick={handleSubmitNext}
           >

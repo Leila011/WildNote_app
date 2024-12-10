@@ -4,14 +4,13 @@ import { AttributeValue, Sample } from "~/types/db";
 
 type Props = {
   data: {
-  columns: Partial<Sample>,
-  attributes: AttributeValue[],
-},
-experimentId: number,
-}
+    columns: Partial<Sample>;
+    attributes: AttributeValue[];
+  };
+  experimentId: number;
+};
 
-export async function addNewSample(props: Props
-) {
+export async function addNewSample(props: Props) {
   const cleanData = {
     columns: columnToDb(props.data.columns),
     attributes: attributeToDb(props.data.attributes),

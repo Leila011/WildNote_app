@@ -2,13 +2,12 @@ import { backendUrl } from "~/db";
 import { AttributeValue, Experiment } from "~/types/db";
 import { attributeToDb, columnToDb } from "~/utils/db";
 
-
 type Props = {
   data: {
-  columns: Partial<Experiment>,
-  attributes: AttributeValue[],
+    columns: Partial<Experiment>;
+    attributes: AttributeValue[];
+  };
 };
-}
 
 export async function addNewExperiment(props: Props) {
   const cleanedData = {

@@ -13,15 +13,17 @@ export default function newSubject() {
   const params = useParams();
   const navigate = useNavigate();
   const [ready, setReady] = createSignal<boolean>(false);
-  const [store, setStore] = createStore<Attribute[]>([
-    { ...newAttribute },
-  ]);
+  const [store, setStore] = createStore<Attribute[]>([{ ...newAttribute }]);
 
   const handleSubmit = async () => {
     setReady(isAttributesDefValid(store));
 
     if (ready()) {
-      addExperimentalSetup({ data: store, experimentId: Number(params.experimentId), level: "subject" });
+      addExperimentalSetup({
+        data: store,
+        experimentId: Number(params.experimentId),
+        level: "subject",
+      });
       navigate(`/newExperiment/${params.experimentId}/newSubject`);
     }
   };

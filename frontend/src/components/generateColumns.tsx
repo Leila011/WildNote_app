@@ -17,7 +17,7 @@ import { Level } from "~/types/db";
 import { getTimestamp } from "~/utils/db";
 
 export const generateColumns = (
-  schema: {name: string}[],
+  schema: { name: string }[],
   table: Level,
   refetch?: () => void,
 ): ColumnDef<any>[] => {
@@ -49,7 +49,6 @@ export const generateColumns = (
     id: "actions",
     enableHiding: false,
     cell: (props) => {
-
       return (
         <DropdownMenu placement="bottom-end">
           <DropdownMenuTrigger
@@ -65,9 +64,19 @@ export const generateColumns = (
             <Show when={table === "experiment"}>
               <DropdownMenuItem
                 onClick={async () => {
-                  await updateValue({level: "experiment", column_name: "status", row_id: props.row.original.experiment_id, value: "active"});
-                  await updateValue({level: "experiment", column_name: "timestamp_start", row_id: props.row.original.experiment_id, value: getTimestamp()});
-            
+                  await updateValue({
+                    level: "experiment",
+                    column_name: "status",
+                    row_id: props.row.original.experiment_id,
+                    value: "active",
+                  });
+                  await updateValue({
+                    level: "experiment",
+                    column_name: "timestamp_start",
+                    row_id: props.row.original.experiment_id,
+                    value: getTimestamp(),
+                  });
+
                   refetch && refetch();
                 }}
               >
@@ -79,8 +88,7 @@ export const generateColumns = (
                 const response = await deleteRow({
                   level: table,
                   row_id: props.row.original[table + "_id"],
-                }
-                );
+                });
                 refetch && refetch();
               }}
             >

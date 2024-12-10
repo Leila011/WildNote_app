@@ -306,6 +306,11 @@ def create_app(test_config=None):
         schemas = db.get_columns("experiment")
         return jsonify({"schema": schemas, "attributes": attributes})
     
+    # Retrive the duration set for a sample from a given experiment
+    @app.route('/api/experiments/<int:experiment_id>/duration', methods=['GET'])
+    def get_duration(experiment_id):
+        return db.get_duration(experiment_id)
+
     # All other tables 
     @app.route('/api/experiments/<int:experiment_id>/<table_name>/attributes', methods=['GET'])
     def get_attributes(table_name, experiment_id):

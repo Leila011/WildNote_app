@@ -1,5 +1,5 @@
 import { backendUrl } from "~/db";
-import {  AttributeDb, Metadata, SchemaDb } from "~/types/db";
+import { AttributeDb, Metadata, SchemaDb } from "~/types/db";
 import { attributeFromDb } from "~/utils/db";
 
 type RawData = {

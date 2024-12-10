@@ -9,8 +9,11 @@ import { Observation } from "~/types/db";
 export default function Observations() {
   const params = useParams();
 
-  const [data, { refetch }] = createResource<Observation[]>(
-    () => fetchObservations({ sampleId: Number(params.sampleId), experimentId: Number(params.experimentId) }),
+  const [data, { refetch }] = createResource<Observation[]>(() =>
+    fetchObservations({
+      sampleId: Number(params.sampleId),
+      experimentId: Number(params.experimentId),
+    }),
   );
 
   function getColumnNames(data: Observation[]) {
@@ -27,14 +30,14 @@ export default function Observations() {
       {data()?.length && (
         <DataTable
           columns={generateColumns(
-            getColumnNames(data()??[]),
+            getColumnNames(data() ?? []),
             "observation",
             refetch,
           )}
           data={data() || []}
         />
       )}
-        <Show when={data() && !data()?.length }>
+      <Show when={data() && !data()?.length}>
         <div>There is no observation yet!</div>
       </Show>
     </div>

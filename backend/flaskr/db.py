@@ -71,8 +71,8 @@ def add_experiment(con, data):
     try:
         cursor = con.cursor()
         cursor.execute(
-            'INSERT INTO experiment (predefine_subject, name) VALUES (?,?)',
-            ( data['predefine_subject'],data['name'],)
+            'INSERT INTO experiment (predefine_subject, name, duration) VALUES (?,?, ?)',
+            ( data['predefine_subject'],data['name'],data['duration'],)
         )
         con.commit()
         return cursor.lastrowid
@@ -345,6 +345,8 @@ def get_subjects(experiment_id):
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
     return jsonify(rows)
 
+
+
 ############################### READ ATTRIBUTES ###############################
 def get_attributes(attribute_table, experiment_id):
     """Retrieve the attributes for a given table"""
@@ -375,3 +377,10 @@ def get_column_names(table_name):
     columns_info = db.execute(f'PRAGMA table_info({table_name})').fetchall()
     column_names = [column['name'] for column in columns_info]
     return column_names
+
+def get_duration(experiment_id):
+    """Retrieve the duration (in second) of a sample from a given experiment"""
+    db = get_db()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+    duration = db.execute(f'SELECT duration FROM experiment WHERE experiment_id = ?', (experiment_id,)).fetchall()
+    return jsonify(duration)

@@ -3,14 +3,11 @@ import { attributeToDb, columnToDb } from "~/utils/db";
 import { AttributeValue, Observation } from "~/types/db";
 
 type Props = {
-  data: {columns: Partial<Observation>;
-         attributes: AttributeValue[];
-  },
+  data: { columns: Partial<Observation>; attributes: AttributeValue[] };
   sampleId: number;
 };
 
-export async function addNewObservation(props: Props
-) {
+export async function addNewObservation(props: Props) {
   const cleanData = {
     columns: columnToDb(props.data.columns),
     attributes: attributeToDb(props.data.attributes),

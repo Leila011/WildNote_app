@@ -7,10 +7,11 @@ import { Heading } from "~/components/Heading";
 import { Experiment } from "~/types/db";
 
 export default function Experiments() {
-  const [dataAttributes, { refetch }] = createResource<Experiment[]>(fetchExperiments);
+  const [dataAttributes, { refetch }] =
+    createResource<Experiment[]>(fetchExperiments);
 
   function getColumnNames(data: Experiment[]) {
-      return Object.keys(data![0]).map((key) => ({ name: key }));
+    return Object.keys(data![0]).map((key) => ({ name: key }));
   }
 
   return (
@@ -29,14 +30,14 @@ export default function Experiments() {
       {dataAttributes()?.length && (
         <DataTable
           columns={generateColumns(
-            getColumnNames(dataAttributes()|| []),
+            getColumnNames(dataAttributes() || []),
             "experiment",
             refetch,
           )}
           data={dataAttributes() || []}
         />
       )}
-      <Show when={dataAttributes() && !dataAttributes()?.length }>
+      <Show when={dataAttributes() && !dataAttributes()?.length}>
         <div>There is no experiments yet!</div>
       </Show>
     </div>

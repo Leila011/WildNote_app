@@ -13,7 +13,7 @@ export async function fetchSubjects(props: Props): Promise<Subject[]> {
     if (!response.ok) {
       throw new Error(`Failed to fetch subjects: ${response.statusText}`);
     }
-    const data= await response.json();
+    const data = await response.json();
     return data;
   } catch (error) {
     throw error;

@@ -9,8 +9,8 @@ import { Sample } from "~/types/db";
 
 export default function Samples() {
   const params = useParams();
-  const [data, { refetch }] = createResource<Sample[]>(
-    () => fetchSamples({experimentId:Number(params.experimentId)})
+  const [data, { refetch }] = createResource<Sample[]>(() =>
+    fetchSamples({ experimentId: Number(params.experimentId) }),
   );
 
   function getColumnNames(data: Sample[]) {
@@ -34,11 +34,15 @@ export default function Samples() {
       </div>
       {data() && data()!.length > 0 && (
         <DataTable
-          columns={generateColumns(getColumnNames(data() ?? []), "sample", refetch)}
+          columns={generateColumns(
+            getColumnNames(data() ?? []),
+            "sample",
+            refetch,
+          )}
           data={data() ?? []}
         />
       )}
-      <Show when={data() && !data()?.length }>
+      <Show when={data() && !data()?.length}>
         <div>There is no observation session yet!</div>
       </Show>
     </div>

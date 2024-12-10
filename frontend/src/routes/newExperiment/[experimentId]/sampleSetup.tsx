@@ -12,16 +12,19 @@ import { isAttributesDefValid } from "~/utils/dataValidation";
 export default function SampleSetup() {
   const params = useParams();
   const navigate = useNavigate();
-  const [store, setStore] = createStore<Attribute[]>([
-    { ...newAttribute },
-  ]);
+  const [store, setStore] = createStore<Attribute[]>([{ ...newAttribute }]);
 
   const handleSubmit = async () => {
-    const isReady =isAttributesDefValid(store)
+    const isReady = isAttributesDefValid(store);
 
     if (isReady) {
-      const reponse = await addExperimentalSetup({ data: store, experimentId: Number(params.experimentId), level: "sample" });
-      reponse && navigate(`/newExperiment/${params.experimentId}/observationSetup`);
+      const reponse = await addExperimentalSetup({
+        data: store,
+        experimentId: Number(params.experimentId),
+        level: "sample",
+      });
+      reponse &&
+        navigate(`/newExperiment/${params.experimentId}/observationSetup`);
     }
   };
 

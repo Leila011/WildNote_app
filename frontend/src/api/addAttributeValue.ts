@@ -2,11 +2,11 @@ import { backendUrl } from "~/db";
 import { Level } from "~/types/db";
 
 type Props = {
-  level: Level,
-  attribute_id: string,
-  item_id: number,
-  value: any,
-}
+  level: Level;
+  attribute_id: string;
+  item_id: number;
+  value: any;
+};
 
 export async function addAttributeValue(props: Props) {
   const response = await fetch(

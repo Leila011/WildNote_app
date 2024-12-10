@@ -31,7 +31,10 @@ import { fetchSubjects } from "~/api/fetchSubjects";
 import { Heading } from "~/components/Heading";
 import { updateValue } from "~/api/updateValue";
 import { getTimestamp, toAttributeValue } from "~/utils/db";
-import { isAttributesValuesValid, isColumnsValuesValid } from "~/utils/dataValidation";
+import {
+  isAttributesValuesValid,
+  isColumnsValuesValid,
+} from "~/utils/dataValidation";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
@@ -41,22 +44,29 @@ export default function EncodingSample() {
   const [experiment, setExperiment] = createSignal<Experiment>();
   const [subject, setSubject] = createSignal<Subject>();
 
-
-  const [subjects, {refetch: refetchSubject }] = createResource<Subject[]|undefined>(
-    () => experiment() && fetchSubjects({experimentId:experiment()!.experiment_id}) ,
+  const [subjects, { refetch: refetchSubject }] = createResource<
+    Subject[] | undefined
+  >(
+    () =>
+      experiment() &&
+      fetchSubjects({ experimentId: experiment()!.experiment_id }),
   );
 
-  const [data, { refetch: refetchAttributes }] = createResource<Metadata | undefined>(
-    () => experiment() && fetchAttributeDescriptions({
-      experimentId: experiment()!.experiment_id,
-      level: "sample",
-    })
+  const [data, { refetch: refetchAttributes }] = createResource<
+    Metadata | undefined
+  >(
+    () =>
+      experiment() &&
+      fetchAttributeDescriptions({
+        experimentId: experiment()!.experiment_id,
+        level: "sample",
+      }),
   );
 
   createEffect(() => {
     if (experiment()) {
       refetchSubject();
-      refetchAttributes()
+      refetchAttributes();
     }
   });
 
@@ -88,27 +98,32 @@ export default function EncodingSample() {
         attributes: store,
       };
 
-      const isReady = isAttributesValuesValid(dataOut.attributes) && isColumnsValuesValid(dataOut.columns)
+      console.log(isAttributesValuesValid(dataOut.attributes));
+      console.log((dataOut.columns));
 
-      if(isReady) {
-      if (experiment()?.timestamp_start === null) {
-        updateValue({
-          level:"experiment",
-          column_name:"timestamp_start",
-          row_id:experiment()!.experiment_id,
-          value: getTimestamp(),
+      const isNotRequired = experiment()?.predefine_subject ? undefined: ["subject_id"]
+      const isReady =
+        isAttributesValuesValid(dataOut.attributes) &&
+        isColumnsValuesValid(dataOut.columns, isNotRequired);
+
+      if (isReady) {
+        if (experiment()?.timestamp_start === null) {
+          updateValue({
+            level: "experiment",
+            column_name: "timestamp_start",
+            row_id: experiment()!.experiment_id,
+            value: getTimestamp(),
+          });
         }
-        );
-      }
-      const response = await addNewSample({
-        data:dataOut, 
-        experimentId:experiment()!.experiment_id
-      });
-      
-      response.sample_id &&
-        navigate(
-          `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
-        );
+        const response = await addNewSample({
+          data: dataOut,
+          experimentId: experiment()!.experiment_id,
+        });
+
+        response.sample_id &&
+          navigate(
+            `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
+          );
       }
     }
   };

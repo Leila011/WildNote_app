@@ -6,7 +6,9 @@ type Props = {
   row_id: number;
 };
 export async function deleteRow(props: Props) {
-  const response = await fetch(`${backendUrl}/api/${props.level}/${props.row_id}/delete`);
+  const response = await fetch(
+    `${backendUrl}/api/${props.level}/${props.row_id}/delete`,
+  );
   if (!response.ok) {
     throw new Error("Failed to delete record");
   }
