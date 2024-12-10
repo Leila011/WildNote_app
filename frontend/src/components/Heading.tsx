@@ -1,14 +1,15 @@
-import { JSX } from "solid-js";
 
+import { cleanAnchor } from "~/utils";
 interface TitleProps {
-  children: JSX.Element | JSX.Element[];
+  children: string;
   class?: string;
 }
 
 export function Heading(props: TitleProps) {
   return (
     <div class={`flex py-10 ${props.class}`}>
-      <h1 class="text-3xl font-bold">{props.children}</h1>
+      <h1 class="text-3xl font-bold" id={cleanAnchor(props.children)}
+      >{props.children}</h1>
     </div>
   );
 }
