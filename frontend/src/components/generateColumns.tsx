@@ -11,7 +11,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
@@ -48,6 +47,10 @@ export const generateColumns = (
     id: "actions",
     enableHiding: false,
     cell: (props) => {
+      function get_timestamp(): any {
+        throw new Error("Function not implemented.");
+      }
+
       return (
         <DropdownMenu placement="bottom-end">
           <DropdownMenuTrigger
@@ -69,6 +72,12 @@ export const generateColumns = (
                     props.row.original.experiment_id,
                     "completed",
                   );
+                  await updateValue(
+                    "experiment",
+                    "timestamp_end",
+                    props.row.original.experiment_id,
+                    get_timestamp(),
+                  );
                   refetch && refetch();
                 }}
               >
@@ -81,7 +90,6 @@ export const generateColumns = (
                   table,
                   props.row.original[table + "_id"],
                 );
-                console.log(response);
                 refetch && refetch();
               }}
             >

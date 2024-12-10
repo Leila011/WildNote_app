@@ -136,26 +136,29 @@ def add_subject(con, experiment_id):
     except Exception as e:
         raise Exception(f"Error adding subject: {e}")
     
-def add_sample(con, experiment_id, subject_id):
+def add_sample(con, experiment_id, subject_id, timestamp_start):
     """Add a new sample in the sample table"""
     try:
         cursor = con.cursor()
         cursor.execute(
-        'INSERT INTO sample (experiment_id, subject_id) VALUES (?, ?)',
-        (experiment_id, subject_id)
+        'INSERT INTO sample (experiment_id, subject_id, timestamp_start) VALUES (?, ?, ?)',
+        (experiment_id, subject_id, timestamp_start,)
         )
         con.commit()
         return cursor.lastrowid
     except Exception as e:
         raise Exception(f"Error adding sample: {e}")
 
-def add_observation(con, sample_id):
+def add_observation(con, sample_id, data):
     """Add a new observation in the observation table"""
     try:
+        print(data)
+        print(sample_id)
+
         cursor = con.cursor()
         cursor.execute(
-        'INSERT INTO observation (sample_id) VALUES (?)',
-        (sample_id,)
+        'INSERT INTO observation (sample_id, timestamp_start, timestamp_end, status) VALUES (?, ?, ?,?)',
+        (sample_id, data['timestamp_start'],data['timestamp_end'], data['status'])
         )
         con.commit()
         return cursor.lastrowid
@@ -253,8 +256,6 @@ def get_samples(experiment_id):
         WHERE experiment_id = ?
         ''', (experiment_id,)
     ).fetchall()
-
-    print('attribute_names',attribute_names)    
 
     # Generate the pivot query
     columns = ["s.sample_id AS sample_id", "status", "timestamp_start", "timestamp_end"]

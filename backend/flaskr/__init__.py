@@ -166,7 +166,7 @@ def create_app(test_config=None):
             con = db.get_db()
 
             # add a new sample & retrieve the last inserted id
-            sample_id = db.add_sample(con, experiment_id, data['columns']['subject']['subject_id'])
+            sample_id = db.add_sample(con, experiment_id, data['columns']['subject_id'],  data['columns']['timestamp_start'])
 
             # add the custom attributes for the experiment
             for attribute in data['attributes']:
@@ -192,7 +192,7 @@ def create_app(test_config=None):
             con = db.get_db()
 
             # add a new sample & retrieve the last inserted id
-            observation_id = db.add_observation(con, sample_id)
+            observation_id = db.add_observation(con, sample_id, data['columns'])
 
             # add the custom attributes for the experiment
             for attribute in data['attributes']:

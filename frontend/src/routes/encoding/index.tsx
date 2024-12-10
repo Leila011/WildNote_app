@@ -28,6 +28,7 @@ import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
 import { Heading } from "~/components/Heading";
 import { updateValue } from "~/api/updateValue";
+import { getTimestamp } from "~/utils/db";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ export default function EncodingSample() {
   createEffect(() => {
     if (params.experimentId && experiments()) {
       const experimentId = Number(params.experimentId);
-      const experiment = experiments().find(
+      const experiment = experiments()!.find(
         (experiment) => experiment.experiment_id === experimentId,
       );
       setExperiment(experiment);
@@ -90,25 +91,31 @@ export default function EncodingSample() {
   });
 
   const handleSubmit = async () => {
+    if (experiment() && (experiment()?.predefine_subject? subject(): true)) {
     const data = {
       columns: {
-        subject: { subject_id: subject().subject_id },
+        subject_id:  subject()?.subject_id ?? null,
+        timestamp_start: getTimestamp()
       },
       attributes: store,
     };
 
+    if(experiment()?.timestamp_start === null){
     updateValue(
       "experiment",
       "timestamp_start",
-      experiment().experiment_id,
-      Date.now(),
+      experiment()!.experiment_id,
+      getTimestamp()
     );
-    const response = await addNewSample(data, experiment().experiment_id);
+  }
+    const response = await addNewSample(data, experiment()!.experiment_id);
+    console.log(response);
     experiment() &&
       response &&
       navigate(
-        `/encoding/${experiment()!.experiment_id}/${response.sample_id}`,
+        `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
       );
+    }
   };
 
   return (

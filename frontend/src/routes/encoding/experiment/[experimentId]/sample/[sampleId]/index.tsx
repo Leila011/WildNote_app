@@ -1,4 +1,4 @@
-import { createEffect, createResource } from "solid-js";
+import { createEffect, createResource, createSignal } from "solid-js";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { TableAttribute, TableAttributeValue } from "~/types/db";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
@@ -8,11 +8,12 @@ import { useNavigate, useParams } from "@solidjs/router";
 import { addNewObservation } from "~/api/addNewObservation";
 import { updateValue } from "~/api/updateValue";
 import { Heading } from "~/components/Heading";
+import { getTimestamp } from "~/utils/db";
 
 export default function EncodingObservation() {
   const navigate = useNavigate();
   const params = useParams();
-
+  const [timestamp_start, setTimestamp_start] = createSignal(getTimestamp());
   function fetcher(props: { experimentId: number; tableName: string }) {
     return props.experimentId
       ? fetchAttributeDescriptions(props.tableName, props.experimentId)
@@ -27,9 +28,6 @@ export default function EncodingObservation() {
   }, fetcher);
 
   const [store, setStore] = createStore<TableAttributeValue[]>([]);
-  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>(
-    [],
-  );
 
   createEffect(() => {
     if (attributes()) {
@@ -45,25 +43,17 @@ export default function EncodingObservation() {
           (attribute: TableAttributeValue) => attribute.autofill === false,
         ),
       );
-      setStoreAutofill(
-        attributesAugmented.filter(
-          (attribute: TableAttributeValue) => attribute.autofill === true,
-        ),
-      );
     }
   });
 
   const endObservation = async () => {
-    setStoreAutofill((prevStore) =>
-      prevStore.map((attribute) =>
-        attribute.name === "creation_date"
-          ? { ...attribute, value: Date.now() }
-          : attribute,
-      ),
-    );
     const data = {
-      columns: [],
-      attributes: [...store, ...storeAutofill],
+      columns: {
+        status: "completed",
+        timestamp_start: timestamp_start(),
+        timestamp_end: getTimestamp()
+      },
+      attributes: store,
     };
 
     const response = await addNewObservation(data, Number(params.sampleId));
@@ -76,29 +66,28 @@ export default function EncodingObservation() {
       };
     });
     setStore(resetStore);
-
-    const resetStoreAutofill = storeAutofill.map((attribute) => {
-      return {
-        ...attribute,
-        value: "",
-      };
-    });
-    setStoreAutofill(resetStoreAutofill);
+    setTimestamp_start(getTimestamp());
     return response;
   };
 
   const endSample = async () => {
     await updateValue("sample", "status", Number(params.sampleId), "completed");
+    await updateValue("sample", "timestamp_end", Number(params.sampleId), getTimestamp());
+
   };
 
   const handleSubmitNext = async () => {
     const response = await endObservation();
-    navigate(`/encoding/${params.experimentId}/${params.sampleId}`);
+    console.log(response);
+    navigate(`/encoding/experiment/${params.experimentId}/sample/${params.sampleId}`);
   };
 
   const handleSubmitNextSample = async () => {
     const response = await endObservation();
-    navigate(`/encoding/${params.experimentId}`);
+    console.log(response);
+
+    await endSample();
+    navigate(`/encoding/experiment/${params.experimentId}`);
   };
 
   const handleSubmitEnd = async () => {
@@ -128,6 +117,12 @@ export default function EncodingObservation() {
               onClick={handleSubmitNextSample}
             >
               Next observation session
+            </Button>
+            <Button
+              class={buttonVariants({ variant: "outline" })}
+              onClick={handleSubmitEnd}
+            >
+              Stop observation session and return home
             </Button>
           </div>
         </div>

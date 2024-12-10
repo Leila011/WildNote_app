@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { IconChevronDown } from "~/components/icons";
 import { Button } from "./ui/button";
-import { createEffect, For, Index, Show } from "solid-js";
+import { For, Index, Show } from "solid-js";
 import { TableAttribute } from "~/types/db";
 import { SetStoreFunction } from "solid-js/store";
 import { typeOptions } from "~/utils/typeOptions";

@@ -2,13 +2,6 @@ import { backendUrl } from "~/db";
 import { TableAttribute } from "~/types/db";
 import { attributeFromDb } from "~/utils/db";
 
-/**
- * Fetch the schema of a table from the backend
- * @param {string} tableName The name of the table to fetch the schema for
- * @returns {Promise<any>} A promise that resolves to the schema of the table
- * @throws Will throw an error if the fetch operation fails.
- */
-
 type props = {
   attributes: TableAttribute[];
   columns: any[];
@@ -18,7 +11,6 @@ export async function fetchAttributeDescriptions(
   experimentId?: number,
 ): Promise<props> {
   try {
-    console.log("fetchAttributeDescriptions");
     const response = await fetch(
       `${backendUrl}/api/experiments/${experimentId}/${tableName}/attributes`,
     );

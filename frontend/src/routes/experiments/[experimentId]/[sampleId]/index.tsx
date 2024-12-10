@@ -1,5 +1,5 @@
 import { useParams } from "@solidjs/router";
-import { createEffect, createResource, createSignal } from "solid-js";
+import { createResource } from "solid-js";
 import { DataTable } from "~/components/data-table";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchObservations } from "~/api/fetchObservations";
@@ -16,10 +16,6 @@ export default function Observations() {
     fetchObservations,
   );
 
-  createEffect(() => {
-    console.log(params.sampleId);
-    data() && console.log(data());
-  });
 
   function getColumnNames(data: any) {
     if (data) {

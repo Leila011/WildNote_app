@@ -61,7 +61,7 @@ export default function ObservationSetup() {
         Number(params.experimentId),
         "active",
       );
-      navigate(`/encoding/${params.experimentId}`);
+      navigate(`/encoding/experiment/${params.experimentId}`);
     }
   };
 
