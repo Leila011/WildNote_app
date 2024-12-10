@@ -17,8 +17,10 @@ import { IconChevronDown } from "~/components/icons";
 import {
   Experiment,
   Subject,
-  TableAttribute,
-  TableAttributeValue,
+  Attribute,
+  AttributeValue,
+  Metadata,
+  Level,
 } from "~/types/db";
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { Form } from "~/components/Form";
@@ -34,47 +36,39 @@ export default function EncodingSample() {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [experiments] = createResource(fetchExperiments);
+  const [experiments] = createResource<Experiment[]>(fetchExperiments);
   const [experiment, setExperiment] = createSignal<Experiment>();
   const [subject, setSubject] = createSignal<Subject>();
 
-  function fetcherSubject(props: { experimentId: number }) {
-    return props.experimentId ? fetchSubjects(props.experimentId) : undefined;
-  }
 
-  const [subjects] = createResource(() => {
-    return (
-      experiment() && {
-        experimentId: experiment()!.experiment_id,
-      }
-    );
-  }, fetcherSubject);
+  const [subjects, {refetch: refetchSubject }] = createResource<Subject[]|undefined>(
+    () => experiment() && fetchSubjects({experimentId:experiment()!.experiment_id}) ,
+  );
 
-  function fetcher(props: { experimentId: number; tableName: string }) {
-    return props.experimentId
-      ? fetchAttributeDescriptions(props.tableName, props.experimentId)
-      : undefined;
-  }
+  const [attributes, { refetch: refetchAttributes }] = createResource<Metadata | undefined>(
+    () => experiment() && fetchAttributeDescriptions({
+      experimentId: experiment()!.experiment_id,
+      level: "sample",
+    })
+  );
 
-  const [attributes] = createResource(() => {
-    return (
-      experiment() && {
-        experimentId: experiment()!.experiment_id,
-        tableName: "sample",
-      }
-    );
-  }, fetcher);
+  createEffect(() => {
+    if (experiment()) {
+      refetchSubject();
+      refetchAttributes()
+    }
+  });
 
-  const [store, setStore] = createStore<TableAttributeValue[]>([]);
+  const [store, setStore] = createStore<AttributeValue[]>([]);
 
   createEffect(() => {
     if (attributes()) {
       const attributesAugmented = attributes()!.attributes.map(
-        (attribute: TableAttribute) =>
+        (attribute: Attribute) =>
           ({
             ...attribute,
             value: "",
-          }) as TableAttributeValue,
+          }) as AttributeValue,
       );
       setStore(attributesAugmented);
     }
@@ -94,22 +88,25 @@ export default function EncodingSample() {
     if (experiment() && (experiment()?.predefine_subject ? subject() : true)) {
       const data = {
         columns: {
-          subject_id: subject()?.subject_id ?? null,
+          subject_id: subject()?.subject_id ?? undefined,
           timestamp_start: getTimestamp(),
         },
         attributes: store,
       };
 
       if (experiment()?.timestamp_start === null) {
-        updateValue(
-          "experiment",
-          "timestamp_start",
-          experiment()!.experiment_id,
-          getTimestamp(),
+        updateValue({
+          level:"experiment",
+          column_name:"timestamp_start",
+          row_id:experiment()!.experiment_id,
+          value: getTimestamp(),
+        }
         );
       }
-      const response = await addNewSample(data, experiment()!.experiment_id);
-      console.log(response);
+      const response = await addNewSample({
+        data:data, 
+        experimentId:experiment()!.experiment_id
+      });
       experiment() &&
         response &&
         navigate(

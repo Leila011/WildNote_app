@@ -1,22 +1,19 @@
 import { useParams } from "@solidjs/router";
-import { createResource } from "solid-js";
+import { createResource, Show } from "solid-js";
 import { DataTable } from "~/components/data-table";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchObservations } from "~/api/fetchObservations";
 import { Heading } from "~/components/Heading";
+import { Observation } from "~/types/db";
 
 export default function Observations() {
   const params = useParams();
 
-  const [data, { refetch }] = createResource(
-    () => ({
-      experimentId: Number(params.experimentId),
-      sampleId: Number(params.sampleId),
-    }),
-    fetchObservations,
+  const [data, { refetch }] = createResource<Observation[]>(
+    () => fetchObservations({ sampleId: Number(params.sampleId), experimentId: Number(params.experimentId) }),
   );
 
-  function getColumnNames(data: any) {
+  function getColumnNames(data: Observation[]) {
     if (data) {
       return Object.keys(data![0]).map((key) => ({ name: key }));
     } else {
@@ -30,13 +27,16 @@ export default function Observations() {
       {data()?.length && (
         <DataTable
           columns={generateColumns(
-            getColumnNames(data()),
+            getColumnNames(data()??[]),
             "observation",
             refetch,
           )}
           data={data() || []}
         />
       )}
+        <Show when={data() && !data()?.length }>
+        <div>There is no observation yet!</div>
+      </Show>
     </div>
   );
 }

@@ -10,7 +10,7 @@ import {
 import { IconChevronDown } from "~/components/icons";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { toggleVariants } from "~/components/ui/toggle";
-import { TableAttribute, TableAttributeValue } from "~/types/db";
+import { Attribute, AttributeValue } from "~/types/db";
 import {
   NumberField,
   NumberFieldDecrementTrigger,
@@ -25,8 +25,8 @@ import {
 } from "~/components/ui/text-field";
 
 type Props = {
-  store: TableAttributeValue[];
-  setStore: SetStoreFunction<TableAttributeValue[]>;
+  store: AttributeValue[];
+  setStore: SetStoreFunction<AttributeValue[]>;
 };
 
 /**
@@ -42,7 +42,7 @@ type Props = {
  * @param argValue - The value of the argument to validate.
  * @returns True if the argument is valid, false otherwise.
  */
-export function isValid(argConfig: TableAttribute, argValue: any): boolean {
+export function isValid(argConfig: AttributeValue, argValue: any): boolean {
   const isRequired = "required" in argConfig && argConfig.required;
   const isEmpty =
     argValue === null || argValue === "" || Number.isNaN(argValue); // Because deleting the text field content set value to "". & deleting number field content set value to NaN
@@ -62,7 +62,7 @@ export function isValid(argConfig: TableAttribute, argValue: any): boolean {
  * @returns `true` if the value is within the specified range, otherwise `false`.
  */
 export function isValidNumber(
-  argConfig: TableAttributeValue,
+  argConfig: AttributeValue,
   argValue: number,
 ): boolean {
   const isBelowMin = argConfig.min !== null && argValue < argConfig.min;
@@ -76,7 +76,7 @@ export function isValidNumber(
  * @param argConfig - The configuration object that may contain `min` and `max` properties.
  * @returns A string message indicating the valid range for the parameter value.
  */
-export function invalidNumberMessage(argConfig: TableAttribute): string {
+export function invalidNumberMessage(argConfig: AttributeValue): string {
   const minText = "min" in argConfig ? `>=${argConfig.min}` : "";
   const maxText = "max" in argConfig ? `<=${argConfig.max}` : "";
   const minMaxText = minText && maxText ? ` and ` : "";
@@ -96,7 +96,7 @@ export function invalidNumberMessage(argConfig: TableAttribute): string {
  * @returns An array of options for the boolean toggle.
  */
 export function booleanToggleOptions(
-  arg: TableAttribute,
+  arg: AttributeValue,
 ): { name: string; value: any }[] {
   return [
     { name: "True", value: true },

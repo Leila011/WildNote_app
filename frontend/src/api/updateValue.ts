@@ -1,19 +1,21 @@
 import { backendUrl } from "~/db";
 
-export async function updateValue(
-  level: string,
-  column_name: string,
-  row_id: number,
-  value: any,
-) {
+type Props = {
+  level: string;
+  column_name: string;
+  row_id: number;
+  value: any;
+};
+
+export async function updateValue(props: Props) {
   const response = await fetch(
-    `${backendUrl}/api/updateValue/${level}/${column_name}/${row_id}`,
+    `${backendUrl}/api/updateValue/${props.level}/${props.column_name}/${props.row_id}`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(value),
+      body: JSON.stringify(props.value),
     },
   );
   if (!response.ok) {

@@ -1,9 +1,11 @@
 import { backendUrl } from "~/db";
+import { Observation } from "~/types/db";
 
-export async function fetchObservations(props: {
+type Props = {
   sampleId: number;
   experimentId: number;
-}): Promise<any[]> {
+};
+export async function fetchObservations(props: Props): Promise<Observation[]> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/${props.experimentId}/samples/${props.sampleId}/observations/attributeValues`,
@@ -11,7 +13,7 @@ export async function fetchObservations(props: {
     if (!response.ok) {
       throw new Error(`Failed to fetch observations: ${response.statusText}`);
     }
-    const data: any[] = await response.json();
+    const data = await response.json();
     return data;
   } catch (error) {
     throw error;

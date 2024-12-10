@@ -1,19 +1,19 @@
 import { useParams } from "@solidjs/router";
-import { createEffect, createResource, createSignal } from "solid-js";
+import { createResource, Show } from "solid-js";
 import { DataTable } from "~/components/data-table";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchSamples } from "~/api/fetchSamples";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";
+import { Sample } from "~/types/db";
 
 export default function Samples() {
   const params = useParams();
-  const [data, { refetch }] = createResource(
-    () => Number(params.experimentId),
-    fetchSamples,
+  const [data, { refetch }] = createResource<Sample[]>(
+    () => fetchSamples({experimentId:Number(params.experimentId)})
   );
 
-  function getColumnNames(data: any) {
+  function getColumnNames(data: Sample[]) {
     if (data) {
       return Object.keys(data![0]).map((key) => ({ name: key }));
     } else {
@@ -32,12 +32,15 @@ export default function Samples() {
           Start a new observation session
         </a>
       </div>
-      {data()?.length && (
+      {data() && data()!.length > 0 && (
         <DataTable
-          columns={generateColumns(getColumnNames(data()), "sample", refetch)}
-          data={data() || []}
+          columns={generateColumns(getColumnNames(data() ?? []), "sample", refetch)}
+          data={data() ?? []}
         />
       )}
+      <Show when={data() && !data()?.length }>
+        <div>There is no observation session yet!</div>
+      </Show>
     </div>
   );
 }

@@ -1,14 +1,19 @@
 import { backendUrl } from "~/db";
-import { TableAttribute } from "~/types/db";
-import { attributeToDb, dataToDb } from "~/utils/db";
+import { AttributeValue, Experiment } from "~/types/db";
+import { attributeToDb, columnToDb } from "~/utils/db";
 
-export async function addNewExperiment(data: {
-  columns: Record<string, any>;
-  attributes: TableAttribute[];
-}) {
+
+type Props = {
+  data: {
+  columns: Partial<Experiment>,
+  attributes: AttributeValue[],
+};
+}
+
+export async function addNewExperiment(props: Props) {
   const cleanedData = {
-    columns: dataToDb(data.columns),
-    attributes: attributeToDb(data.attributes),
+    columns: columnToDb(props.data.columns),
+    attributes: attributeToDb(props.data.attributes),
   };
   const response = await fetch(`${backendUrl}/api/experiment`, {
     method: "POST",

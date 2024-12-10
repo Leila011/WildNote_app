@@ -13,10 +13,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Level } from "~/types/db";
+import { getTimestamp } from "~/utils/db";
 
 export const generateColumns = (
-  schema: any = [],
-  table: string,
+  schema: {name: string}[],
+  table: Level,
   refetch?: () => void,
 ): ColumnDef<any>[] => {
   const navigate = useNavigate();
@@ -47,9 +49,6 @@ export const generateColumns = (
     id: "actions",
     enableHiding: false,
     cell: (props) => {
-      function get_timestamp(): any {
-        throw new Error("Function not implemented.");
-      }
 
       return (
         <DropdownMenu placement="bottom-end">
@@ -66,18 +65,9 @@ export const generateColumns = (
             <Show when={table === "experiment"}>
               <DropdownMenuItem
                 onClick={async () => {
-                  await updateValue(
-                    "experiment",
-                    "status",
-                    props.row.original.experiment_id,
-                    "completed",
-                  );
-                  await updateValue(
-                    "experiment",
-                    "timestamp_end",
-                    props.row.original.experiment_id,
-                    get_timestamp(),
-                  );
+                  await updateValue({level: "experiment", column_name: "status", row_id: props.row.original.experiment_id, value: "active"});
+                  await updateValue({level: "experiment", column_name: "timestamp_start", row_id: props.row.original.experiment_id, value: getTimestamp()});
+            
                   refetch && refetch();
                 }}
               >
@@ -86,9 +76,10 @@ export const generateColumns = (
             </Show>
             <DropdownMenuItem
               onClick={async () => {
-                const response = await deleteRow(
-                  table,
-                  props.row.original[table + "_id"],
+                const response = await deleteRow({
+                  level: table,
+                  row_id: props.row.original[table + "_id"],
+                }
                 );
                 refetch && refetch();
               }}

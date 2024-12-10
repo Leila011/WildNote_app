@@ -12,7 +12,7 @@ import {
 import { IconChevronDown, ImBin } from "~/components/icons";
 import { Button, buttonVariants } from "./ui/button";
 import { For, Index, Show } from "solid-js";
-import { TableAttribute } from "~/types/db";
+import { Attribute } from "~/types/db";
 import { SetStoreFunction } from "solid-js/store";
 import { typeOptions } from "~/utils/typeOptions";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
@@ -25,8 +25,8 @@ import {
 import { toggleVariants } from "./ui/toggle";
 import { newAttribute } from "~/utils/db";
 type Props = {
-  store: TableAttribute[];
-  setStore: SetStoreFunction<TableAttribute[]>;
+  store: Attribute[];
+  setStore: SetStoreFunction<Attribute[]>;
 };
 
 export function FormNewAttribute(props: Props) {

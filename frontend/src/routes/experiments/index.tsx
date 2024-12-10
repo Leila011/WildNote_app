@@ -1,19 +1,16 @@
 import { DataTable } from "~/components/data-table";
-import { createResource } from "solid-js";
+import { createResource, Show } from "solid-js";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchExperiments } from "~/api/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";
+import { Experiment } from "~/types/db";
 
 export default function Experiments() {
-  const [dataAttributes, { refetch }] = createResource(fetchExperiments);
+  const [dataAttributes, { refetch }] = createResource<Experiment[]>(fetchExperiments);
 
-  function getColumnNames(data: any) {
-    if (data) {
+  function getColumnNames(data: Experiment[]) {
       return Object.keys(data![0]).map((key) => ({ name: key }));
-    } else {
-      return [];
-    }
   }
 
   return (
@@ -32,13 +29,16 @@ export default function Experiments() {
       {dataAttributes()?.length && (
         <DataTable
           columns={generateColumns(
-            getColumnNames(dataAttributes()),
+            getColumnNames(dataAttributes()|| []),
             "experiment",
             refetch,
           )}
           data={dataAttributes() || []}
         />
       )}
+      <Show when={dataAttributes() && !dataAttributes()?.length }>
+        <div>There is no experiments yet!</div>
+      </Show>
     </div>
   );
 }

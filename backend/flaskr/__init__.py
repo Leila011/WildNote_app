@@ -164,7 +164,7 @@ def create_app(test_config=None):
                 return jsonify({"error": "Invalid JSON format"}), 400
             # connect to db
             con = db.get_db()
-
+            print(data)
             # add a new sample & retrieve the last inserted id
             sample_id = db.add_sample(con, experiment_id, data['columns']['subject_id'],  data['columns']['timestamp_start'])
 
@@ -279,16 +279,16 @@ def create_app(test_config=None):
     @app.route('/api/experiments/attributes', methods=['GET'])
     def get_attributes_experiment():
         attributes = db.get_attributes_predetermined("experiment")
-        columns = db.get_columns("experiment")
-        return jsonify({"columns": columns, "attributes": attributes})
+        schemas = db.get_columns("experiment")
+        return jsonify({"schema": schemas, "attributes": attributes})
     
     # All other tables 
     @app.route('/api/experiments/<int:experiment_id>/<table_name>/attributes', methods=['GET'])
     def get_attributes(table_name, experiment_id):
         target_table = table_name +"_attributes"
         attributes = db.get_attributes(target_table, experiment_id)
-        columns = db.get_columns(table_name)
-        return jsonify({"columns": columns, "attributes": attributes})
+        schemas = db.get_columns(table_name)
+        return jsonify({"schemas": schemas, "attributes": attributes})
     
     # Retrieve the attribute description for displaying the entry #
     # Get the predetermined attributes

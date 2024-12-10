@@ -1,29 +1,33 @@
 import { backendUrl } from "~/db";
-import { TableAttribute } from "~/types/db";
+import { AttributeDb, Level, Metadata, SchemaDb } from "~/types/db";
 import { attributeFromDb } from "~/utils/db";
 
-type props = {
-  attributes: TableAttribute[];
-  columns: any[];
+type RawData = {
+  attributes: AttributeDb[];
+  schemas: SchemaDb[];
 };
-export async function fetchAttributeDescriptions(
-  tableName: string,
-  experimentId?: number,
-): Promise<props> {
+
+type Props = {
+  level: Level;
+  experimentId?: number;
+};
+
+export async function fetchAttributeDescriptions(props: Props): Promise<Metadata> {
   try {
     const response = await fetch(
-      `${backendUrl}/api/experiments/${experimentId}/${tableName}/attributes`,
+      `${backendUrl}/api/experiments/${props.experimentId}/${props.level}/attributes`,
     );
     if (!response.ok) {
       throw new Error(
         `Failed to fetch attributes descriptions: ${response.statusText}`,
       );
     }
-    const data = await response.json();
-    return {
-      attributes: attributeFromDb(data.attributes),
-      columns: data.columns,
+    const rawData: RawData = await response.json();
+    const formattedData = {
+      attributes: attributeFromDb(rawData.attributes),
+      schemas: rawData.schemas,
     };
+    return formattedData;
   } catch (error) {
     throw error;
   }

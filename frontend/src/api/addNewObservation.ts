@@ -1,20 +1,22 @@
 import { backendUrl } from "~/db";
-import { attributeToDb } from "~/utils/db";
-import { TableAttributeValue } from "~/types/db";
+import { attributeToDb, columnToDb } from "~/utils/db";
+import { AttributeValue, Observation } from "~/types/db";
 
-export async function addNewObservation(
-  data: {
-    columns: {};
-    attributes: TableAttributeValue[];
+type Props = {
+  data: {columns: Partial<Observation>;
+         attributes: AttributeValue[];
   },
-  sampleId: number,
+  sampleId: number;
+};
+
+export async function addNewObservation(props: Props
 ) {
   const cleanData = {
-    columns: data.columns,
-    attributes: attributeToDb(data.attributes),
+    columns: columnToDb(props.data.columns),
+    attributes: attributeToDb(props.data.attributes),
   };
   const response = await fetch(
-    `${backendUrl}/api/sample/${sampleId}/newObservation`,
+    `${backendUrl}/api/sample/${props.sampleId}/newObservation`,
     {
       method: "POST",
       headers: {

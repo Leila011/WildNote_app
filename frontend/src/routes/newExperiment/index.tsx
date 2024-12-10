@@ -4,7 +4,7 @@ import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
 import { Form } from "~/components/Form";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { TableAttribute, TableAttributeValue } from "~/types/db";
+import { Attribute, AttributeValue, Metadata, SchemaDb } from "~/types/db";
 import { addNewExperiment } from "~/api/addNewExperiment";
 import { Heading } from "~/components/Heading";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
@@ -18,11 +18,8 @@ import {
 
 export default function NewExperiment() {
   const navigate = useNavigate();
-  const [data] = createResource(() => fetchAttributeDescriptionsExperiments());
-  const [store, setStore] = createStore<TableAttributeValue[]>([]);
-  const [storeAutofill, setStoreAutofill] = createStore<TableAttributeValue[]>(
-    [],
-  );
+  const [data] = createResource<Metadata>(() => fetchAttributeDescriptionsExperiments());
+  const [store, setStore] = createStore<AttributeValue[]>([]);
   const [predefineSubject, setPredefineSubject] = createSignal<boolean>(false);
   const [name, setName] = createSignal<string>("");
   const [ready, setReady] = createSignal<boolean>(false);
@@ -36,16 +33,16 @@ export default function NewExperiment() {
       ),
     );
 
-    const data = {
-      attributes: [...store, ...storeAutofill],
+    const dataOut = {
+      attributes: store,
       columns: { predefine_subject: predefineSubject(), name: name() },
     };
 
-    setReady(isAttributesValuesValid(data.attributes));
+    setReady(isAttributesValuesValid(dataOut.attributes));
 
     if (ready()) {
-      const response = await addNewExperiment(data);
-      if (data.columns.predefine_subject) {
+      const response = await addNewExperiment({ data: dataOut });
+      if (dataOut.columns.predefine_subject) {
         navigate(`/newExperiment/${response.experiment_id}/subjectSetup`);
       } else {
         navigate(`/newExperiment/${response.experiment_id}/sampleSetup`);
@@ -55,22 +52,17 @@ export default function NewExperiment() {
 
   createEffect(() => {
     if (data()) {
-      const attributesAugmented = data().attributes.map(
-        (attribute: TableAttribute) =>
+      const attributesAugmented = data()!.attributes.map(
+        (attribute: Attribute) =>
           ({
             ...attribute,
             value: "",
-          }) as TableAttribute,
+          }) as AttributeValue,
       );
 
       setStore(
         attributesAugmented.filter(
-          (attribute: TableAttributeValue) => attribute.autofill === false,
-        ),
-      );
-      setStoreAutofill(
-        attributesAugmented.filter(
-          (attribute: TableAttributeValue) => attribute.autofill === true,
+          (attribute: AttributeValue) => attribute.autofill === false,
         ),
       );
     }

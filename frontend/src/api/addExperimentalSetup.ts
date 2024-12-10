@@ -1,20 +1,21 @@
 import { backendUrl } from "~/db";
-import { TableAttribute } from "~/types/db";
+import { Attribute, Level } from "~/types/db";
 import { attributeToDb } from "~/utils/db";
 
-export async function addExperimentalSetup(
-  data: TableAttribute[],
-  experimentId: number,
-  tableName: string,
-) {
+type Props = {
+  data: Attribute[];
+  experimentId: number;
+  level: Level;
+};
+export async function addExperimentalSetup(props: Props) {
   const response = await fetch(
-    `${backendUrl}/api/experiment/${experimentId}/${tableName}`,
+    `${backendUrl}/api/experiment/${props.experimentId}/${props.level}`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(attributeToDb(data)),
+      body: JSON.stringify(attributeToDb(props.data)),
     },
   );
   if (!response.ok) {

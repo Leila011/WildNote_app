@@ -9,7 +9,7 @@ export async function fetchExperiments(): Promise<Experiment[]> {
     if (!response.ok) {
       throw new Error(`Failed to fetch experiments: ${response.statusText}`);
     }
-    const data: any[] = await response.json();
+    const data = await response.json();
     return data;
   } catch (error) {
     throw error;

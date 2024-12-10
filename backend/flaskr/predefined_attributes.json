@@ -1,14 +1,14 @@
 {
   "experiment": [
-    { "name": "description", "label": "Description", "type": "string", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": [], "default_value": null }
+    { "name": "description", "label": "Description", "type": "string", "custom": false, "autofill": false, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
   ],
   "sample": [
-    { "name": "duration", "label": "Duration", "type": "string", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": [], "default_value": null }
+    { "name": "duration", "label": "Duration", "type": "string", "custom": false, "autofill": true, "required": false, "min": null, "max": null, "choices": null, "default_value": null }
 
   ],
   "observation": [
   ],
   "subject": [
-    { "name": "name", "label": "Name", "type": "string", "custom": false, "autofill": false, "required": true, "min": null, "max": null, "choices": [], "default_value": null }
+    { "name": "name", "label": "Name", "type": "string", "custom": false, "autofill": false, "required": true, "min": null, "max": null, "choices": null, "default_value": null }
   ]
 }

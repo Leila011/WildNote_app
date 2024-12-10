@@ -1,23 +1,22 @@
 import { backendUrl } from "~/db";
 import { attributeToDb, columnToDb } from "~/utils/db";
-import { AttributeValue, Sample } from "~/types/db";
+import { AttributeValue, Subject } from "~/types/db";
 
 type Props = {
-  data: {
-  columns: Partial<Sample>,
-  attributes: AttributeValue[],
-},
-experimentId: number,
-}
+  data: {columns: Partial<Subject>;
+         attributes: AttributeValue[];
+  },
+  experimentId: number;
+};
 
-export async function addNewSample(props: Props
+export async function addNewSubject(props: Props
 ) {
   const cleanData = {
     columns: columnToDb(props.data.columns),
     attributes: attributeToDb(props.data.attributes),
   };
   const response = await fetch(
-    `${backendUrl}/api/experiment/${props.experimentId}/newSample`,
+    `${backendUrl}/api/experiment/${props.experimentId}/newSubject`,
     {
       method: "POST",
       headers: {
@@ -27,7 +26,7 @@ export async function addNewSample(props: Props
     },
   );
   if (!response.ok) {
-    throw new Error("Failed to add record");
+    throw new Error("Failed to add new subject");
   }
   return response.json();
 }

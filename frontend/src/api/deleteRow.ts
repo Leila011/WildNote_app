@@ -1,7 +1,12 @@
 import { backendUrl } from "~/db";
+import { Level } from "~/types/db";
 
-export async function deleteRow(level: string, row_id: number) {
-  const response = await fetch(`${backendUrl}/api/${level}/${row_id}/delete`);
+type Props = {
+  level: Level;
+  row_id: number;
+};
+export async function deleteRow(props: Props) {
+  const response = await fetch(`${backendUrl}/api/${props.level}/${props.row_id}/delete`);
   if (!response.ok) {
     throw new Error("Failed to delete record");
   }

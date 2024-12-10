@@ -1,10 +1,10 @@
-import { TableAttribute, TableAttributeValue } from "~/types/db";
+import { Attribute, AttributeValue } from "~/types/db";
 
 export function isAttributesValuesValid(
-  attributes: TableAttributeValue[],
+  attributes: AttributeValue[],
 ): boolean {
   let ready = true;
-  attributes.forEach((attribute: TableAttributeValue) => {
+  attributes.forEach((attribute: AttributeValue) => {
     if (attribute.value === "" && attribute.required) {
       ready = false;
     }
@@ -12,9 +12,9 @@ export function isAttributesValuesValid(
   return ready;
 }
 
-export function isAttributesDefValid(attributes: TableAttribute[]): boolean {
+export function isAttributesDefValid(attributes: Attribute[]): boolean {
   let ready = true;
-  attributes.forEach((attribute: TableAttribute) => {
+  attributes.forEach((attribute: Attribute) => {
     if (attribute.name === "") {
       ready = false;
     }
