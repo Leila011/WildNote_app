@@ -11,14 +11,15 @@ export default function Observations() {
   const [data, { refetch }] = createResource(
     () => ({
       experimentId: Number(params.experimentId),
-      sampleId: Number(params.sampleId)
+      sampleId: Number(params.sampleId),
     }),
     fetchObservations,
   );
 
   createEffect(() => {
-    console.log(params.sampleId)
-    data()  && console.log(data())});
+    console.log(params.sampleId);
+    data() && console.log(data());
+  });
 
   function getColumnNames(data: any) {
     if (data) {

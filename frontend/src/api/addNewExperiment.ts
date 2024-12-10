@@ -2,8 +2,11 @@ import { backendUrl } from "~/db";
 import { TableAttribute } from "~/types/db";
 import { attributeToDb, dataToDb } from "~/utils/db";
 
-export async function addNewExperiment(data: {columns:Record<string, any>, attributes:TableAttribute[]}) {
-  console.log("addNewExperiment",data);
+export async function addNewExperiment(data: {
+  columns: Record<string, any>;
+  attributes: TableAttribute[];
+}) {
+  console.log("addNewExperiment", data);
   const cleanedData = {
     columns: dataToDb(data.columns),
     attributes: attributeToDb(data.attributes),

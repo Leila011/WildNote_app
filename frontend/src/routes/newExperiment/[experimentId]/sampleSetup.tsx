@@ -19,12 +19,11 @@ export default function SampleSetup() {
   ]);
 
   const handleSubmit = async () => {
-
     setReady(isAttributesDefValid(store));
-    
-    if(ready()) {
-    addExperimentalSetup([...store], Number(params.experimentId), "sample");
-    navigate(`/newExperiment/${params.experimentId}/observationSetup`);
+
+    if (ready()) {
+      addExperimentalSetup([...store], Number(params.experimentId), "sample");
+      navigate(`/newExperiment/${params.experimentId}/observationSetup`);
     }
   };
 

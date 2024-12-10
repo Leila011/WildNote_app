@@ -27,14 +27,10 @@ export default function ObservationSetup() {
     { ...newAttribute },
   ]);
 
-
-
-
   const handleSubmit = async () => {
-
     setReady(isAttributesDefValid(store));
-    
-    if(ready()) {
+
+    if (ready()) {
       await addExperimentalSetup(
         [...store],
         Number(params.experimentId),
@@ -46,14 +42,14 @@ export default function ObservationSetup() {
         Number(params.experimentId),
         "active",
       );
-    navigate(`/`);
+      navigate(`/`);
     }
   };
 
   const handleSubmitStart = async () => {
-setReady(isAttributesDefValid(store));
-    
-    if(ready()) {
+    setReady(isAttributesDefValid(store));
+
+    if (ready()) {
       await addExperimentalSetup(
         [...store],
         Number(params.experimentId),
@@ -65,9 +61,9 @@ setReady(isAttributesDefValid(store));
         Number(params.experimentId),
         "active",
       );
-    navigate(`/encoding/${params.experimentId}`);
-  }
-}
+      navigate(`/encoding/${params.experimentId}`);
+    }
+  };
 
   return (
     <div class="container mx-auto">

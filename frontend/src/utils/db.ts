@@ -1,5 +1,8 @@
-import { TableAttribute, TableAttributeDb, TableAttributeValue } from "~/types/db";
-
+import {
+  TableAttribute,
+  TableAttributeDb,
+  TableAttributeValue,
+} from "~/types/db";
 
 export function dataToDb(data: Record<string, any>): Record<string, any> {
   const cleanData: Record<string, any> = {};
@@ -8,8 +11,8 @@ export function dataToDb(data: Record<string, any>): Record<string, any> {
   });
   return cleanData;
 }
-   
-export function attributeToDb(attributes: TableAttribute[] ) {
+
+export function attributeToDb(attributes: TableAttribute[]) {
   const cleanAttributes = attributes.map((attribute) => {
     const newAttribute = {
       ...attribute,
@@ -57,4 +60,3 @@ export const statusOptions = [
   { value: "active", label: "Active" },
   { value: "completed", label: "Completed" },
 ];
-

@@ -7,7 +7,10 @@
 
 import { backendUrl } from "~/db";
 
-export async function fetchObservations(props:{sampleId: number, experimentId: number}): Promise<any[]> {
+export async function fetchObservations(props: {
+  sampleId: number;
+  experimentId: number;
+}): Promise<any[]> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/${props.experimentId}/samples/${props.sampleId}/observations/attributeValues`,

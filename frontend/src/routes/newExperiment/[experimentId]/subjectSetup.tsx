@@ -28,11 +28,11 @@ export default function SubjectSetup() {
 
   const handleSubmit = async () => {
     setReady(isAttributesDefValid(store));
-    
-    if(ready()) {
-    addExperimentalSetup([...store], Number(params.experimentId), "subject");
 
-    navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
+    if (ready()) {
+      addExperimentalSetup([...store], Number(params.experimentId), "subject");
+
+      navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
     }
   };
 
@@ -44,7 +44,7 @@ export default function SubjectSetup() {
           <FormNewAttribute store={store} setStore={setStore} />
         </div>
         <div>
-        <Button
+          <Button
             class={buttonVariants({ variant: "accent" })}
             onClick={handleSubmit}
           >

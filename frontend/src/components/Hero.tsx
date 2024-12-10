@@ -85,7 +85,9 @@ export const Hero: ParentComponent<Props> = (props) => {
         />
       )}
       {/* content */}
-      <div class={` relative z-30 flex flex-col space-y-6 ${style} p-36 text-left`}>
+      <div
+        class={` relative z-30 flex flex-col space-y-6 ${style} p-36 text-left`}
+      >
         {props.subtitle && (
           <div class="flex flex-row items-start text-accent">
             <div class={subtitleStyle}>{props.subtitle}</div>

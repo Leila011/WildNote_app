@@ -65,9 +65,8 @@ export default function EncodingSample() {
   }, fetcher);
 
   const [store, setStore] = createStore<TableAttributeValue[]>([]);
-  
 
-   createEffect(() => {
+  createEffect(() => {
     if (attributes()) {
       const attributesAugmented = attributes()!.attributes.map(
         (attribute: TableAttribute) =>
@@ -76,12 +75,12 @@ export default function EncodingSample() {
             value: "",
           }) as TableAttributeValue,
       );
-      setStore(attributesAugmented)
+      setStore(attributesAugmented);
     }
   });
 
   createEffect(() => {
-      if (params.experimentId && experiments()) {
+    if (params.experimentId && experiments()) {
       const experimentId = Number(params.experimentId);
       const experiment = experiments().find(
         (experiment) => experiment.experiment_id === experimentId,
@@ -98,7 +97,12 @@ export default function EncodingSample() {
       attributes: store,
     };
 
-    updateValue("experiment", "timestamp_start", experiment().experiment_id, Date.now());
+    updateValue(
+      "experiment",
+      "timestamp_start",
+      experiment().experiment_id,
+      Date.now(),
+    );
     const response = await addNewSample(data, experiment().experiment_id);
     experiment() &&
       response &&
@@ -109,7 +113,7 @@ export default function EncodingSample() {
 
   return (
     <div class="container mx-auto">
-       <div>
+      <div>
         <Heading>
           Select your experiment and fill out your observation session
           parameters
@@ -132,7 +136,11 @@ export default function EncodingSample() {
                   <IconChevronDown />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <For each={experiments()?.filter((item) => item.status !== "completed")}>
+                  <For
+                    each={experiments()?.filter(
+                      (item) => item.status !== "completed",
+                    )}
+                  >
                     {(option) => (
                       <DropdownMenuItem
                         onSelect={() => {
@@ -193,7 +201,7 @@ export default function EncodingSample() {
             </div>
           </Show>
         </div>
-      </div> 
+      </div>
     </div>
   );
 }

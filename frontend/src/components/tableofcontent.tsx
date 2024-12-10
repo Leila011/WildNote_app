@@ -1,6 +1,6 @@
 import { createSignal, onCleanup, createEffect, For } from "solid-js";
 import { useLocation } from "@solidjs/router";
-import {Heading} from "~/components/Heading";
+import { Heading } from "~/components/Heading";
 import { cleanAnchor } from "~/utils";
 
 type TableOfContentProps = {

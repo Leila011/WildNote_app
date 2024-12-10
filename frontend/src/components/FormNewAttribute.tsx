@@ -58,7 +58,6 @@ export function FormNewAttribute(props: Props) {
                     : "invalid"
                 }
                 onChange={(e: any) => {
-                  
                   const valueClean = e.toLowerCase().replace(/ /g, "_");
                   setStore([index], "name", valueClean);
                   setStore([index], "label", e);

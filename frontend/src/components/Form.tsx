@@ -140,9 +140,7 @@ export const Form = (props: Props) => {
                             class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start ${isValid(field(), store.filter((attribute) => attribute.name === key)[0].value) ? "border-secondary" : "border-warning-foreground"} w-full`}
                           >
                             <div class="flex-grow text-left">
-                              {
-                                store[index].value
-                              }
+                              {store[index].value}
                             </div>
                             <IconChevronDown />
                           </DropdownMenuTrigger>

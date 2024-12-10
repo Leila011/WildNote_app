@@ -1,7 +1,5 @@
 import { DataTable } from "~/components/data-table";
-import {
-  createResource,
-} from "solid-js";
+import { createResource } from "solid-js";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchExperiments } from "~/api/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
