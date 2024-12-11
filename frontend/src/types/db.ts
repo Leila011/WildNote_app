@@ -125,3 +125,22 @@ export type DurationHMS = {
   minutes: number;
   seconds: number;
 };
+
+export interface ExperimentStats {
+  sample_nb: number;
+  sample_time_tot: number;
+  sample_time_mean: number;
+  sample_time_median: number;
+  sample_incomplete_nb: number;
+  sample_short_nb?: number;
+  sample_empty_nb: number;
+  obs_nb: number;
+  obs_time_tot: number;
+  obs_time_mean: number;
+  obs_time_median: number;
+  obs_incomplete_nb: number;
+}
+
+export type StatDescriptives = Record<string, any>
+
+export type StatDescriptivesPlot = Record<string, any>

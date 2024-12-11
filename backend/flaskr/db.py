@@ -225,7 +225,7 @@ def get_experiments():
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end", "e.name"]
+    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end", "e.name", "duration"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         # Use double quotes to handle attribute names with spaces or special characters
@@ -244,7 +244,9 @@ def get_experiments():
     return jsonify(rows)
 
 def get_experiment(experiment_id):
-    """Retrieve the experiment from the database (predefined attributes + values) for the given experiment_id"""
+    """Retrieve the experiment from the database (predefined attributes + values) for the given experiment_id
+        ! return raw results, not jsonified    
+    """
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
@@ -258,7 +260,7 @@ def get_experiment(experiment_id):
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["e.experiment_id AS experiment_id", "e.status", "e.timestamp_start", "e.timestamp_end", "e.name"]
+    columns = ["e.experiment_id AS experiment_id", "e.status", "e.timestamp_start", "e.timestamp_end", "e.name", "duration", "samples_number_goal", "samples_time_goal", "obs_number_goal", "obs_time_goal"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         # Use double quotes to handle attribute names with spaces or special characters
@@ -275,10 +277,12 @@ def get_experiment(experiment_id):
     """
 
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
-    return jsonify(rows)
+    return rows
 
 def get_samples(experiment_id):
-    """Retrieve all samples from an experiment (attributes + values)"""
+    """Retrieve all samples from an experiment (attributes + values)
+       ! return raw results, not jsonified    
+    """
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
@@ -308,10 +312,12 @@ def get_samples(experiment_id):
     """
 
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
-    return jsonify(rows)
+    return rows
 
 def get_observations(experiment_id, sample_id):
-    """Retrieve all observations from a sample (attributes + values)"""	
+    """Retrieve all observations from a sample (attributes + values)
+        ! return raw results, not jsonified
+    """
     
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
@@ -326,7 +332,7 @@ def get_observations(experiment_id, sample_id):
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["o.observation_id AS observation_id", "o.timestamp_start", "o.timestamp_end"]
+    columns = ["o.observation_id AS observation_id", "o.timestamp_start", "o.timestamp_end", "o.sample_id", "o.status"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         columns.append(f"MAX(CASE WHEN oa.name = '{attribute_name}' THEN oav.value END) AS \"{attribute_name}\"")
@@ -335,16 +341,15 @@ def get_observations(experiment_id, sample_id):
 
     pivot_query = f"""
     SELECT {columns_str}
-     FROM observation o
-    LEFT JOIN sample s ON o.sample_id = s.sample_id
+    FROM observation o
     LEFT JOIN observation_attribute_values oav ON o.observation_id = oav.observation_id
     LEFT JOIN observation_attributes oa ON oav.attribute_id = oa.observation_attributes_id
     WHERE o.sample_id = ?
-    GROUP BY o.observation_id, o.timestamp_start, o.timestamp_end
+    GROUP BY o.observation_id, o.timestamp_start, o.timestamp_end, o.sample_id, o.status
     """
 
     rows = db.execute(pivot_query, (sample_id,)).fetchall()
-    return jsonify(rows)
+    return rows
 
 def get_subjects(experiment_id):
     """Retrieve all subjects from an experiment (attributes + values)"""
@@ -382,11 +387,12 @@ def get_subjects(experiment_id):
 
 
 ############################### READ ATTRIBUTES ###############################
-def get_attributes(attribute_table, experiment_id):
+def get_attributes(level, experiment_id):
     """Retrieve the attributes for a given table"""
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
-    rows = db.execute(f'SELECT * FROM {attribute_table} WHERE experiment_id = ?', (experiment_id,)).fetchall()
+    target_table = level +"_attributes"
+    rows = db.execute(f'SELECT * FROM {target_table} WHERE experiment_id = ?', (experiment_id,)).fetchall()
     return rows
 
 def get_columns(table_name):

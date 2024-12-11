@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, jsonify, request
+from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 
 def create_app(test_config=None):
@@ -29,6 +29,7 @@ def create_app(test_config=None):
         pass
 
     from . import db
+    from . import stat
 
     # ??
     db.init_app(app)
@@ -285,14 +286,14 @@ def create_app(test_config=None):
         return db.get_experiments()
     
     # get one specific experiment
-    @app.route('/api/experiment/<experiment_id>attributeValues', methods=['GET'])
+    @app.route('/api/experiment/<int:experiment_id>/attributeValues', methods=['GET'])
     def get_experiment(experiment_id):
-        return db.get_experiment(experiment_id)
+        return jsonify(db.get_experiment(experiment_id))
     
     # get all samples (fixed & custom attributes) for a given experiment    
     @app.route('/api/experiments/<int:id>/samples/attributeValues', methods=['GET'])
     def get_samples(id):
-        return db.get_samples(id)
+        return jsonify(db.get_samples(id))
     
     @app.route('/api/experiments/<int:id>/subjects/attributeValues', methods=['GET'])
     def get_subjects(id):
@@ -301,7 +302,7 @@ def create_app(test_config=None):
     # get all observations for a given sample
     @app.route('/api/experiments/<int:experiment_id>/samples/<int:sample_id>/observations/attributeValues', methods=['GET'])
     def get_observations(experiment_id, sample_id):
-        return db.get_observations(experiment_id, sample_id)
+        return jsonify(db.get_observations(experiment_id, sample_id))
     
     # Retrieve the attribute description#
     # Special one required when creating a new experiment
@@ -317,11 +318,11 @@ def create_app(test_config=None):
         return db.get_duration(experiment_id)
 
     # All other tables 
-    @app.route('/api/experiments/<int:experiment_id>/<table_name>/attributes', methods=['GET'])
-    def get_attributes(table_name, experiment_id):
-        target_table = table_name +"_attributes"
-        attributes = db.get_attributes(target_table, experiment_id)
-        schemas = db.get_columns(table_name)
+    @app.route('/api/experiments/<int:experiment_id>/<level>/attributes', methods=['GET'])
+    def get_attributes(level, experiment_id):
+        
+        attributes = db.get_attributes(level, experiment_id)
+        schemas = db.get_columns(level)
         return jsonify({"schemas": schemas, "attributes": attributes})
     
     # Retrieve the attribute description for displaying the entry #
@@ -353,11 +354,55 @@ def create_app(test_config=None):
             return jsonify({"message": "row deleted successfully"}), 200
 
     ############################ COMPUTATION #######################################
-    # get descriptive statistics for all attributes of an experiment
-    # @app.route('/api/experiment/<int:experiment_id>/statistics', methods=['GET'])
-    # def statistics(experiment_id):
-    #     data = db.get_experiment(experiment_id)
-    #     res = get_statistics(data)
-    #     return jsonify(res)
+    #get descriptive statistics for all attributes of a sample of an experiment
+    @app.route('/api/experiments/<int:experiment_id>/sample/descriptiveStat', methods=['GET'])
+    def get_decriptive_stat_sample(experiment_id):
+        data = db.get_samples(experiment_id)
+        attributes = db.get_attributes('sample', experiment_id)
+        res = stat.descriptive_stat(data, attributes)
+        return jsonify(res)
     
+        #get descriptive statistics for all attributes of a obs of an experiment
+    @app.route('/api/experiments/<int:experiment_id>/observation/descriptiveStat', methods=['GET'])
+    def get_decriptive_stat_obs(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        data = []
+        for sample in sampleData:
+            observations = db.get_observations(experiment_id, sample['sample_id'])
+            data = data +observations
+        attributes = db.get_attributes('observation' , experiment_id)
+        res = stat.descriptive_stat(data, attributes)
+        return jsonify(res)
+    
+    #get descriptive plot data for all attributes of observations of an experiment
+    @app.route('/api/experiments/<int:experiment_id>/sample/descriptivePlot', methods=['GET'])
+    def get_descriptive_plot_samples(experiment_id):
+        data = db.get_samples(experiment_id)
+        attributes = db.get_attributes('sample', experiment_id)
+        res = stat.descriptive_plot(data, attributes)
+        return jsonify(res)
+    
+       #get descriptive plot data for all attributes of samples of an experiment
+    @app.route('/api/experiments/<int:experiment_id>/observation/descriptivePlot', methods=['GET'])
+    def get_descriptive_plot_obs(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        data = []
+        for sample in sampleData:
+            observations = db.get_observations(experiment_id, sample['sample_id'])
+            data = data +observations
+        attributes = db.get_attributes('observation', experiment_id)
+        res = stat.descriptive_plot(data, attributes)
+        return jsonify(res)
+    
+    @app.route('/api/experiment/<int:experiment_id>/stat', methods=['GET'])
+    def get_experiment_stat(experiment_id):
+        experimentData = db.get_experiment(experiment_id)
+        sampleData = db.get_samples(experiment_id)
+
+        obsData = []
+        for sample in sampleData:
+            observations = db.get_observations(experiment_id, sample['sample_id'])
+            obsData = obsData +observations
+        res = stat.experiment_stat(experimentData, sampleData, obsData)
+        return jsonify(res)
     return app

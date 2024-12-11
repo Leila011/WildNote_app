@@ -10,7 +10,7 @@ INSERT INTO experiment_attribute_values (attribute_id, experiment_id, value) VAL
 
 -- Insert mock sample attributes (e.g., localisation, weather, group size, etc.)
 INSERT INTO sample_attributes (experiment_id, name, label, type, custom, autofill, required, min, max, choices, default_value) VALUES
-(1, 'localisation', 'Localisation', 'number', 0, 1, 0, null, null, '1|2|3', '1'),
+(1, 'localisation', 'Localisation', 'string', 0, 1, 0, null, null, '1|2|3', '1'),
 (1, 'weather', 'Weather', 'string', 0, 1, 0, null, null, 'sun|rain|cloud', 'sun'),
 (1, 'group_size', 'Group Size', 'number', 0, 1, 0, 1, null, null, null),
 (1, 'num_adult_men', 'Number of Adult Men', 'number', 0, 1, 0, 0, null, null, null),
