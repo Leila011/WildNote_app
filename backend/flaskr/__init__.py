@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, json, jsonify, request
 from flask_cors import CORS
+import pandas as pd
 
 def create_app(test_config=None):
     # create and configure the app
@@ -298,6 +299,7 @@ def create_app(test_config=None):
     def get_samples(id):
         return jsonify(db.get_samples(id))
     
+    
     @app.route('/api/experiments/<int:id>/subjects/attributeValues', methods=['GET'])
     def get_subjects(id):
         return db.get_subjects(id)
@@ -306,6 +308,27 @@ def create_app(test_config=None):
     @app.route('/api/experiments/<int:experiment_id>/samples/<int:sample_id>/observations/attributeValues', methods=['GET'])
     def get_observations(experiment_id, sample_id):
         return jsonify(db.get_observations(experiment_id, sample_id))
+    
+    # get all observations for a given experiment (object of column)
+    @app.route('/api/experiments/<int:experiment_id>/observations/columnValue', methods=['GET'])
+    def get_observations_experiment(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        data = []
+        for sample in sampleData:
+            observations = db.get_observations(experiment_id, sample['sample_id'])
+            data = data +observations
+        attributes = db.get_attributes('observation' , experiment_id)
+        df = pd.DataFrame(attributes)
+        transformed_data = df.to_dict(orient='list')
+        return jsonify(transformed_data)
+    
+    # get all samples (fixed & custom attributes) for a given experiment     (object of column)
+    @app.route('/api/experiments/<int:experiment_id>/samples/columnValue', methods=['GET'])
+    def get_samples_columns(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        df = pd.DataFrame(sampleData)
+        transformed_data = df.to_dict(orient='list')
+        return jsonify(transformed_data)
     
     # Retrieve the attribute description#
     # Special one required when creating a new experiment

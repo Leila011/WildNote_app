@@ -1,25 +1,33 @@
-import { Show } from "solid-js";
+import { createEffect, Show } from "solid-js";
 import { PolarAreaChart } from "~/components/ui/charts";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Level } from "~/types/db";
 
 type Polar = {
-  day: Record<number, number>;
-  night: Record<number, number>;
+  day: {
+    keys: number[];
+    values: number[];
+  }
+  night: {
+    keys: number[];
+    values: number[];
+  }
 };
 
 export function PolarPlot(props: {
   data: () => Polar;
   level:Level
 }) {
-  const data = (input: Record<number, number>) => ({
-    datasets: [{ data: Object.values(input) }],
-    labels: Object.keys(input),
+
+  const data = (input:  {
+    keys: number[];
+    values: number[];
+  }) => ({
+    datasets: [{ data: input.values }],
+    labels: input.keys
   });
 
   const options = {
-    responsive: true,
-    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
@@ -27,10 +35,9 @@ export function PolarPlot(props: {
     },
     scales: {
       r: {
-        startAngle: 210,
+        startAngle: 0,
         ticks: {
           display: false,
-
         },
 
         pointLabels: {
@@ -43,7 +50,6 @@ export function PolarPlot(props: {
       },
     },
   };
-
   return (
     <div>
         <Card>
