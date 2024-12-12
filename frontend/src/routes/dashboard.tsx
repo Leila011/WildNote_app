@@ -137,7 +137,7 @@ export default function Dashboards() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Tabs defaultValue="account" class="w-full">
+      <Tabs defaultValue="overview" class="w-full">
         <TabsList class="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="overview-sample">
@@ -147,8 +147,8 @@ export default function Dashboards() {
           <TabsTrigger value="datasanity">Data quality</TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
-          <div class="flex flex-col space-x-3">
-            <div class="flex flex-row space-x-3">
+          <div class="grid grid-cols-2  gap-2">
+            <div class="cols-span-1  gap-2">
               <Card>
                 <CardHeader>
                   <CardTitle>Goals</CardTitle>
@@ -162,27 +162,33 @@ export default function Dashboards() {
                   )}
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Time</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {samplePolar() && obsPolar() && (
-                    <PolarPlot
-                      samplePolar={() => samplePolar()}
-                      obsPolar={() => obsPolar()}
-                    />
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-            <div class="flex flex-row space-x-3">
-              <Card>
+              <Card class="h-96">
                 <CardHeader>
                   <CardTitle>Calendar</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {calendar() && <Heatmap series={calendar()["2024"].series} />}
+                </CardContent>
+              </Card>
+            </div>
+            <div class="cols-span-1 gap-4">
+            <Card>
+                <CardHeader>
+                  <CardTitle>Time</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {samplePolar() && (
+                    <PolarPlot
+                      data={() => samplePolar()}
+                      level={"sample"}	
+                    />
+                  )}
+                  {obsPolar() && (
+                    <PolarPlot
+                      data={() => obsPolar()}
+                      level={"observation"}	
+                    />
+                  )}
                 </CardContent>
               </Card>
             </div>

@@ -31,5 +31,8 @@ const options = {
 };
 
 export default function Heatmap({ series }: HeatmapProps) {
-  return <SolidApexCharts type="heatmap" options={options} series={series} />;
+  return (
+  <div class="">
+  <SolidApexCharts type="heatmap" options={options} series={series} />
+  </div>)
 }

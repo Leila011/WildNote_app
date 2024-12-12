@@ -1,6 +1,7 @@
 import { Show } from "solid-js";
 import { PolarAreaChart } from "~/components/ui/charts";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Level } from "~/types/db";
 
 type Polar = {
   day: Record<number, number>;
@@ -8,8 +9,8 @@ type Polar = {
 };
 
 export function PolarPlot(props: {
-  samplePolar: () => Polar;
-  obsPolar: () => Polar;
+  data: () => Polar;
+  level:Level
 }) {
   const data = (input: Record<number, number>) => ({
     datasets: [{ data: Object.values(input) }],
@@ -17,6 +18,8 @@ export function PolarPlot(props: {
   });
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
@@ -27,13 +30,14 @@ export function PolarPlot(props: {
         startAngle: 210,
         ticks: {
           display: false,
+
         },
 
         pointLabels: {
           display: true,
           centerPointLabels: false,
           font: {
-            size: 18,
+            size: 10,
           },
         },
       },
@@ -42,57 +46,37 @@ export function PolarPlot(props: {
 
   return (
     <div>
-      <Show when={props.samplePolar()}>
         <Card>
           <CardHeader>
-            <CardTitle>Observation sessions</CardTitle>
+            <CardTitle>{props.level==="sample"? "Observation sessions":"Observations"}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div class="flex flex-row">
+            <div class="flex flex-row space-x-3">
               <div class="flex flex-col items-center space-y-8">
                 <p>Day</p>
+                <div class="relative h-48">
                 <PolarAreaChart
-                  data={data(props.samplePolar().day)}
+                  data={data(props.data().day)}
                   options={options}
                 />
+                 </div>
+
               </div>
 
-              <div class="flex flex-col items-center space-y-8">
+              <div class="flex flex-col items-center space-y-8 ">
                 <p>Night</p>
+                <div class="relative h-48">
+
                 <PolarAreaChart
-                  data={data(props.samplePolar().night)}
+                  data={data(props.data().night)}
                   options={options}
                 />
               </div>
+              </div>
+
             </div>
           </CardContent>
-        </Card>
-      </Show>
-      <Show when={props.obsPolar()}>
-        <div class="flex flex-row">
-          <Card>
-            <CardHeader>
-              <CardTitle>Observations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div class="flex flex-col items-center space-y-8">
-                <p>Day</p>
-                <PolarAreaChart
-                  data={data(props.obsPolar().day)}
-                  options={options}
-                />
-              </div>
-              <div class="flex flex-col items-center space-y-8">
-                <p>Night</p>
-                <PolarAreaChart
-                  data={data(props.obsPolar().night)}
-                  options={options}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </Show>
+        </Card>     
     </div>
   );
 }
