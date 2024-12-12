@@ -44,7 +44,7 @@ import {
   Tooltip,
 } from "chart.js";
 
-type TypedChartProps = {
+export type TypedChartProps = {
   data: ChartData;
   options?: ChartOptions;
   plugins?: ChartPlugin[];

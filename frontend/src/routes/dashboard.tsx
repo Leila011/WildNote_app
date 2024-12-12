@@ -10,19 +10,19 @@ import { fetchExperiment } from "~/api/fetchExperiment";
 import { Button } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
 import { GoalsCard } from "~/components/dashboard/GoalsCard";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { fetchStatExperiment } from "~/api/fetchStatExperiment";
 import { fetchPlotDescriptives } from "~/api/fetchPlotDescriptives";
 import { fetchStatDescriptives } from "~/api/fetchStatDescriptives";
 import { fetchExperimentsIdentification } from "~/api/fetchgetExperimentIdentification";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
-import { Experiment, ExperimentDb, ExperimentStats, StatDescriptives, StatDescriptivesPlot } from "~/types/db";
+import { ExperimentDb, ExperimentStats, StatDescriptives, StatDescriptivesPlot } from "~/types/db";
 import Heatmap from "~/components/dashboard/Heatmap";
 import { fetchCalendar } from "~/api/fetchCalendar";
-import { secondToString } from "~/utils";
 import { DescriptiveStatPlot } from "~/components/dashboard/descriptiveStatPlot";
 import { DescriptiveStatTable } from "~/components/dashboard/descriptiveStatTable";
-
+import { fetchPlotPolar } from "~/api/fetchPlotPolar";
+import { PolarPlot } from "~/components/dashboard/PolarPlot";
 export default function Dashboards() {
   const [experiments] = createResource<{name:string, experiment_id:number}[]>(fetchExperimentsIdentification);
   const [experimentId, setExperimentId] = createSignal<number|undefined>(1); //! dev: change back to undefined
@@ -60,6 +60,16 @@ export default function Dashboards() {
     const [calendar] = createResource<any>(
       () => experimentId() && ({experimentId: experimentId() }),
       fetchCalendar
+    );
+
+    const [samplePolar] = createResource<any>(
+      () => experimentId() && ({level:"sample", experimentId: experimentId() }),
+      fetchPlotPolar
+    );
+
+    const [obsPolar] = createResource<any>(
+      () => experimentId() && ({level:"observation", experimentId: experimentId() }),
+      fetchPlotPolar
     );
 
     createEffect(() => {
@@ -120,6 +130,7 @@ export default function Dashboards() {
     <TabsTrigger value="datasanity">Data quality</TabsTrigger>
   </TabsList>
   <TabsContent value="overview">
+    <div class="flex flex-col space-x-3">
   <div class="flex flex-row space-x-3">
 
         <Card>
@@ -133,6 +144,17 @@ export default function Dashboards() {
         </Card>
         <Card>
         <CardHeader>
+          <CardTitle>Time</CardTitle>
+        </CardHeader>
+        <CardContent>
+        { samplePolar() && obsPolar() &&  <PolarPlot samplePolar={()=> samplePolar()} obsPolar={()=> obsPolar()}/> }
+        </CardContent>
+ 
+        </Card>
+  </div>
+        <div class="flex flex-row space-x-3">
+        <Card>
+        <CardHeader>
           <CardTitle>Calendar</CardTitle>
         </CardHeader>
         <CardContent>
@@ -140,7 +162,8 @@ export default function Dashboards() {
         </CardContent>
  
         </Card>
-
+  
+        </div>   
         </div>
 
   </TabsContent>

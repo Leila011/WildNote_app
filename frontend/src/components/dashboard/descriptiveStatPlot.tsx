@@ -3,11 +3,6 @@ import { StatDescriptivesPlot } from "~/types/db";
 import { BarChart, PieChart } from "~/components/ui/charts"
 
 export function DescriptiveStatPlot(props: {stats: ()=>StatDescriptivesPlot, name: string}){
-    createEffect(() => {
-    console.log("DescriptiveStatPlot", props.stats());
-    console.log("DescriptiveStatPlot", props.stats().unique);
-    console.log("DescriptiveStatPlot", props.stats().counts);
-    })
 
     const pieChartData = () => ({
         datasets: [{ data: props.stats().counts,

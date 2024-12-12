@@ -165,7 +165,6 @@ def create_app(test_config=None):
                 return jsonify({"error": "Invalid JSON format"}), 400
             # connect to db
             con = db.get_db()
-            print(data)
             # add a new sample & retrieve the last inserted id
             sample_id = db.add_sample(con, experiment_id, data['columns']['subject_id'],  data['columns']['timestamp_start'])
 
@@ -416,7 +415,22 @@ def create_app(test_config=None):
         res = stat.calendar(sampleData)
         return jsonify(res)
     
+    @app.route('/api/experiment/<int:experiment_id>/sample/polarPlot', methods=['GET'])
+    def get_sample_polar(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        res = stat.polar(sampleData)
+        return jsonify(res)
+    
+    @app.route('/api/experiment/<int:experiment_id>/observation/polarPlot', methods=['GET'])
+    def get_obs_polar(experiment_id):
+        sampleData = db.get_samples(experiment_id)
 
+        obsData = []
+        for sample in sampleData:
+            observations = db.get_observations(experiment_id, sample['sample_id'])
+            obsData = obsData +observations
+        res = stat.polar(obsData)
+        return jsonify(res)
 
     return app
 
