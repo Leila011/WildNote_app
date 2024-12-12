@@ -10,7 +10,7 @@ import { createStore } from "solid-js/store";
 import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
 import { Form } from "~/components/Form";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { AttributeValue, DurationHMS as DurationHMS} from "~/types/db";
+import { AttributeValue, DurationHMS as DurationHMS } from "~/types/db";
 import { addNewExperiment } from "~/api/addNewExperiment";
 import { Heading } from "~/components/Heading";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
@@ -25,7 +25,12 @@ import {
   TextFieldInput,
 } from "~/components/ui/text-field";
 import { columnToDb, ExperimentToDb, toAttributeValue } from "~/utils/db";
-import { NumberField, NumberFieldDecrementTrigger, NumberFieldIncrementTrigger, NumberFieldInput } from "~/components/ui/number-field";
+import {
+  NumberField,
+  NumberFieldDecrementTrigger,
+  NumberFieldIncrementTrigger,
+  NumberFieldInput,
+} from "~/components/ui/number-field";
 import { Experiment, Metadata } from "~/types/db";
 import { DurationForm } from "~/components/durationForm";
 
@@ -41,9 +46,9 @@ export default function NewExperiment() {
     samples_number_goal: 0,
     samples_time_goal: { hours: 0, minutes: 0, seconds: 0 },
     obs_number_goal: 0,
-    obs_time_goal:{ hours: 0, minutes: 0, seconds: 0 }
-  })
- 
+    obs_time_goal: { hours: 0, minutes: 0, seconds: 0 },
+  });
+
   const [attributes, setAttributes] = createStore<AttributeValue[]>([]);
   createEffect(() => {
     if (data()) {
@@ -53,11 +58,12 @@ export default function NewExperiment() {
 
   const [hasDuration, setHasDuration] = createSignal<boolean>(true);
   const [hasSampleGoal, setHasSampleGoal] = createSignal<boolean>(true);
-  const [hasObservationGoal, setHasObservationGoal] = createSignal<boolean>(true);
+  const [hasObservationGoal, setHasObservationGoal] =
+    createSignal<boolean>(true);
   const handleSubmit = async () => {
     const dataOut = {
       attributes: attributes,
-      columns: columnToDb(ExperimentToDb(experiment))
+      columns: columnToDb(ExperimentToDb(experiment)),
     };
 
     const isReady =
@@ -74,201 +80,225 @@ export default function NewExperiment() {
     }
   };
 
-
   return (
-<div class="container mx-auto">
-  <Heading>New experiment</Heading>
+    <div class="container mx-auto">
+      <Heading>New experiment</Heading>
 
-  <div class="flex flex-col space-y-4">
-    <div class="border border-primary rounded-md item-center bg-primary/10 p-6">
-      <div class="flex flex-col space-y-8 px-5 pb-4">
-        <div class="flex flex-row space-x-3 items-baseline">
-          <p>Experiment name:</p>
-          <TextField
-            value={experiment.name}
-            onChange={(e: any) => {
-              setExperiment("name", e);
-            }}
-            validationState={experiment.name !== "" && experiment.name ? "valid" : "invalid"}
-          >
-            <TextFieldInput
-              type={"text"}
-              class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-            />
-            <TextFieldErrorMessage>
-              This parameter is required, a value must be given.
-            </TextFieldErrorMessage>
-          </TextField>
-        </div>
-        <div class="flex flex-row space-x-3 items-baseline">
-          <p>Do you want to predefine subjects?</p>
-          <ToggleGroup
-            class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-            value={experiment.predefine_subject!.toString()}
-          >
-            <For each={["true", "false"]}>
-              {(option) => (
-                <ToggleGroupItem
-                  class={`${toggleVariants({ size: "sm" })}`}
-                  value={option}
-                  onClick={() => {
-                    setExperiment("predefine_subject", option === "true");
-                  }}
+      <div class="flex flex-col space-y-4">
+        <div class="border border-primary rounded-md item-center bg-primary/10 p-6">
+          <div class="flex flex-col space-y-8 px-5 pb-4">
+            <div class="flex flex-row space-x-3 items-baseline">
+              <p>Experiment name:</p>
+              <TextField
+                value={experiment.name}
+                onChange={(e: any) => {
+                  setExperiment("name", e);
+                }}
+                validationState={
+                  experiment.name !== "" && experiment.name
+                    ? "valid"
+                    : "invalid"
+                }
+              >
+                <TextFieldInput
+                  type={"text"}
+                  class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                />
+                <TextFieldErrorMessage>
+                  This parameter is required, a value must be given.
+                </TextFieldErrorMessage>
+              </TextField>
+            </div>
+            <div class="flex flex-row space-x-3 items-baseline">
+              <p>Do you want to predefine subjects?</p>
+              <ToggleGroup
+                class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
+                value={experiment.predefine_subject!.toString()}
+              >
+                <For each={["true", "false"]}>
+                  {(option) => (
+                    <ToggleGroupItem
+                      class={`${toggleVariants({ size: "sm" })}`}
+                      value={option}
+                      onClick={() => {
+                        setExperiment("predefine_subject", option === "true");
+                      }}
+                    >
+                      {option}
+                    </ToggleGroupItem>
+                  )}
+                </For>
+              </ToggleGroup>
+            </div>
+            <div class="flex flex-row space-x-10">
+              <div class="flex flex-row space-x-10 items-baseline">
+                <p>
+                  Do you want to set a duration for the observation sessions:
+                </p>
+                <ToggleGroup
+                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
+                  value={hasDuration().toString()}
                 >
-                  {option}
-                </ToggleGroupItem>
-              )}
-            </For>
-          </ToggleGroup>
-        </div>
-        <div class="flex flex-row space-x-10">
-        <div class="flex flex-row space-x-10 items-baseline">
-
-          <p>Do you want to set a duration for the observation sessions:</p>
-          <ToggleGroup
-            class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-            value={hasDuration().toString()}
-          >
-            <For each={["true", "false"]}>
-              {(option) => (
-                <ToggleGroupItem
-                  class={`${toggleVariants({ size: "sm" })}`}
-                  value={option}
-                  onClick={() => {
-                    setHasDuration(option === "true");
-                  }}
-                >
-                  {option}
-                </ToggleGroupItem>
-              )}
-            </For>
-          </ToggleGroup>
-        </div>
-        <div class="-m-5">
-          <Show when={hasDuration()}>
-            <DurationForm duration={experiment.duration!} setDuration={(key:Partial<keyof DurationHMS>, value: number) => setExperiment("duration", key, value)} />
-          </Show>
-        </div>
-        </div>
-        <div class="flex flex-row space-x-10 pt-16">
-           <div class="flex flex-row space-x-10 items-baseline">
-            <p>Do you want to set goals for the observation sessions:</p>
-            <ToggleGroup
-              class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-              value={hasSampleGoal().toString()}
-            >
-              <For each={["true", "false"]}>
-                {(option) => (
-                  <ToggleGroupItem
-                    class={`${toggleVariants({ size: "sm" })}`}
-                    value={option}
-                    onClick={() => {
-                      setHasSampleGoal(option === "true");
-                    }}
-                  >
-                    {option}
-                  </ToggleGroupItem>
-                )}
-              </For>
-            </ToggleGroup>
-          </div>
-       
-        <div class="-m-5 items-end">
-          <Show when={hasSampleGoal()}>
-            <div class="flex flex-row space-x-24 -mt-7">
-              <div class="flex flex-col space-x-1 items-center">
-                <p class="pb-6">Number of observation sessions</p>
-                <NumberField
-                  rawValue={experiment.samples_number_goal}
-                  onRawValueChange={(e: any) => {
-                    const value = Number.isNaN(e) ? null : e;
-                    setExperiment("samples_number_goal", value);
-                  }}
-                  minValue={0}
-                >
-                  <div class="relative">
-                    <NumberFieldInput
-                      class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                    />
-                    <NumberFieldIncrementTrigger />
-                    <NumberFieldDecrementTrigger />
-                  </div>
-                </NumberField>
+                  <For each={["true", "false"]}>
+                    {(option) => (
+                      <ToggleGroupItem
+                        class={`${toggleVariants({ size: "sm" })}`}
+                        value={option}
+                        onClick={() => {
+                          setHasDuration(option === "true");
+                        }}
+                      >
+                        {option}
+                      </ToggleGroupItem>
+                    )}
+                  </For>
+                </ToggleGroup>
               </div>
-              <div class="flex flex-col space-x-1 items-center">
-                <p>Cumulative observation session time</p>
-                <DurationForm duration={experiment.samples_time_goal!} setDuration={(key:Partial<keyof DurationHMS>, value: number) => setExperiment("samples_time_goal", key, value)} />
+              <div class="-m-5">
+                <Show when={hasDuration()}>
+                  <DurationForm
+                    duration={experiment.duration!}
+                    setDuration={(
+                      key: Partial<keyof DurationHMS>,
+                      value: number,
+                    ) => setExperiment("duration", key, value)}
+                  />
+                </Show>
               </div>
             </div>
-          </Show>
-        </div>
-        </div>
-        <div class="flex flex-row space-x-10 pt-16">
-           <div class="flex flex-row space-x-10 items-baseline">
-            <p>Do you want to set goals for the observations:</p>
-            <ToggleGroup
-              class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-              value={hasObservationGoal().toString()}
-            >
-              <For each={["true", "false"]}>
-                {(option) => (
-                  <ToggleGroupItem
-                    class={`${toggleVariants({ size: "sm" })}`}
-                    value={option}
-                    onClick={() => {
-                      setHasObservationGoal(option === "true");
-                    }}
-                  >
-                    {option}
-                  </ToggleGroupItem>
-                )}
-              </For>
-            </ToggleGroup>
-          </div>
-       
-        <div class="-m-5 items-end">
-          <Show when={hasObservationGoal()}>
-            <div class="flex flex-row space-x-24 -mt-7">
-              <div class="flex flex-col space-x-1 items-center">
-                <p class="pb-6">Number of observation sessions</p>
-                <NumberField
-                  rawValue={experiment.samples_number_goal}
-                  onRawValueChange={(e: any) => {
-                    const value = Number.isNaN(e) ? null : e;
-                    setExperiment("obs_number_goal", value);
-                  }}
-                  minValue={0}
+            <div class="flex flex-row space-x-10 pt-16">
+              <div class="flex flex-row space-x-10 items-baseline">
+                <p>Do you want to set goals for the observation sessions:</p>
+                <ToggleGroup
+                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
+                  value={hasSampleGoal().toString()}
                 >
-                  <div class="relative">
-                    <NumberFieldInput
-                      class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                    />
-                    <NumberFieldIncrementTrigger />
-                    <NumberFieldDecrementTrigger />
-                  </div>
-                </NumberField>
+                  <For each={["true", "false"]}>
+                    {(option) => (
+                      <ToggleGroupItem
+                        class={`${toggleVariants({ size: "sm" })}`}
+                        value={option}
+                        onClick={() => {
+                          setHasSampleGoal(option === "true");
+                        }}
+                      >
+                        {option}
+                      </ToggleGroupItem>
+                    )}
+                  </For>
+                </ToggleGroup>
               </div>
-              <div class="flex flex-col space-x-1 items-center">
-                <p>Cumulative observation session time</p>
-                <DurationForm duration={experiment.obs_time_goal!} setDuration={(key:Partial<keyof DurationHMS>, value: number) => setExperiment("obs_time_goal", key, value)} />
+
+              <div class="-m-5 items-end">
+                <Show when={hasSampleGoal()}>
+                  <div class="flex flex-row space-x-24 -mt-7">
+                    <div class="flex flex-col space-x-1 items-center">
+                      <p class="pb-6">Number of observation sessions</p>
+                      <NumberField
+                        rawValue={experiment.samples_number_goal}
+                        onRawValueChange={(e: any) => {
+                          const value = Number.isNaN(e) ? null : e;
+                          setExperiment("samples_number_goal", value);
+                        }}
+                        minValue={0}
+                      >
+                        <div class="relative">
+                          <NumberFieldInput
+                            class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                          />
+                          <NumberFieldIncrementTrigger />
+                          <NumberFieldDecrementTrigger />
+                        </div>
+                      </NumberField>
+                    </div>
+                    <div class="flex flex-col space-x-1 items-center">
+                      <p>Cumulative observation session time</p>
+                      <DurationForm
+                        duration={experiment.samples_time_goal!}
+                        setDuration={(
+                          key: Partial<keyof DurationHMS>,
+                          value: number,
+                        ) => setExperiment("samples_time_goal", key, value)}
+                      />
+                    </div>
+                  </div>
+                </Show>
               </div>
             </div>
-          </Show>
-        </div>
-        </div>
+            <div class="flex flex-row space-x-10 pt-16">
+              <div class="flex flex-row space-x-10 items-baseline">
+                <p>Do you want to set goals for the observations:</p>
+                <ToggleGroup
+                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
+                  value={hasObservationGoal().toString()}
+                >
+                  <For each={["true", "false"]}>
+                    {(option) => (
+                      <ToggleGroupItem
+                        class={`${toggleVariants({ size: "sm" })}`}
+                        value={option}
+                        onClick={() => {
+                          setHasObservationGoal(option === "true");
+                        }}
+                      >
+                        {option}
+                      </ToggleGroupItem>
+                    )}
+                  </For>
+                </ToggleGroup>
+              </div>
 
-        {attributes && <Form store={attributes} setStore={setAttributes}></Form>}
+              <div class="-m-5 items-end">
+                <Show when={hasObservationGoal()}>
+                  <div class="flex flex-row space-x-24 -mt-7">
+                    <div class="flex flex-col space-x-1 items-center">
+                      <p class="pb-6">Number of observation sessions</p>
+                      <NumberField
+                        rawValue={experiment.samples_number_goal}
+                        onRawValueChange={(e: any) => {
+                          const value = Number.isNaN(e) ? null : e;
+                          setExperiment("obs_number_goal", value);
+                        }}
+                        minValue={0}
+                      >
+                        <div class="relative">
+                          <NumberFieldInput
+                            class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                          />
+                          <NumberFieldIncrementTrigger />
+                          <NumberFieldDecrementTrigger />
+                        </div>
+                      </NumberField>
+                    </div>
+                    <div class="flex flex-col space-x-1 items-center">
+                      <p>Cumulative observation session time</p>
+                      <DurationForm
+                        duration={experiment.obs_time_goal!}
+                        setDuration={(
+                          key: Partial<keyof DurationHMS>,
+                          value: number,
+                        ) => setExperiment("obs_time_goal", key, value)}
+                      />
+                    </div>
+                  </div>
+                </Show>
+              </div>
+            </div>
+
+            {attributes && (
+              <Form store={attributes} setStore={setAttributes}></Form>
+            )}
+          </div>
+        </div>
+        <div>
+          <Button
+            class={buttonVariants({ variant: "accent" })}
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </div>
       </div>
     </div>
-    <div>
-      <Button
-        class={buttonVariants({ variant: "accent" })}
-        onClick={handleSubmit}
-      >
-        Submit
-      </Button>
-    </div>
-  </div>
-</div>
   );
 }

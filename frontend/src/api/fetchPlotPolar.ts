@@ -5,7 +5,9 @@ type Props = {
   level: Level;
   experimentId: number;
 };
-export async function fetchPlotPolar(props: Props): Promise<StatDescriptivesPlot> {
+export async function fetchPlotPolar(
+  props: Props,
+): Promise<StatDescriptivesPlot> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiment/${props.experimentId}/${props.level}/polarPlot`,

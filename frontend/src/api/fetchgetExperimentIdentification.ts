@@ -1,6 +1,8 @@
 import { backendUrl } from "~/db";
 
-export async function fetchExperimentsIdentification(): Promise<{name:string, experiment_id: number}[]> {
+export async function fetchExperimentsIdentification(): Promise<
+  { name: string; experiment_id: number }[]
+> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/identification`,

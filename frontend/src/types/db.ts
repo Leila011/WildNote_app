@@ -141,6 +141,6 @@ export interface ExperimentStats {
   obs_incomplete_nb: number;
 }
 
-export type StatDescriptives = Record<string, any>
+export type StatDescriptives = Record<string, any>;
 
-export type StatDescriptivesPlot = Record<string, any>
+export type StatDescriptivesPlot = Record<string, any>;

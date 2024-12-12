@@ -9,7 +9,7 @@ import { DurationHMS } from "~/types/db";
 
 export function DurationForm(props: {
   duration: DurationHMS;
-  setDuration: (key:Partial<keyof DurationHMS>, value: number) => void;
+  setDuration: (key: Partial<keyof DurationHMS>, value: number) => void;
 }) {
   return (
     <div class="flex flex-row space-x-6">

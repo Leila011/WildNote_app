@@ -13,7 +13,9 @@ export async function fetchStatDescriptives(
       `${backendUrl}/api/experiments/${props.experimentId}/${props.level}/descriptiveStat`,
     );
     if (!response.ok) {
-      throw new Error(`Failed to fetch observations stat: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch observations stat: ${response.statusText}`,
+      );
     }
     const data = await response.json();
     return data;
