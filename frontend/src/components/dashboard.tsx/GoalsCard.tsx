@@ -4,8 +4,9 @@ import {
     ProgressValueLabel,
   } from "~/components/ui/progress";
 import { ExperimentDb, ExperimentStats } from "~/types/db";
-import { Card } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Show } from "solid-js";
+import { secondToString } from "~/utils";
 
 type Props = {
   experiment: ExperimentDb;
@@ -13,77 +14,94 @@ type Props = {
 };
 
 export function GoalsCard({ experiment, stat }: Props) { 
-
+console.log("GoalsCard", experiment, stat);	
 
     return(
-        <div class="flex flex-row justify-between">
-        <Card class="w-[300px]">
-        <Show when={experiment.samples_number_goal}>
+        <div class="flex flex-row space-x-3">
+        <Card>
+        <CardHeader>
+          <CardTitle>Samples</CardTitle>
+        </CardHeader>
+        <CardContent class ="flex flex-col space-y-5">
+        <Show when={experiment.samples_number_goal && experiment.samples_number_goal >0 }>
         <Progress
           value={stat.sample_nb}
           minValue={0}
           maxValue={experiment.samples_number_goal}
           getValueLabel={({ value, max }) =>
-            `${value} of ${max} observation sessions completed`
+            `${stat.sample_nb} of ${max} `
           }
           class="w-[300px] space-y-1"
         >
           <div class="flex justify-between">
-            <ProgressLabel>Processing...</ProgressLabel>
+            <ProgressLabel>Number</ProgressLabel>
             <ProgressValueLabel />
           </div>
         </Progress>
         </Show>
-        <Show when={experiment.samples_time_goal}>
+        <Show when={experiment.samples_time_goal && experiment.samples_time_goal >0}>
         <Progress
           value={stat.sample_time_tot}
           minValue={0}
           maxValue={experiment.samples_time_goal}
-          getValueLabel={({ value, max }) =>
-            `${value} of ${max} of observation session time completed`
+          getValueLabel={({ value, max }) =>{
+            const valueHMS = secondToString(stat.sample_time_tot);
+            const maxHMS = secondToString(max);
+            return `${valueHMS} of ${maxHMS} `
+          }
           }
           class="w-[300px] space-y-1"
         >
           <div class="flex justify-between">
-            <ProgressLabel>Processing...</ProgressLabel>
+            <ProgressLabel>Cumulative time</ProgressLabel>
             <ProgressValueLabel />
           </div>
         </Progress>
         </Show>
+        </CardContent>
+
         </Card>
-        <Card class="w-[300px]">
-          <Show when={experiment.obs_number_goal}>
+        <Card>
+        <CardHeader>
+          <CardTitle>Observations</CardTitle>
+        </CardHeader>
+        <CardContent class ="flex flex-col space-y-5">
+          <Show when={experiment.obs_number_goal && experiment.obs_number_goal>0}>
         <Progress
           value={stat.obs_nb}
           minValue={0}
           maxValue={experiment.obs_number_goal}
           getValueLabel={({ value, max }) =>
-            `${value} of ${max} observations completed`
+            `${stat.obs_nb} of ${max} `
           }
           class="w-[300px] space-y-1"
         >
           <div class="flex justify-between">
-            <ProgressLabel>Processing...</ProgressLabel>
+            <ProgressLabel>Number</ProgressLabel>
             <ProgressValueLabel />
           </div>
         </Progress>
         </Show>
-        <Show when={experiment.obs_time_goal}>
+        <Show when={experiment.obs_time_goal && experiment.obs_time_goal>0}>
         <Progress
           value={(stat.obs_time_tot)}
           minValue={0}
           maxValue={(experiment.obs_time_goal)}
-          getValueLabel={({ value, max }) =>
-            `${value} of ${max} of observation time completed`
-          }
+          getValueLabel={({ value, max }) =>{
+            const valueHMS = secondToString(stat.obs_time_tot);
+          const maxHMS = secondToString(max);
+          return `${valueHMS} of ${maxHMS} `
+        }}
           class="w-[300px] space-y-1"
         >
           <div class="flex justify-between">
-            <ProgressLabel>Processing...</ProgressLabel>
+            <ProgressLabel>Cumulative time</ProgressLabel>
             <ProgressValueLabel />
           </div>
         </Progress>
         </Show>
+        </CardContent>
+
         </Card>
       </div>
     )

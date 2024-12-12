@@ -5,6 +5,7 @@ type Props = {
   experimentId: number;
 };
 export async function fetchStatExperiment(props: Props): Promise<ExperimentStats> {
+  console.log("fetchStatExperiment", props);
   try {
     const response = await fetch(
       `${backendUrl}/api/experiment/${props.experimentId}/stat`,

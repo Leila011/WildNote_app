@@ -5,51 +5,60 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { createEffect, createResource, createSignal, For, Show } from "solid-js";
-import { ExperimentDb, ExperimentStats, StatDescriptives, StatDescriptivesPlot } from "~/types/db";
-import { fetchExperiments } from "~/api/fetchExperiments";
+import { createEffect, createResource, createSignal, For } from "solid-js";
+import { fetchExperiment } from "~/api/fetchExperiment";
 import { Button } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
 import { GoalsCard } from "~/components/dashboard.tsx/GoalsCard";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { fetchStatExperiment } from "~/api/fetchStatExperiment";
 import { fetchPlotDescriptives } from "~/api/fetchPlotDescriptives";
 import { fetchStatDescriptives } from "~/api/fetchStatDescriptives";
+import { fetchExperimentsIdentification } from "~/api/fetchgetExperimentIdentification";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
+import { Experiment, ExperimentDb, ExperimentStats, StatDescriptives, StatDescriptivesPlot } from "~/types/db";
+
 
 export default function Dashboards() {
-  const [experiments] = createResource<ExperimentDb[]>(fetchExperiments);
-  const [experiment, setExperiment] = createSignal<ExperimentDb>();
+  const [experiments] = createResource<{name:string, experiment_id:number}[]>(fetchExperimentsIdentification);
+  const [experimentId, setExperimentId] = createSignal<number|undefined>(1); //! dev: change back to undefined
+  const [experimentData] = createResource<ExperimentDb>(
+    () => experimentId() && ({ experimentId: experimentId() }),
+    fetchExperiment
+    );
 
   // fetch stat and plot data
-  const [statExperiment, { refetch: refetchStatExp }] = createResource<ExperimentStats|undefined>(() =>
-    experiment() ?fetchStatExperiment({ experimentId: Number(experiment()?.experiment_id) }):undefined,
-  );
+  // typescript is not happy but the reason is weird and it works
+  const [experimentStat] = createResource<ExperimentStats>(
+    () => experimentId() && ({ experimentId: experimentId() }),
+    fetchStatExperiment
+    );
+    const [samplesStat] = createResource<StatDescriptives>(
+      () => experimentId() && ({level:"sample", experimentId: experimentId() }),
+      fetchStatDescriptives
+    );
+    const [ObsStat] = createResource<StatDescriptives>(
+      () => experimentId() && ({level:"observation", experimentId: experimentId() }),
+      fetchStatDescriptives
+    );
+    const [samplesPlot] = createResource<StatDescriptivesPlot>(
+      () => experimentId() && ({level:"sample", experimentId: experimentId() }),
+      fetchPlotDescriptives
+    );
 
-  const [statSamples, { refetch: refetchStatSamples }] = createResource<StatDescriptives|undefined>(() =>
-    experiment() ?fetchStatDescriptives({level:"sample", experimentId: Number(experiment()?.experiment_id) }):undefined,
-  );
-  
-  const [statObs, { refetch: refetchStatObs }] = createResource<StatDescriptivesPlot|undefined>(() =>
-    experiment() ?fetchStatDescriptives({level:"observation", experimentId: Number(experiment()?.experiment_id) }):undefined,
-  );
-  const [plotSamples, { refetch: refetchPlotSamples }] = createResource<StatDescriptives|undefined>(() =>
-    experiment() ?fetchPlotDescriptives({level:"sample", experimentId: Number(experiment()?.experiment_id) }):undefined,
-  );
-  const [plotObs, { refetch: refetchPlotObs }] = createResource<StatDescriptivesPlot|undefined>(() =>
-    experiment() ?fetchPlotDescriptives({level:"observation", experimentId: Number(experiment()?.experiment_id) }):undefined,
-  );
+    const [ObsPlot] = createResource<StatDescriptivesPlot>(
+      () => experimentId() && ({level:"observation", experimentId: experimentId() }),
+      fetchPlotDescriptives
+    );
 
-  createEffect(() => {
-    console.log("Experiment changed", experiment());
-    console.log("Stat changed", statExperiment());
-    if (experiment() && !statSamples() && !statObs() && !plotSamples() && !plotObs()) {
-      refetchStatExp();
-      refetchStatSamples()
-      refetchStatObs()
-      refetchPlotObs()
-      refetchPlotSamples()
-    }
-  });
+    createEffect(() => {
+      console.log("experimentData", experimentData());
+      console.log("experimentStat", experimentStat());
+      console.log("samplesStat", samplesStat());
+      console.log("ObsStat", ObsStat());
+      console.log("samplesPlot", samplesPlot());
+      console.log("ObsPlot", ObsPlot());
+    } );
 
   return (
     <div>
@@ -62,7 +71,7 @@ export default function Dashboards() {
             class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
           >
             <div class="flex-grow text-left">
-              {!experiment() ? "Pick your experiment" : experiment()!.name}
+              {!experimentId() ? "Pick your experiment" : experimentId()!.name}
             </div>
             <IconChevronDown />
           </DropdownMenuTrigger>
@@ -72,7 +81,7 @@ export default function Dashboards() {
                 <DropdownMenuItem
                   onSelect={() => {
                     console.log("Selected", option);
-                    setExperiment(option);
+                    setExperimentId(option.experiment_id);
                   }}
                 >
                   <span>{option.name}</span>
@@ -82,20 +91,42 @@ export default function Dashboards() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {experiment() && (
+      <Tabs defaultValue="account" class="w-[800px]">
+  <TabsList class="grid w-full grid-cols-4">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="overview-sample">Observation sessions</TabsTrigger>
+    <TabsTrigger value="overview-obs">Observations</TabsTrigger>
+    <TabsTrigger value="datasanity">Data quality</TabsTrigger>
+  </TabsList>
+  <TabsContent value="overview">
+ 
         <Card>
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
+          <CardTitle>Goals</CardTitle>
         </CardHeader>
         <CardContent>
-           <GoalsCard experiment={experiment()!} stat={statExperiment()!} /> 
+       { experimentData() && experimentStat() && <GoalsCard experiment={experimentData()!} stat={experimentStat()!} /> }
         </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
+ 
         </Card>
-      )}
+        <Card>
+        <CardHeader>
+          <CardTitle>Calendar</CardTitle>
+        </CardHeader>
+        <CardContent>
+       { experimentData() && experimentStat() && <GoalsCard experiment={experimentData()!} stat={experimentStat()!} /> }
+        </CardContent>
+ 
+        </Card>
+
+  </TabsContent>
+
+
+        <TabsContent value="overview-sample"></TabsContent>
+        <TabsContent value="overview-obs"></TabsContent>
+        <TabsContent value="datasanity"></TabsContent>
+
+        </Tabs>
     </div>
   );
 }

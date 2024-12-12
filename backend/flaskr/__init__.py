@@ -285,6 +285,10 @@ def create_app(test_config=None):
     def get_experiments():
         return db.get_experiments()
     
+    @app.route('/api/experiments/identification', methods=['GET'])
+    def get_experiments_identification():
+        return db.get_experiments_identification()
+    
     # get one specific experiment
     @app.route('/api/experiment/<int:experiment_id>/attributeValues', methods=['GET'])
     def get_experiment(experiment_id):

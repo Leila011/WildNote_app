@@ -210,6 +210,13 @@ def update_value(con, table, id, field, value):
 #     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 #     rows = db.execute(f'SELECT * FROM {level}').fetchall()
 #     return rows
+def get_experiments_identification():
+    """Retrieve the name and id of the experiment"""
+    db = get_db()
+    db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
+    ids = db.execute(f'SELECT experiment_id, name FROM experiment').fetchall()
+    print(ids)
+    return jsonify(ids)
 
 def get_experiments():
     """Retrieve all experiments from the database (predefined attributes + values)"""
@@ -225,7 +232,7 @@ def get_experiments():
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end", "e.name", "duration"]
+    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end", "e.name", "duration", "samples_number_goal", "samples_time_goal", "obs_number_goal", "obs_time_goal"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         # Use double quotes to handle attribute names with spaces or special characters
@@ -260,7 +267,7 @@ def get_experiment(experiment_id):
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["e.experiment_id AS experiment_id", "e.status", "e.timestamp_start", "e.timestamp_end", "e.name", "duration", "samples_number_goal", "samples_time_goal", "obs_number_goal", "obs_time_goal"]
+    columns = ["e.experiment_id AS experiment_id", "e.status", "e.timestamp_start", "e.timestamp_end", "e.name", "duration","samples_number_goal", "samples_time_goal", "obs_number_goal", "obs_time_goal"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         # Use double quotes to handle attribute names with spaces or special characters
@@ -276,8 +283,9 @@ def get_experiment(experiment_id):
     GROUP BY e.experiment_id
     """
 
-    rows = db.execute(pivot_query, (experiment_id,)).fetchall()
-    return rows
+    row = db.execute(pivot_query, (experiment_id,)).fetchone()
+    print(row)
+    return row
 
 def get_samples(experiment_id):
     """Retrieve all samples from an experiment (attributes + values)
@@ -387,6 +395,8 @@ def get_subjects(experiment_id):
 
 
 ############################### READ ATTRIBUTES ###############################
+
+
 def get_attributes(level, experiment_id):
     """Retrieve the attributes for a given table"""
     db = get_db()

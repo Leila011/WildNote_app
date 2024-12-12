@@ -14,7 +14,7 @@ def experiment_stat(experimentData, sampleData, observationData):
         cumulative observation time
         data integrity: missing value, duplicate value, outlier, number with status !== "completed", number with time < duration. number without observation
     '''
-    experiment = pd.DataFrame(experimentData)
+    experiment = experimentData
     samples = pd.DataFrame(sampleData)
     obs = pd.DataFrame(observationData)
     
@@ -29,8 +29,8 @@ def experiment_stat(experimentData, sampleData, observationData):
     # number of sample with status !== "completed"
     res['sample_incomplete_nb'] = samples[samples['status'] != 'completed'].shape[0]
     # number of sample with time < duration
-    if experiment['duration'].iloc[0] is not None and experiment['duration'].iloc[0] != 0:
-        res['sample_short_nb'] = samples[samples['duration'] < experiment['duration'].iloc[0]].shape[0]
+    if experiment['duration'] is not None and experiment['duration'] != 0:
+        res['sample_short_nb'] = samples[samples['duration'] < experiment['duration']].shape[0]
                                 
     # number of sample without observation
     res['sample_empty_nb'] = samples[~samples['sample_id'].isin(obs['sample_id'])].shape[0]
