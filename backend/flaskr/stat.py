@@ -107,6 +107,7 @@ def descriptive_plot(data, attributes):
     # add new columns
     df['duration'] = (df['timestamp_end'] - df['timestamp_start']).dt.total_seconds()
     hist, bin_edges = np.histogram(df['duration'].dropna(), bins=10, range=None, density=None, weights=None)
+    
     plotData['duration'] = {
         'hist': hist.tolist(),
         'bin_edges': bin_edges.tolist()

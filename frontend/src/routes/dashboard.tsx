@@ -26,6 +26,8 @@ import { DescriptiveStatTable } from "~/components/dashboard/descriptiveStatTabl
 export default function Dashboards() {
   const [experiments] = createResource<{name:string, experiment_id:number}[]>(fetchExperimentsIdentification);
   const [experimentId, setExperimentId] = createSignal<number|undefined>(1); //! dev: change back to undefined
+  const [sampleVariable, setSampleVariable] = createSignal<string|undefined>(undefined);
+  const [obsVariable, setObsVariable] = createSignal<string|undefined>(undefined);
   const [experimentData] = createResource<ExperimentDb>(
     () => experimentId() && ({ experimentId: experimentId() }),
     fetchExperiment
@@ -41,7 +43,7 @@ export default function Dashboards() {
       () => experimentId() && ({level:"sample", experimentId: experimentId() }),
       fetchStatDescriptives
     );
-    const [ObsStat] = createResource<StatDescriptives>(
+    const [obsStat] = createResource<StatDescriptives>(
       () => experimentId() && ({level:"observation", experimentId: experimentId() }),
       fetchStatDescriptives
     );
@@ -50,7 +52,7 @@ export default function Dashboards() {
       fetchPlotDescriptives
     );
 
-    const [ObsPlot] = createResource<StatDescriptivesPlot>(
+    const [obsPlot] = createResource<StatDescriptivesPlot>(
       () => experimentId() && ({level:"observation", experimentId: experimentId() }),
       fetchPlotDescriptives
     );
@@ -64,10 +66,13 @@ export default function Dashboards() {
       console.log("experimentData", experimentData());
       console.log("experimentStat", experimentStat());
       console.log("samplesStat", samplesStat());
-      console.log("ObsStat", ObsStat());
+      console.log("ObsStat", obsStat());
       console.log("samplesPlot", samplesPlot());
-      console.log("ObsPlot", ObsPlot());
+      console.log("ObsPlot", obsPlot());
       console.log("calendar", calendar());
+      console.log("obsVariable", obsVariable());
+      console.log("sampleVariable", sampleVariable());
+      samplesStat() && sampleVariable() && console.log("stat sample var", samplesStat()[sampleVariable()!])
     } );
 
   return (
@@ -135,34 +140,94 @@ export default function Dashboards() {
   </TabsContent>
 
 
-        <TabsContent value="overview-sample"></TabsContent>
+        <TabsContent value="overview-sample">
         <div>
-        <Card>
-        <CardContent>
-        {samplesStat() && <DescriptiveStatTable stat={samplesStat()}/>}
-        </CardContent>
-        </Card>
-        <Card>
-        <CardContent>
-        {samplesPlot() && <DescriptiveStatPlot stat={samplesPlot()}/>}
-        </CardContent>
-        </Card>
-        </div>
-        <TabsContent value="overview-obs"></TabsContent>
-        <div>
+        <h1>Select a variable:</h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            as={Button<"button">}
+            variant={"ghost"}
+            class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
+          >
+            <div class="flex-grow text-left">
+              {!samplesStat() ? "Select a variable" : sampleVariable()!}
+            </div>
+            <IconChevronDown />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <For each={Object.keys(samplesStat())}>
+              {(option) => (
+                <DropdownMenuItem
+                  onSelect={() => {
+                    console.log("Selected", option);
+                    setSampleVariable(option);
+                  }}
+                >
+                  <span>{option}</span>
+                </DropdownMenuItem>
+              )}
+            </For>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div class="flex flex-row">
 
         <Card>
         <CardContent>
-        {ObsStat() && <DescriptiveStatTable stat={ObsStat()}/>}
+        {samplesStat() && sampleVariable() &&  <DescriptiveStatTable stats={()=>samplesStat()[sampleVariable()!]}/>}
         </CardContent>
         </Card>
         <Card>
         <CardContent>
-        {ObsPlot() && <DescriptiveStatPlot stat={ObsPlot()}/>}
+        {samplesPlot() && sampleVariable() &&  <DescriptiveStatPlot stats={()=>samplesPlot()[sampleVariable()!]} name={sampleVariable()!}/>}
         </CardContent>
         </Card>
         </div>
+        </TabsContent>
+        <TabsContent value="overview-obs">
+        <div>
+        <h1>Select a variable:</h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            as={Button<"button">}
+            variant={"ghost"}
+            class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
+          >
+            <div class="flex-grow text-left">
+              {!obsStat() ? "Select a variable" : obsVariable()!}
+            </div>
+            <IconChevronDown />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <For each={Object.keys(obsStat())}>
+              {(option) => (
+                <DropdownMenuItem
+                  onSelect={() => {
+                    console.log("Selected", option);
+                    setObsVariable(option);
+                  }}
+                >
+                  <span>{option}</span>
+                </DropdownMenuItem>
+              )}
+            </For>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+        <div class="flex flex-row">
 
+        <Card>
+        <CardContent>
+        {obsStat() && obsVariable() && <DescriptiveStatTable stats={()=>obsStat()[obsVariable()!]}/>}
+        </CardContent>
+        </Card>
+        <Card>
+        <CardContent>
+        {obsPlot() && obsVariable()&&  <DescriptiveStatPlot stats={()=>obsPlot()[obsVariable()!]} name={sampleVariable()!}/>}
+        </CardContent>
+        </Card>
+        </div>
+        </TabsContent>
         <TabsContent value="datasanity"></TabsContent>
 
         </Tabs>
