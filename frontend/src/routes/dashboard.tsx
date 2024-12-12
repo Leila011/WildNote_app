@@ -9,7 +9,7 @@ import { createEffect, createResource, createSignal, For } from "solid-js";
 import { fetchExperiment } from "~/api/fetchExperiment";
 import { Button } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
-import { GoalsCard } from "~/components/dashboard.tsx/GoalsCard";
+import { GoalsCard } from "~/components/dashboard/GoalsCard";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { fetchStatExperiment } from "~/api/fetchStatExperiment";
 import { fetchPlotDescriptives } from "~/api/fetchPlotDescriptives";
@@ -17,7 +17,11 @@ import { fetchStatDescriptives } from "~/api/fetchStatDescriptives";
 import { fetchExperimentsIdentification } from "~/api/fetchgetExperimentIdentification";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 import { Experiment, ExperimentDb, ExperimentStats, StatDescriptives, StatDescriptivesPlot } from "~/types/db";
-
+import Heatmap from "~/components/dashboard/Heatmap";
+import { fetchCalendar } from "~/api/fetchCalendar";
+import { secondToString } from "~/utils";
+import { DescriptiveStatPlot } from "~/components/dashboard/descriptiveStatPlot";
+import { DescriptiveStatTable } from "~/components/dashboard/descriptiveStatTable";
 
 export default function Dashboards() {
   const [experiments] = createResource<{name:string, experiment_id:number}[]>(fetchExperimentsIdentification);
@@ -51,6 +55,11 @@ export default function Dashboards() {
       fetchPlotDescriptives
     );
 
+    const [calendar] = createResource<any>(
+      () => experimentId() && ({experimentId: experimentId() }),
+      fetchCalendar
+    );
+
     createEffect(() => {
       console.log("experimentData", experimentData());
       console.log("experimentStat", experimentStat());
@@ -58,6 +67,7 @@ export default function Dashboards() {
       console.log("ObsStat", ObsStat());
       console.log("samplesPlot", samplesPlot());
       console.log("ObsPlot", ObsPlot());
+      console.log("calendar", calendar());
     } );
 
   return (
@@ -91,7 +101,7 @@ export default function Dashboards() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Tabs defaultValue="account" class="w-[800px]">
+      <Tabs defaultValue="account" class="w-full">
   <TabsList class="grid w-full grid-cols-4">
     <TabsTrigger value="overview">Overview</TabsTrigger>
     <TabsTrigger value="overview-sample">Observation sessions</TabsTrigger>
@@ -99,7 +109,8 @@ export default function Dashboards() {
     <TabsTrigger value="datasanity">Data quality</TabsTrigger>
   </TabsList>
   <TabsContent value="overview">
- 
+  <div class="flex flex-row space-x-3">
+
         <Card>
         <CardHeader>
           <CardTitle>Goals</CardTitle>
@@ -114,19 +125,48 @@ export default function Dashboards() {
           <CardTitle>Calendar</CardTitle>
         </CardHeader>
         <CardContent>
-       { experimentData() && experimentStat() && <GoalsCard experiment={experimentData()!} stat={experimentStat()!} /> }
+        { calendar() && <Heatmap series={calendar()["2024"].series} /> }
         </CardContent>
  
         </Card>
+
+        </div>
 
   </TabsContent>
 
 
         <TabsContent value="overview-sample"></TabsContent>
+        <div>
+        <Card>
+        <CardContent>
+        {samplesStat() && <DescriptiveStatTable stat={samplesStat()}/>}
+        </CardContent>
+        </Card>
+        <Card>
+        <CardContent>
+        {samplesPlot() && <DescriptiveStatPlot stat={samplesPlot()}/>}
+        </CardContent>
+        </Card>
+        </div>
         <TabsContent value="overview-obs"></TabsContent>
+        <div>
+
+        <Card>
+        <CardContent>
+        {ObsStat() && <DescriptiveStatTable stat={ObsStat()}/>}
+        </CardContent>
+        </Card>
+        <Card>
+        <CardContent>
+        {ObsPlot() && <DescriptiveStatPlot stat={ObsPlot()}/>}
+        </CardContent>
+        </Card>
+        </div>
+
         <TabsContent value="datasanity"></TabsContent>
 
         </Tabs>
+        
     </div>
   );
 }

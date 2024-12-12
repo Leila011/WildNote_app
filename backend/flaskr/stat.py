@@ -113,3 +113,51 @@ def descriptive_plot(data, attributes):
     }
     
     return plotData
+
+def calendar(samples):
+    '''calendar data for apex heatmap
+    '''
+    df = pd.DataFrame(samples)
+    df['year'] = df['timestamp_start'].dt.year
+    df['date'] = df['timestamp_start'].dt.date
+    start_dt = df['date'].min()
+    end_dt = df['date'].max()
+
+    # get range from a monday to a sunday
+    start_dt_weekday_nb= start_dt.weekday() 
+    end_dt_weekday_nb = end_dt.weekday()
+    start_dt_monday = start_dt if start_dt_weekday_nb == 0 else start_dt - pd.Timedelta(days=start_dt_weekday_nb)
+    end_dt_sunday = end_dt if end_dt_weekday_nb == 6 else end_dt + pd.Timedelta(days=6-end_dt_weekday_nb)
+
+    # Convert unique dates to ISO format strings
+    #unique_dates_iso = [date.isoformat() for date in df['date'].unique()]
+    dates_iso = [date.isoformat() for date in df['date']]
+
+  # Initialize calendarData structure
+    unique_years = df['year'].unique()
+    calendarData = {}
+    for year in unique_years:
+        calendarData[str(year)] = {
+            "series": [{"name": day, "data": []} for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]]
+        }
+
+    # loop through all dates in the range
+    while start_dt_monday <= end_dt_sunday:
+        year = start_dt_monday.year
+        #hasSamples = start_dt_monday.isoformat() in (unique_dates_iso) # check if date has samples
+        nbSamples = dates_iso.count(start_dt_monday.isoformat())
+        weekday = start_dt_monday.strftime("%A") # monday, tuesday, ...
+        weekdayNumber = start_dt_monday.weekday()  # Get the weekday as an integer (Monday=1, Sunday=7)
+        weekNumberYear = start_dt_monday.isocalendar().week  # Get the ISO week number
+        # add date to the serie coresponding to its weekday
+        res = {
+                'x': "W"+str(weekNumberYear),
+                'y': nbSamples
+            }
+        calendarData[str(year)]["series"][weekdayNumber]["data"].append(res)
+        #calendarData[year][weekdayNumber]["name"] = weekday
+
+        start_dt_monday += pd.Timedelta(days=1)  # Corrected: use pd.Timedelta to increment the date
+
+
+    return calendarData

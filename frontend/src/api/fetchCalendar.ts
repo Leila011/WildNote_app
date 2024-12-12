@@ -4,10 +4,10 @@ import { ExperimentDb } from "~/types/db";
 type Props = {
   experimentId: number;
 };
-export async function fetchExperiment(props: Props): Promise<ExperimentDb> {
+export async function fetchCalendar(props: Props): Promise<any> {
   try {
     const response = await fetch(
-      `${backendUrl}/api/experiment/${props.experimentId}/attributeValues`,
+      `${backendUrl}/api/experiment/${props.experimentId}/calendar`,
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch experiment: ${response.statusText}`);

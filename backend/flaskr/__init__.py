@@ -409,4 +409,14 @@ def create_app(test_config=None):
             obsData = obsData +observations
         res = stat.experiment_stat(experimentData, sampleData, obsData)
         return jsonify(res)
+    
+    @app.route('/api/experiment/<int:experiment_id>/calendar', methods=['GET'])
+    def get_experiment_calendar(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        res = stat.calendar(sampleData)
+        return jsonify(res)
+    
+
+
     return app
+
