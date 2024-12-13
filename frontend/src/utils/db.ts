@@ -85,9 +85,14 @@ export const statusOptions = [
 
 export function getTimestamp(): string {
   const formattedDate = new Date().toISOString().slice(0, 19).replace("T", " ");
-
   return formattedDate;
 }
+
+export const getDate = (timestamp: string) => {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString("en-GB"); // "en-GB" locale for dd/mm/yy format
+};
+
 
 export function toAttributeValue(attributes: Attribute[]): AttributeValue[] {
   return attributes.map(

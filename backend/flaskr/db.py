@@ -152,9 +152,6 @@ def add_sample(con, experiment_id, subject_id, timestamp_start):
 def add_observation(con, sample_id, data):
     """Add a new observation in the observation table"""
     try:
-        print(data)
-        print(sample_id)
-
         cursor = con.cursor()
         cursor.execute(
         'INSERT INTO observation (sample_id, timestamp_start, timestamp_end, status) VALUES (?, ?, ?,?)',
@@ -215,7 +212,6 @@ def get_experiments_identification():
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
     ids = db.execute(f'SELECT experiment_id, name FROM experiment').fetchall()
-    print(ids)
     return jsonify(ids)
 
 def get_experiments():
@@ -284,7 +280,6 @@ def get_experiment(experiment_id):
     """
 
     row = db.execute(pivot_query, (experiment_id,)).fetchone()
-    print(row)
     return row
 
 def get_samples(experiment_id):

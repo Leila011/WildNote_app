@@ -57,10 +57,10 @@ export function PolarPlot(props: {
             <CardTitle>{props.level==="sample"? "Observation sessions":"Observations"}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div class="flex flex-row space-x-3">
-              <div class="flex flex-col items-center space-y-8">
+            <div class="flex flex-row space-x-16 justify-center w-full h-44 mb-2">
+              <div class="flex flex-col items-center space-y-2">
                 <p>Day</p>
-                <div class="relative h-48">
+                <div class="relative h-36">
                 <PolarAreaChart
                   data={data(props.data().day)}
                   options={options}
@@ -69,9 +69,9 @@ export function PolarPlot(props: {
 
               </div>
 
-              <div class="flex flex-col items-center space-y-8 ">
+              <div class="flex flex-col items-center space-y-2 ">
                 <p>Night</p>
-                <div class="relative h-48">
+                <div class="relative h-36">
 
                 <PolarAreaChart
                   data={data(props.data().night)}

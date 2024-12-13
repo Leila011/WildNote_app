@@ -168,14 +168,25 @@ def calendar(samples):
 def polar(data):
     '''clock data for polar plot
     '''
-    print(data[0:10])
     df = pd.DataFrame(data)
     df["hour"] = pd.to_datetime(df["timestamp_start"]).dt.floor('h',).dt.hour
-    counts = df["hour"].value_counts()
-    hours_day =pd.Series(0, index=[12, 13, 14, 15, 16, 17, 18, 7, 8, 9, 10, 11]) 
-    hours_night = pd.Series(0, index=[0, 1, 2, 3, 4, 5, 6, 19, 20, 21, 22, 23]) 
-    res={}
-    res['day']= (hours_day+counts).fillna(0).to_dict()
-    res['night']= (hours_night+counts).fillna(0).to_dict()
+    count = df["hour"].value_counts()
+    daytime = [12, 13, 14, 15, 16, 17, 18, 7, 8, 9, 10, 11]
+    nightime = [0, 1, 2, 3, 4, 5, 6, 19, 20, 21, 22, 23]
+    hours_count = (pd.Series(0, index=range(24)) + count).fillna(0)
+    
+    count_day= hours_count[daytime]
+    count_night= hours_count[nightime]
 
+    res = {}
+    res['day'] = {
+        'keys': list(count_day.keys()),
+        'values': list(count_day.values)
+    }
+    res['night'] = {
+        'keys': list(count_night.keys()),
+        'values': list(count_night.values)
+    }
+    
+    
     return res
