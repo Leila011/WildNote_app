@@ -40,7 +40,7 @@ export default function Dashboards() {
   const [experiments] = createResource<
     { name: string; experiment_id: number }[]
   >(fetchExperimentsIdentification);
-  const [experimentId, setExperimentId] = createSignal<number | undefined>(1); //! dev: change back to undefined
+  const [experimentId, setExperimentId] = createSignal<number | undefined>(undefined); //! dev: change back to undefined
   const [sampleVariable, setSampleVariable] = createSignal<string | undefined>(
     undefined,
   );
@@ -94,19 +94,22 @@ export default function Dashboards() {
     fetchPlotPolar,
   );
 
-  const [sampleData] = createResource(
+  const [sampleData] = createResource<Record<string,any[]>>(
     () =>
       experimentId() && {experimentId: experimentId() },
     fetchSamplesColumns,
   );
 
-  const [obsData] = createResource(
+  const [obsData] = createResource<Record<string,any[]>>(
     () =>
       experimentId() && {experimentId: experimentId() },
     fetchObservationsExperiment,
   );
 
   createEffect(() => {
+    if (experiments()) {
+      setExperimentId(experiments()![0].experiment_id);
+    }
     if (obsStat() && !obsVariable()) {
       setObsVariable(Object.keys(obsStat())[0]);
     }
@@ -301,7 +304,7 @@ export default function Dashboards() {
               <CardContent>
                 {sampleData() && sampleVariable() && (
                   <Timeline
-                    values={() => sampleData()[sampleVariable()!]}	
+                    values={() => sampleVariable() && sampleData()[sampleVariable()]}	
                     time={()=> sampleData()["timestamp_start"]}
                     name={sampleVariable()!}
                   />
@@ -365,7 +368,7 @@ export default function Dashboards() {
                 {obsPlot() && obsVariable() && (
                   <DescriptiveStatPlot
                     stats={() => obsPlot()[obsVariable()!]}
-                    name={sampleVariable()!}
+                    name={obsVariable()!}
                   />
                 )}
               </CardContent>
@@ -377,9 +380,9 @@ export default function Dashboards() {
               <CardContent>
                 {obsData() && obsVariable() && (
                   <Timeline
-                    values={() => obsData()[obsVariable()!]}	
+                    values={() =>obsVariable && obsData()[obsVariable()]}	
                     time={()=> obsData()["timestamp_start"]}
-                    name={sampleVariable()!}
+                    name={obsVariable()!}
                   />
                 )}
               </CardContent>

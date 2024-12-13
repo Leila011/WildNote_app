@@ -317,9 +317,9 @@ def create_app(test_config=None):
         for sample in sampleData:
             observations = db.get_observations(experiment_id, sample['sample_id'])
             data = data +observations
-        attributes = db.get_attributes('observation' , experiment_id)
-        df = pd.DataFrame(attributes)
-        transformed_data = df.to_dict(orient='list')
+        df = pd.DataFrame(data)
+        df_augmented = stat.add_columns(df, 'observation')
+        transformed_data = df_augmented.to_dict(orient='list')
         return jsonify(transformed_data)
     
     # get all samples (fixed & custom attributes) for a given experiment     (object of column)
@@ -327,7 +327,8 @@ def create_app(test_config=None):
     def get_samples_columns(experiment_id):
         sampleData = db.get_samples(experiment_id)
         df = pd.DataFrame(sampleData)
-        transformed_data = df.to_dict(orient='list')
+        df_augmented = stat.add_columns(df, 'sample')
+        transformed_data = df_augmented.to_dict(orient='list')
         return jsonify(transformed_data)
     
     # Retrieve the attribute description#

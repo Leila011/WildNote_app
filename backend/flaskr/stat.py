@@ -190,3 +190,14 @@ def polar(data):
     
     
     return res
+
+def add_columns(df, level):
+    '''add columns to the dataframe
+    '''
+    if level == 'sample':
+        df['duration'] = (df['timestamp_end'] - df['timestamp_start']).dt.total_seconds()
+
+    if level == 'observation':
+        df['duration'] = (df['timestamp_end'] - df['timestamp_start']).dt.total_seconds()
+
+    return df
