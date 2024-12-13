@@ -309,28 +309,6 @@ def create_app(test_config=None):
     def get_observations(experiment_id, sample_id):
         return jsonify(db.get_observations(experiment_id, sample_id))
     
-    # get all observations for a given experiment (object of column)
-    @app.route('/api/experiments/<int:experiment_id>/observations/columnValue', methods=['GET'])
-    def get_observations_experiment(experiment_id):
-        sampleData = db.get_samples(experiment_id)
-        data = []
-        for sample in sampleData:
-            observations = db.get_observations(experiment_id, sample['sample_id'])
-            data = data +observations
-        df = pd.DataFrame(data)
-        df_augmented = stat.add_columns(df, 'observation')
-        transformed_data = df_augmented.to_dict(orient='list')
-        return jsonify(transformed_data)
-    
-    # get all samples (fixed & custom attributes) for a given experiment     (object of column)
-    @app.route('/api/experiments/<int:experiment_id>/samples/columnValue', methods=['GET'])
-    def get_samples_columns(experiment_id):
-        sampleData = db.get_samples(experiment_id)
-        df = pd.DataFrame(sampleData)
-        df_augmented = stat.add_columns(df, 'sample')
-        transformed_data = df_augmented.to_dict(orient='list')
-        return jsonify(transformed_data)
-    
     # Retrieve the attribute description#
     # Special one required when creating a new experiment
     @app.route('/api/experiments/attributes', methods=['GET'])
@@ -455,6 +433,29 @@ def create_app(test_config=None):
             obsData = obsData +observations
         res = stat.polar(obsData)
         return jsonify(res)
-
+    
+    # get mean/freq for each attributes of observation along time
+    @app.route('/api/experiments/<int:experiment_id>/observation/timeline', methods=['GET'])
+    def get_observations_timeline(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        data = []
+        for sample in sampleData:
+            observations = db.get_observations(experiment_id, sample['sample_id'])
+            data = data +observations
+        df = pd.DataFrame(data)
+        df_augmented = stat.add_columns(df, 'observation')
+        attributes = db.get_attributes('observation', experiment_id)
+        res = stat.timelineAttributes(df_augmented, attributes)
+        return jsonify(res)
+    
+    # get all samples (fixed & custom attributes) for a given experiment     (object of column)
+    @app.route('/api/experiments/<int:experiment_id>/sample/timeline', methods=['GET'])
+    def get_samples_timeline(experiment_id):
+        sampleData = db.get_samples(experiment_id)
+        df = pd.DataFrame(sampleData)
+        df_augmented = stat.add_columns(df, 'sample')
+        attributes = db.get_attributes('sample', experiment_id)
+        res = stat.timelineAttributes(df_augmented, attributes)
+        return jsonify(res)
     return app
 

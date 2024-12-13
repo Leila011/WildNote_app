@@ -1,43 +1,41 @@
 import { createEffect } from "solid-js";
 import { LineChart } from "~/components/ui/charts";
+import { StatTimelineItem } from "~/types/db";
 import { getDate } from "~/utils/db";
 
 export default function Timeline(props: {
-  values: () => any[];
-  time: () => any[];
+  data: () =>  StatTimelineItem;
   name: string;
 }) {
-  const data = () =>({
-    datasets: [{ data: props.values() }],
-    labels: props.time().map((time) => getDate(time)),
-  });
-
-  const optionsCat =()=> ({
-    scales: {
-      y: {
-        type: 'category' as const,
-        labels: Array.from(new Set(props.values()))
-      },
-    },
-  })
-
-  const optionsNum = ()=>({
-    scales: {
-      y: {
-        type: 'category',
-      },
-    },
-  })
-
-  createEffect(() => {
-    console.log("Timeline", props.values(), props.time());
-  }
+  const data = () =>{
+    
+    const datasets = Object.keys(props.data().data).map((item) => {
+      const dataItem =props.data().data[item];
+      return({
+      label: item,
+      data: dataItem,
+      yAxisID: 'y'
+    })}
   );
+
+    return ({
+    datasets: datasets,
+    labels: props.data().dates.map(getDate),
+  })}
+
+  const options = {
+      responsive: true,
+      interaction: {
+        mode: 'index' as const,
+        intersect: false,
+      }     
+    }
+  
 
   return (
     <div>
         <div>
-          <LineChart  data={data()} options={typeof props.values()[0]==="string"?optionsCat(): optionsNum} />
+          <LineChart  data={data()} options={options}/>
         </div>
     </div>
   );

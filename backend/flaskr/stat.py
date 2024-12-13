@@ -201,3 +201,53 @@ def add_columns(df, level):
         df['duration'] = (df['timestamp_end'] - df['timestamp_start']).dt.total_seconds()
 
     return df
+
+def timelineAttributes(data, attributes):
+    '''add columns to the dataframe
+    '''
+
+    df = pd.DataFrame(data)
+    df_info = pd.DataFrame(attributes)
+    # add extra column for duration
+    new_row = {'name': 'duration', 'type': 'number'}
+    df_info_augmented = df_info.copy()
+    df_info_augmented.loc[len(df_info)] = new_row
+    df['date'] = df['timestamp_start'].dt.date
+
+    # convert to number whentype is number (dirty fix for type error in the mock data)
+    df_fixed = df.copy()
+    for index, row in df_info_augmented.iterrows():
+        if row.type == 'number':
+            # convert to number (dirty fix for type error in the mock data)
+            df_fixed[row['name']] = pd.to_numeric(df[row['name']])
+        else:
+            df_fixed[row['name']] = df[row['name']]
+
+    # group by date
+    grouped = df_fixed.groupby('date')
+
+    # generate all dates between the start and end date
+    start_date = df['date'].min()
+    end_date = df['date'].max()
+    all_dates = pd.date_range(start=start_date, end=end_date).date
+
+    res = {}
+    for index, row in df_info_augmented.iterrows():
+        if row['type'] == 'number':
+            res[row['name']] = {}
+            res[row['name']]['data'] = {}
+            res[row['name']]['data']['mean'] = grouped[row['name']].mean().reindex(all_dates, fill_value=0).fillna(0).tolist()
+            res[row['name']]['type'] = 'continuous'
+            res[row['name']]['dates'] = all_dates.tolist()
+
+        else:
+            value_counts = grouped[row['name']].value_counts(normalize=True).unstack(fill_value=0).reindex(all_dates, fill_value=0).fillna(0)
+            res[row['name']] = {}
+            res[row['name']]['data'] = {}
+
+            for value in value_counts.columns:
+                res[row['name']]['data'][value] = value_counts[value].tolist()
+            res[row['name']]['type'] = 'categorical'
+            res[row['name']]['dates'] = all_dates.tolist()
+    print(res)
+    return res

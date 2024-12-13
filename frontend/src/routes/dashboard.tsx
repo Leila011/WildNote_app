@@ -22,6 +22,7 @@ import {
   SampleDb,
   StatDescriptives,
   StatDescriptivesPlot,
+  StatTimeline,
 } from "~/types/db";
 import Heatmap from "~/components/dashboard/Heatmap";
 import { fetchCalendar } from "~/api/fetchCalendar";
@@ -31,7 +32,7 @@ import { fetchPlotPolar } from "~/api/fetchPlotPolar";
 import { PolarPlot } from "~/components/dashboard/PolarPlot";
 import { Heading } from "~/components/Heading";
 import { getDate } from "~/utils/db";
-import { fetchObservationsExperiment } from "~/api/fetchObservationsExperiment";
+import { fetchObservationsExperiment, fetchStatTimeline } from "~/api/fetchStatTimeline";
 import Timeline from "~/components/dashboard/Timeline";
 import { fetchSamplesColumns } from "~/api/fetchSamplesColumns";
 
@@ -41,9 +42,7 @@ export default function Dashboards() {
     { name: string; experiment_id: number }[]
   >(fetchExperimentsIdentification);
   const [experimentId, setExperimentId] = createSignal<number | undefined>(undefined); //! dev: change back to undefined
-  const [sampleVariable, setSampleVariable] = createSignal<string | undefined>(
-    undefined,
-  );
+  const [sampleVariable, setSampleVariable] = createSignal<string>("duration");
   const [obsVariable, setObsVariable] = createSignal<string | undefined>(
     undefined,
   );
@@ -94,16 +93,16 @@ export default function Dashboards() {
     fetchPlotPolar,
   );
 
-  const [sampleData] = createResource<Record<string,any[]>>(
+  const [sampleTimeline] = createResource<StatTimeline[]>(
     () =>
-      experimentId() && {experimentId: experimentId() },
-    fetchSamplesColumns,
+      experimentId() && {experimentId: experimentId(), level: "sample" },
+    fetchStatTimeline,
   );
 
-  const [obsData] = createResource<Record<string,any[]>>(
+  const [obsTimeline] = createResource<StatTimeline[]>(
     () =>
-      experimentId() && {experimentId: experimentId() },
-    fetchObservationsExperiment,
+      experimentId() && {experimentId: experimentId(), level: "observation" },
+    fetchStatTimeline,
   );
 
   createEffect(() => {
@@ -127,8 +126,8 @@ export default function Dashboards() {
     console.log("sampleVariable", sampleVariable());
     console.log("samplePolar", samplePolar());
     console.log("obsPolar", obsPolar());
-    console.log("sampleData", sampleData());
-    console.log("obsData", obsData());
+    console.log("sampleData", sampleTimeline());
+    console.log("obsData", obsTimeline());
     samplesStat() &&
       sampleVariable() &&
       console.log("stat sample var", samplesStat()[sampleVariable()!]);
@@ -302,10 +301,9 @@ export default function Dashboards() {
                   <CardTitle>Timeline</CardTitle>
                 </CardHeader>
               <CardContent>
-                {sampleData() && sampleVariable() && (
+                {sampleTimeline() && sampleVariable() && (
                   <Timeline
-                    values={() => sampleVariable() && sampleData()[sampleVariable()]}	
-                    time={()=> sampleData()["timestamp_start"]}
+                    data={() => sampleVariable() && sampleTimeline()[sampleVariable()]}	
                     name={sampleVariable()!}
                   />
                 )}
@@ -378,10 +376,9 @@ export default function Dashboards() {
                   <CardTitle>Timeline</CardTitle>
                 </CardHeader>
               <CardContent>
-                {obsData() && obsVariable() && (
+                {obsTimeline() && obsVariable() && (
                   <Timeline
-                    values={() =>obsVariable && obsData()[obsVariable()]}	
-                    time={()=> obsData()["timestamp_start"]}
+                    data={() =>obsVariable && obsTimeline()[obsVariable()]}	
                     name={obsVariable()!}
                   />
                 )}

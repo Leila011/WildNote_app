@@ -11,20 +11,16 @@ import {
 } from "~/components/ui/table";
 
 export function DescriptiveStatTable(props: { stats: () => StatDescriptives }) {
-  createEffect(() => {
-    console.log("DescriptiveStatTable", props.stats());
-  });
+
   return (
     <div>
       <Show when={props.stats()}>
         <div>
-          {" "}
           <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead class="w-[100px]"></TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Value</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
