@@ -120,12 +120,20 @@ export default function Dashboards() {
     }
   });
 
+  const title = () => {
+    if (!experimentData()) {
+      return <Heading class="py-4">No experiment selected</Heading>;
+    }
+    const to = experimentData().timestamp_end
+      ? `to ${getDate(experimentData().timestamp_end)}`
+      : "(ongoing)";
+    return <Heading class="py-4">{`${experimentData().name} (from ${getDate(experimentData().timestamp_start)} ${to})`}</Heading>
+  }
+  
   return (
     <div>
       <div class="flex flex-row justify-between items-baseline px-10">
-        {experimentData() && (
-          <Heading class="py-4">{`${experimentData().name} (from ${getDate(experimentData().timestamp_start)} to ${getDate(experimentData().timestamp_end) ?? "ongoing"})`}</Heading>
-        )}
+        {title()}
 
         <div>
           <DropdownMenu>
