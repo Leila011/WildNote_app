@@ -18,8 +18,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
   ExperimentDb,
   ExperimentStats,
-  ObservationDb,
-  SampleDb,
   StatDescriptives,
   StatDescriptivesPlot,
   StatTimeline,
@@ -33,11 +31,9 @@ import { PolarPlot } from "~/components/dashboard/PolarPlot";
 import { Heading } from "~/components/Heading";
 import { getDate } from "~/utils/db";
 import {
-  fetchObservationsExperiment,
   fetchStatTimeline,
 } from "~/api/fetchStatTimeline";
 import Timeline from "~/components/dashboard/Timeline";
-import { fetchSamplesColumns } from "~/api/fetchSamplesColumns";
 
 export default function Dashboards() {
   const [experiments] = createResource<
@@ -110,7 +106,7 @@ export default function Dashboards() {
 
   createEffect(() => {
     if (experiments()) {
-      setExperimentId(experiments()![0].experiment_id);
+      setExperimentId(experiments()![experiments()!.length-1].experiment_id);
     }
     if (obsStat() && !obsVariable()) {
       setObsVariable(Object.keys(obsStat())[0]);
