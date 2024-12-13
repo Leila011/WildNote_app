@@ -179,9 +179,6 @@ export default function About() {
                   a reactive JavaScript library ensuring a fast and interactive
                   user experience.
                 </div>
-                <ul class="ml-5">
-                  <li class="list-disc"></li>
-                </ul>
               </Card>
               <Card title="Tailwind CSS & Solid UI">
                 The UI is styled using a combination of:
@@ -197,6 +194,18 @@ export default function About() {
                       Solid UI
                     </a>
                     , which provide customizable UI components.
+                  </li>
+                  <li class="list-disc">
+                    <a href="https://solid-ui.com/" target="_blank">
+                    Apexcharts
+                    </a>
+                    , a library for charts (heatmap).
+                  </li>
+                  <li class="list-disc">
+                    <a href="https://solid-ui.com/" target="_blank">
+                    Chart.js
+                    </a>
+                    , a library for charts.
                   </li>
                 </ul>
               </Card>
