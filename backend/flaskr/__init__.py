@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, json, jsonify, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pandas as pd
 
@@ -31,6 +31,8 @@ def create_app(test_config=None):
 
     from . import db
     from . import stat
+    from . import utils
+
 
     # ??
     db.init_app(app)
@@ -365,7 +367,7 @@ def create_app(test_config=None):
         data = db.get_samples(experiment_id)
         attributes = db.get_attributes('sample', experiment_id)
         res = stat.descriptive_stat(data, attributes)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
         #get descriptive statistics for all attributes of a obs of an experiment
     @app.route('/api/experiments/<int:experiment_id>/observation/descriptiveStat', methods=['GET'])
@@ -377,7 +379,7 @@ def create_app(test_config=None):
             data = data +observations
         attributes = db.get_attributes('observation' , experiment_id)
         res = stat.descriptive_stat(data, attributes)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
     #get descriptive plot data for all attributes of observations of an experiment
     @app.route('/api/experiments/<int:experiment_id>/sample/descriptivePlot', methods=['GET'])
@@ -385,7 +387,7 @@ def create_app(test_config=None):
         data = db.get_samples(experiment_id)
         attributes = db.get_attributes('sample', experiment_id)
         res = stat.descriptive_plot(data, attributes)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
        #get descriptive plot data for all attributes of samples of an experiment
     @app.route('/api/experiments/<int:experiment_id>/observation/descriptivePlot', methods=['GET'])
@@ -397,7 +399,7 @@ def create_app(test_config=None):
             data = data +observations
         attributes = db.get_attributes('observation', experiment_id)
         res = stat.descriptive_plot(data, attributes)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
     @app.route('/api/experiment/<int:experiment_id>/stat', methods=['GET'])
     def get_experiment_stat(experiment_id):
@@ -409,19 +411,19 @@ def create_app(test_config=None):
             observations = db.get_observations(experiment_id, sample['sample_id'])
             obsData = obsData +observations
         res = stat.experiment_stat(experimentData, sampleData, obsData)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
     @app.route('/api/experiment/<int:experiment_id>/calendar', methods=['GET'])
     def get_experiment_calendar(experiment_id):
         sampleData = db.get_samples(experiment_id)
         res = stat.calendar(sampleData)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
     @app.route('/api/experiment/<int:experiment_id>/sample/polarPlot', methods=['GET'])
     def get_sample_polar(experiment_id):
         sampleData = db.get_samples(experiment_id)
         res = stat.polar(sampleData)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
     @app.route('/api/experiment/<int:experiment_id>/observation/polarPlot', methods=['GET'])
     def get_obs_polar(experiment_id):
@@ -432,7 +434,7 @@ def create_app(test_config=None):
             observations = db.get_observations(experiment_id, sample['sample_id'])
             obsData = obsData +observations
         res = stat.polar(obsData)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
     # get mean/freq for each attributes of observation along time
     @app.route('/api/experiments/<int:experiment_id>/observation/timeline', methods=['GET'])
@@ -446,7 +448,7 @@ def create_app(test_config=None):
         df_augmented = stat.add_columns(df, 'observation')
         attributes = db.get_attributes('observation', experiment_id)
         res = stat.timelineAttributes(df_augmented, attributes)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
     
     # get all samples (fixed & custom attributes) for a given experiment     (object of column)
     @app.route('/api/experiments/<int:experiment_id>/sample/timeline', methods=['GET'])
@@ -456,6 +458,7 @@ def create_app(test_config=None):
         df_augmented = stat.add_columns(df, 'sample')
         attributes = db.get_attributes('sample', experiment_id)
         res = stat.timelineAttributes(df_augmented, attributes)
-        return jsonify(res)
+        return jsonify(utils.replace_nan(res))
+        
     return app
 

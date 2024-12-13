@@ -5,7 +5,7 @@ import datetime
 experimentData = [{'experiment_id': 1, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 12, 1, 8, 0), 'timestamp_end': datetime.datetime(2024, 12, 1, 18, 0), 'name': 'Monkey Forest Study', 'description': 'Mock data of a study of money-human interactions in a monkey forest setting'}]
 sampleData = [{'sample_id': 1, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 0), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 10), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 2, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 15), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 25), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 3, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 30), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 40), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 4, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 45), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 55), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 5, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 9, 0), 'timestamp_end': datetime.datetime(2024, 1, 1, 9, 10), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 6, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 9, 15), 'timestamp_end': datetime.datetime(2024, 1, 1, 9, 25), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 7, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 9, 30), 'timestamp_end': datetime.datetime(2024, 1, 1, 9, 40), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 8, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 9, 45), 'timestamp_end': datetime.datetime(2024, 1, 1, 9, 55), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 9, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 10, 0), 'timestamp_end': datetime.datetime(2024, 1, 1, 10, 10), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}, {'sample_id': 10, 'status': 'completed', 'timestamp_start': datetime.datetime(2024, 1, 1, 10, 15), 'timestamp_end': datetime.datetime(2024, 1, 1, 10, 25), 'localisation': '3', 'weather': 'sun', 'group_size': '9', 'num_adult_men': '5', 'num_adult_women': '4', 'num_kids': '4'}]
 observationData =[{'observation_id': 1, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 0), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 3), 'sample_id': 1, 'status': 'completed', 'monkey_gender': 'Male', 'monkey_group': '1', 'monkey_health': 'good', 'monkey_age': 'adult', 'interaction': 'Aggressive level 1', 'visible_food': '1'}, {'observation_id': 2, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 3), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 6), 'sample_id': 1, 'status': 'completed', 'monkey_gender': 'Female', 'monkey_group': '2', 'monkey_health': 'good', 'monkey_age': 'teenage', 'interaction': 'Aggressive level 2', 'visible_food': '0'}, {'observation_id': 3, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 6), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 10), 'sample_id': 1, 'status': 'completed', 'monkey_gender': 'Male', 'monkey_group': '3', 'monkey_health': 'good', 'monkey_age': 'child', 'interaction': 'Physical contact', 'visible_food': '1'}, {'observation_id': 4, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 15), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 18), 'sample_id': 2, 'status': 'completed', 'monkey_gender': 'Female', 'monkey_group': '1', 'monkey_health': 'good', 'monkey_age': 'adult', 'interaction': 'Aggressive level 3', 'visible_food': '0'}, {'observation_id': 5, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 18), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 25), 'sample_id': 2, 'status': 'completed', 'monkey_gender': 'Male', 'monkey_group': '2', 'monkey_health': 'good', 'monkey_age': 'adult', 'interaction': 'Physical contact', 'visible_food': '1'}, {'observation_id': 6, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 30), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 33), 'sample_id': 3, 'status': 'completed', 'monkey_gender': 'Female', 'monkey_group': '3', 'monkey_health': 'good', 'monkey_age': 'teenage', 'interaction': 'Aggressive level 1', 'visible_food': '0'}, {'observation_id': 7, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 33), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 36), 'sample_id': 3, 'status': 'completed', 'monkey_gender': 'Male', 'monkey_group': '1', 'monkey_health': 'good', 'monkey_age': 'child', 'interaction': 'Aggressive level 2', 'visible_food': '1'}, {'observation_id': 8, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 36), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 40), 'sample_id': 3, 'status': 'completed', 'monkey_gender': 'Female', 'monkey_group': '2', 'monkey_health': 'good', 'monkey_age': 'adult', 'interaction': 'Physical contact', 'visible_food': '0'}, {'observation_id': 9, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 45), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 48), 'sample_id': 4, 'status': 'completed', 'monkey_gender': 'Male', 'monkey_group': '3', 'monkey_health': 'good', 'monkey_age': 'teenage', 'interaction': 'Aggressive level 3', 'visible_food': '1'}, {'observation_id': 10, 'timestamp_start': datetime.datetime(2024, 1, 1, 8, 48), 'timestamp_end': datetime.datetime(2024, 1, 1, 8, 55), 'sample_id': 4, 'status': 'completed', 'monkey_gender': 'Female', 'monkey_group': '1', 'monkey_health': 'good', 'monkey_age': 'adult', 'interaction': 'Aggressive level 1', 'visible_food': '0'}]
-
+samples = [{'sample_id': 114, 'timestamp_start': datetime.datetime(2023, 1, 1, 8, 0), 'timestamp_end': datetime.datetime(2023, 1, 1, 9, 0), 'experiment_id': 2, 'status': 'active', 'location': 'loc1', 'group': 'group1'}, {'sample_id': 115, 'timestamp_start': datetime.datetime(2023, 1, 1, 9, 0), 'timestamp_end': datetime.datetime(2023, 1, 1, 10, 0), 'experiment_id': 2, 'status': 'completed', 'location': 'loc2', 'group': 'group2'}, {'sample_id': 116, 'timestamp_start': datetime.datetime(2023, 1, 1, 10, 0), 'timestamp_end': datetime.datetime(2023, 1, 1, 11, 0), 'experiment_id': 2, 'status': 'active', 'location': 'loc3', 'group': 'group1'}, {'sample_id': 117, 'timestamp_start': datetime.datetime(2023, 1, 1, 11, 0), 'timestamp_end': datetime.datetime(2023, 1, 1, 12, 0), 'experiment_id': 2, 'status': 'completed', 'location': 'loc1', 'group': 'group2'}, {'sample_id': 118, 'timestamp_start': datetime.datetime(2023, 1, 1, 12, 0), 'timestamp_end': datetime.datetime(2023, 1, 1, 13, 0), 'experiment_id': 2, 'status': 'active', 'location': 'loc2', 'group': 'group1'}]
 def experiment_stat(experimentData, sampleData, observationData):
     ''' number of sample
         cumulative sample time
@@ -124,41 +124,65 @@ def calendar(samples):
     df['date'] = df['timestamp_start'].dt.date
     start_dt = df['date'].min()
     end_dt = df['date'].max()
+    date_range = pd.date_range(start=start_dt, end=end_dt, freq='d')
 
     # get range from a monday to a sunday
     start_dt_weekday_nb= start_dt.weekday() 
     end_dt_weekday_nb = end_dt.weekday()
-    start_dt_monday = start_dt if start_dt_weekday_nb == 0 else start_dt - pd.Timedelta(days=start_dt_weekday_nb)
-    end_dt_sunday = end_dt if end_dt_weekday_nb == 6 else end_dt + pd.Timedelta(days=6-end_dt_weekday_nb)
+    new_start_dt =  start_dt - pd.Timedelta(days=start_dt_weekday_nb)
+    start_dt_monday = new_start_dt if (start_dt_weekday_nb != 0 and new_start_dt.year == start_dt.year) else start_dt
+    new_end_dt = end_dt + pd.Timedelta(days=6 - end_dt_weekday_nb)
+    end_dt_sunday =  new_end_dt if (end_dt_weekday_nb != 6 and new_end_dt.year == end_dt.year) else end_dt
+    date_range = pd.date_range(start=start_dt_monday, end=end_dt_sunday, freq='d')
+    
+    # dates out of the study range
+    out_start = [] if start_dt_monday== start_dt else pd.date_range(start=start_dt_monday, end=start_dt, inclusive="left", freq='d').to_list()
+    out_end = [] if end_dt== end_dt_sunday else pd.date_range(start=end_dt, end=end_dt_sunday, inclusive="right", freq='d').to_list()
+    out_timestamp = out_start + out_end
+    out_dates = [date.date() for date in out_timestamp] 
 
     # Convert unique dates to ISO format strings
     #unique_dates_iso = [date.isoformat() for date in df['date'].unique()]
     dates_iso = [date.isoformat() for date in df['date']]
 
   # Initialize calendarData structure
-    unique_years = df['year'].unique()
+    unique_years =  date_range.year.unique()
     calendarData = {}
     for year in unique_years:
         calendarData[str(year)] = {
             "series": [{"name": day, "data": []} for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]]
         }
-
+    weekday_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     # loop through all dates in the range
-    while start_dt_monday <= end_dt_sunday:
-        year = start_dt_monday.year
-        nbSamples = dates_iso.count(start_dt_monday.isoformat())
-        weekdayNumber = start_dt_monday.weekday()  # Get the weekday as an integer (Monday=1, Sunday=7)
-        weekNumberYear = start_dt_monday.isocalendar().week  # Get the ISO week number
-        # add date to the serie coresponding to its weekday
-        res = {
-                'x': "W"+str(weekNumberYear),
-                'y': nbSamples
-            }
-        calendarData[str(year)]["series"][weekdayNumber]["data"].append(res)
+    res = {}
+    
+    # Loop through each day from start_date to end_date
+    current_date = start_dt_monday
+    while current_date <= end_dt_sunday:
+        day_str = weekday_names[current_date.weekday()]
+        week_number_str = "W" + str(current_date.isocalendar().week)
+        isOut = current_date in out_dates
+        # Count occurrences of the current day in days_iso
+        count = dates_iso.count(current_date.isoformat())
+        value = -1 if isOut else count
+        # Prepare the data structure
+        year = current_date.year
+        if year not in res:
+            res[year] = {"series": []}
 
-        start_dt_monday += pd.Timedelta(days=1) 
+        # Find the series for the current day_str
+        series = next((s for s in res[year]["series"] if s["name"] == day_str), None)
+        if not series:
+            series = {"name": day_str, "data": []}
+            res[year]["series"].append(series)
 
-    return calendarData
+        # Add the data point
+        series["data"].append({"x": week_number_str, "y": value})
+        
+        # Move to the next day
+        current_date += datetime.timedelta(days=1)
+    
+    return res
 
 def polar(data):
     '''clock data for polar plot
@@ -182,7 +206,6 @@ def polar(data):
         'keys': list(count_night.keys()),
         'values': list(count_night.values)
     }
-    
     
     return res
 

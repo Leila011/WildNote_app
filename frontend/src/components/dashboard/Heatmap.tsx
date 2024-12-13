@@ -1,10 +1,12 @@
 import { SolidApexCharts } from "solid-apexcharts";
+import { createEffect } from "solid-js";
 
 type HeatmapProps = {
   series: {
     name: string;
     data: { x: string; y: number }[];
   }[];
+  year: number;
 };
 
 const options = {
@@ -15,6 +17,13 @@ const options = {
         ranges: [
           {
             from: -1,
+            to: -1,
+            color: "white",
+            foreColor: undefined,
+            name: "not in study",
+          },
+          {
+            from: 0,
             to: 0,
             color: "grey",
             name: "no record",
@@ -23,7 +32,7 @@ const options = {
             from: 1,
             to: 1000,
             color: "#5db075",
-            name: "records (# observation sessions)",
+            name: "# observation sessions",
           },
         ],
       },
@@ -34,9 +43,15 @@ const options = {
   }
 };
 
-export default function Heatmap({ series }: HeatmapProps) {
+
+
+export default function Heatmap({ series, year }: HeatmapProps) {
+  createEffect(() => {
+    console.log("Heatmap", series);
+  })
   return (
     <div class="h-full">
+      <p>{year}</p>
       <SolidApexCharts
         type="heatmap"
         options={options}
