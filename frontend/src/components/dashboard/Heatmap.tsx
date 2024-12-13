@@ -10,24 +10,28 @@ type HeatmapProps = {
 const options = {
   plotOptions: {
     heatmap: {
+      enableShades: false,
       colorScale: {
         ranges: [
           {
             from: -1,
             to: 0,
             color: "grey",
-            name: "no days",
+            name: "no record",
           },
           {
             from: 1,
             to: 1000,
-            color: "#1b1532",
-            name: "sample",
+            color: "#5db075",
+            name: "records (# observation sessions)",
           },
         ],
       },
     },
-  },
+    
+  },yaxis: {
+    reversed: true,
+  }
 };
 
 export default function Heatmap({ series }: HeatmapProps) {
