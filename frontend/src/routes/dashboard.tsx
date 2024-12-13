@@ -177,9 +177,9 @@ export default function Dashboards() {
           <TabsTrigger value="datasanity">Data quality</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" class="bg-secondary p-4 rounded-md">
-          <div class="space-y-4">
-            <div class="flex flex-row space-x-4">
-              <div class='h-1/3'>
+          <div class="flex flex-row space-x-4">
+            <div class="flex flex-col space-y-4">
+              <div class=''>
               <Card class="bg-muted">
                 <CardHeader class="py-2">
                   <CardTitle>Goals</CardTitle>
@@ -194,7 +194,7 @@ export default function Dashboards() {
                 </CardContent>
               </Card>
               </div>
-              <div class='h-1/3'>
+              <div class=''>
               <Card class="bg-muted">
                 <CardHeader class="py-2">
                   <CardTitle>Calendar</CardTitle>
@@ -204,14 +204,17 @@ export default function Dashboards() {
                 </CardContent>
               </Card>
               </div>
+
+
+
             </div>
-            <div class="flex flex-row space-x-4 h-1/3">
-            <Card class="bg-muted">
+            <div class="flex flex-col space-y-4 w-full">
+            <Card class="bg-muted w-full">
                 <CardHeader class="py-2">
                   <CardTitle>Time</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div class="flex flex-row space-x-4">
+                <CardContent class="items-center">
+                  <div class="flex flex-col space-y-12">
                   {samplePolar() && (
                     <PolarPlot
                       data={() => samplePolar()}
@@ -228,6 +231,8 @@ export default function Dashboards() {
                   </div>
                 </CardContent>
               </Card>
+           
+           
             </div>
           </div>
         </TabsContent>
@@ -265,6 +270,9 @@ export default function Dashboards() {
           </div>
           <div class="flex flex-row space-x-4">
             <Card class="bg-muted">
+            <CardHeader class="py-2">
+                  <CardTitle>Metrics</CardTitle>
+                </CardHeader>
               <CardContent>
                 {samplesStat() && sampleVariable() && (
                   <DescriptiveStatTable
@@ -274,6 +282,9 @@ export default function Dashboards() {
               </CardContent>
             </Card>
             <Card class="bg-muted">
+            <CardHeader class="py-2">
+                  <CardTitle>Distribution</CardTitle>
+                </CardHeader>
               <CardContent>
                 {samplesPlot() && sampleVariable() && (
                   <DescriptiveStatPlot
@@ -284,6 +295,9 @@ export default function Dashboards() {
               </CardContent>
             </Card>
             <Card class="bg-muted">
+            <CardHeader class="py-2">
+                  <CardTitle>Timeline</CardTitle>
+                </CardHeader>
               <CardContent>
                 {sampleData() && sampleVariable() && (
                   <Timeline
@@ -332,6 +346,9 @@ export default function Dashboards() {
     
           <div class="flex flex-row space-x-4 ">
             <Card class="bg-muted">
+            <CardHeader class="py-2">
+                  <CardTitle>Metrics</CardTitle>
+                </CardHeader>
               <CardContent>
                 {obsStat() && obsVariable() && (
                   <DescriptiveStatTable
@@ -341,6 +358,9 @@ export default function Dashboards() {
               </CardContent>
             </Card>
             <Card class="bg-muted">
+            <CardHeader class="py-2">
+                  <CardTitle>Distribution</CardTitle>
+                </CardHeader>
               <CardContent>
                 {obsPlot() && obsVariable() && (
                   <DescriptiveStatPlot
@@ -350,10 +370,24 @@ export default function Dashboards() {
                 )}
               </CardContent>
             </Card>
+            <Card class="bg-muted">
+            <CardHeader class="py-2">
+                  <CardTitle>Timeline</CardTitle>
+                </CardHeader>
+              <CardContent>
+                {obsData() && obsVariable() && (
+                  <Timeline
+                    values={() => obsData()[obsVariable()!]}	
+                    time={()=> obsData()["timestamp_start"]}
+                    name={sampleVariable()!}
+                  />
+                )}
+              </CardContent>
+            </Card>
           </div>
           </div>
         </TabsContent>
-        <TabsContent value="datasanity"></TabsContent>
+        <TabsContent value="Subject"></TabsContent>
       </Tabs>
       </div>
     </div>
