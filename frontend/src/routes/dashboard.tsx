@@ -129,7 +129,7 @@ export default function Dashboards() {
       : "(ongoing)";
     return <Heading class="py-4">{`${experimentData().name} (from ${getDate(experimentData().timestamp_start)} ${to})`}</Heading>
   }
-  
+
   return (
     <div>
       <div class="flex flex-row justify-between items-baseline px-10">
@@ -152,7 +152,6 @@ export default function Dashboards() {
                 {(option) => (
                   <DropdownMenuItem
                     onSelect={() => {
-                      console.log("Selected", option);
                       setExperimentId(option.experiment_id);
                     }}
                   ></DropdownMenuItem>
@@ -253,7 +252,6 @@ export default function Dashboards() {
                       {(option) => (
                         <DropdownMenuItem
                           onSelect={() => {
-                            console.log("Selected", option);
                             setSampleVariable(option);
                           }}
                         >
@@ -328,7 +326,6 @@ export default function Dashboards() {
                       {(option) => (
                         <DropdownMenuItem
                           onSelect={() => {
-                            console.log("Selected", option);
                             setObsVariable(option);
                           }}
                         >

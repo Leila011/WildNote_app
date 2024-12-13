@@ -59,7 +59,6 @@ def descriptive_stat(data, attributes):
     # get desciptive statistics for each column of the data table
     for index, row in df_info.iterrows():
         # add missing value count
-        #description[row['name']['missing_values_nb']] = df.locdf[:,row['name']].isna().sum()
         if row.type == 'number':
             # convert to number (dirty fix for type error in the mock data)
             df[row['name']] = pd.to_numeric(df[row['name']])
@@ -147,9 +146,7 @@ def calendar(samples):
     # loop through all dates in the range
     while start_dt_monday <= end_dt_sunday:
         year = start_dt_monday.year
-        #hasSamples = start_dt_monday.isoformat() in (unique_dates_iso) # check if date has samples
         nbSamples = dates_iso.count(start_dt_monday.isoformat())
-        weekday = start_dt_monday.strftime("%A") # monday, tuesday, ...
         weekdayNumber = start_dt_monday.weekday()  # Get the weekday as an integer (Monday=1, Sunday=7)
         weekNumberYear = start_dt_monday.isocalendar().week  # Get the ISO week number
         # add date to the serie coresponding to its weekday
@@ -158,10 +155,8 @@ def calendar(samples):
                 'y': nbSamples
             }
         calendarData[str(year)]["series"][weekdayNumber]["data"].append(res)
-        #calendarData[year][weekdayNumber]["name"] = weekday
 
-        start_dt_monday += pd.Timedelta(days=1)  # Corrected: use pd.Timedelta to increment the date
-
+        start_dt_monday += pd.Timedelta(days=1) 
 
     return calendarData
 
@@ -249,5 +244,4 @@ def timelineAttributes(data, attributes):
                 res[row['name']]['data'][value] = value_counts[value].tolist()
             res[row['name']]['type'] = 'categorical'
             res[row['name']]['dates'] = all_dates.tolist()
-    print(res)
     return res

@@ -24,7 +24,6 @@ export function getTimePassed(start: number) {
 }
 
 export function getPercentageTimePassed(timePassed: number, duration: number) {
-  console.log("duration", Math.floor((timePassed / duration) * 100));
   return Math.floor((timePassed / duration) * 100);
 }
 

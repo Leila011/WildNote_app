@@ -91,9 +91,6 @@ export default function EncodingSample() {
         attributes: store,
       };
 
-      console.log(isAttributesValuesValid(dataOut.attributes));
-      console.log(dataOut.columns);
-
       const isNotRequired = experiment()?.predefine_subject
         ? undefined
         : ["subject_id"];
