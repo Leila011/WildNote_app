@@ -3,7 +3,7 @@ import { Attribute, AttributeValue } from "~/types/db";
 export function isAttributesValuesValid(attributes: AttributeValue[]): boolean {
   let ready = true;
   attributes.forEach((attribute: AttributeValue) => {
-    if (attribute.value === "" && attribute.required) {
+    if ((attribute.value === "") && attribute.required) {
       ready = false;
     }
   });
@@ -16,9 +16,11 @@ export function isColumnsValuesValid(
 ): boolean {
   let ready = true;
   Object.keys(columns).forEach((column: string) => {
+    console.log(column);
+    console.log(columns[column]);
     const isValid = columns[column] !== "" && columns[column] !== undefined;
-    const isRequired = notRequired?.includes(column);
-    if (isValid && isRequired) {
+    const isRequired = notRequired? notRequired?.includes(column): true
+    if (!isValid && isRequired) {
       ready = false;
     }
   });
