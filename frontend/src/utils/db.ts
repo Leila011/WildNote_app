@@ -16,10 +16,10 @@ export function columnToDb(data: Record<string, any>): Record<string, any> {
 }
 
 export function ExperimentToDb(data: Record<string, any>): Record<string, any> {
-  const cleanData = data;
+  const cleanData = JSON.parse(JSON.stringify(data));
   cleanData["duration"] = toSeconds(data.duration);
-  cleanData["samples_time_goal"] = toSeconds(data.duration);
-  cleanData["obs_time_goal"] = toSeconds(data.duration);
+  cleanData["samples_time_goal"] = toSeconds(data.samples_time_goal);
+  cleanData["obs_time_goal"] = toSeconds(data.obs_time_goal);
   return cleanData;
 }
 
