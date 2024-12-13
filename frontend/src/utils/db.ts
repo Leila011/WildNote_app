@@ -93,7 +93,6 @@ export const getDate = (timestamp: string) => {
   return date.toLocaleDateString("en-GB"); // "en-GB" locale for dd/mm/yy format
 };
 
-
 export function toAttributeValue(attributes: Attribute[]): AttributeValue[] {
   return attributes.map(
     (attribute: Attribute) =>

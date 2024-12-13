@@ -5,11 +5,11 @@ type Props = {
   experimentId: number;
   level: Level;
 };
-export async function fetchStatTimeline(
-  props: Props,
-): Promise<StatTimeline[]> {
+export async function fetchStatTimeline(props: Props): Promise<StatTimeline[]> {
   try {
-    const response = await fetch(`${backendUrl}/api/experiments/${props.experimentId}/${props.level}/timeline`);
+    const response = await fetch(
+      `${backendUrl}/api/experiments/${props.experimentId}/${props.level}/timeline`,
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to fetch timeline: ${response.statusText}`);

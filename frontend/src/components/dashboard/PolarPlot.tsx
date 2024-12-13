@@ -7,24 +7,17 @@ type Polar = {
   day: {
     keys: number[];
     values: number[];
-  }
+  };
   night: {
     keys: number[];
     values: number[];
-  }
+  };
 };
 
-export function PolarPlot(props: {
-  data: () => Polar;
-  level:Level
-}) {
-
-  const data = (input:  {
-    keys: number[];
-    values: number[];
-  }) => ({
+export function PolarPlot(props: { data: () => Polar; level: Level }) {
+  const data = (input: { keys: number[]; values: number[] }) => ({
     datasets: [{ data: input.values }],
-    labels: input.keys
+    labels: input.keys,
   });
 
   const options = {
@@ -52,37 +45,36 @@ export function PolarPlot(props: {
   };
   return (
     <div>
-        <Card>
-          <CardHeader>
-            <CardTitle>{props.level==="sample"? "Observation sessions":"Observations"}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="flex flex-row space-x-16 justify-center w-full h-44 mb-2">
-              <div class="flex flex-col items-center space-y-2">
-                <p>Day</p>
-                <div class="relative h-36">
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            {props.level === "sample" ? "Observation sessions" : "Observations"}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="flex flex-row space-x-16 justify-center w-full h-44 mb-2">
+            <div class="flex flex-col items-center space-y-2">
+              <p>Day</p>
+              <div class="relative h-36">
                 <PolarAreaChart
                   data={data(props.data().day)}
                   options={options}
                 />
-                 </div>
-
               </div>
+            </div>
 
-              <div class="flex flex-col items-center space-y-2 ">
-                <p>Night</p>
-                <div class="relative h-36">
-
+            <div class="flex flex-col items-center space-y-2 ">
+              <p>Night</p>
+              <div class="relative h-36">
                 <PolarAreaChart
                   data={data(props.data().night)}
                   options={options}
                 />
               </div>
-              </div>
-
             </div>
-          </CardContent>
-        </Card>     
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

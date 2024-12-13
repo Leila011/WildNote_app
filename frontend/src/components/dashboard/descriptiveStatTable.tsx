@@ -11,7 +11,6 @@ import {
 } from "~/components/ui/table";
 
 export function DescriptiveStatTable(props: { stats: () => StatDescriptives }) {
-
   return (
     <div>
       <Show when={props.stats()}>

@@ -133,7 +133,8 @@ export default function NewExperiment() {
             <div class="flex flex-row space-x-10">
               <div class="flex flex-row space-x-10 items-baseline">
                 <p>
-                  Do you want to set a target duration for the observation sessions?
+                  Do you want to set a target duration for the observation
+                  sessions?
                 </p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}

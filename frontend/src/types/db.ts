@@ -145,11 +145,10 @@ export type StatDescriptives = Record<string, any>;
 
 export type StatDescriptivesPlot = Record<string, any>;
 
-export type StatTimeline = Record<string, StatTimelineItem>
+export type StatTimeline = Record<string, StatTimelineItem>;
 
 export type StatTimelineItem = {
-  type: "categorical"|"continuous";
+  type: "categorical" | "continuous";
   dates: string[];
   data: Record<string, number[]>;
-}
-
+};
