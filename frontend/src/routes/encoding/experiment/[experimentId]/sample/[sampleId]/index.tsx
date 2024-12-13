@@ -167,7 +167,7 @@ export default function EncodingObservation() {
         </AlertDialog>
 
         <div class="flex flex-col space-y-2">
-          <div class="border border-primary rounded-md item-center bg-primary/10">
+          <div class="border border-primary rounded-md item-center bg-muted">
             {store.length && <Form store={store} setStore={setStore}></Form>}
           </div>
 

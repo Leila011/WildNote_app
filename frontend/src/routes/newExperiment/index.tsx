@@ -69,7 +69,6 @@ export default function NewExperiment() {
     const isReady =
       isAttributesValuesValid(dataOut.attributes) &&
       isColumnsValuesValid(dataOut.columns);
-
     if (isReady) {
       const response = await addNewExperiment({ data: dataOut });
       if (dataOut.columns.predefine_subject) {
@@ -85,7 +84,7 @@ export default function NewExperiment() {
       <Heading>New experiment</Heading>
 
       <div class="flex flex-col space-y-4">
-        <div class="border border-primary rounded-md item-center bg-primary/10 p-6">
+        <div class="border border-primary rounded-md item-center bg-muted p-6">
           <div class="flex flex-col space-y-8 px-5 pb-4">
             <div class="flex flex-row space-x-3 items-baseline">
               <p>Experiment name:</p>
@@ -110,7 +109,7 @@ export default function NewExperiment() {
               </TextField>
             </div>
             <div class="flex flex-row space-x-3 items-baseline">
-              <p>Do you want to predefine subjects?</p>
+              <p>Do you want to define reusable subjects?</p>
               <ToggleGroup
                 class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
                 value={experiment.predefine_subject!.toString()}
@@ -253,7 +252,7 @@ export default function NewExperiment() {
                 <Show when={hasObservationGoal()}>
                   <div class="flex flex-row space-x-24 -mt-7">
                     <div class="flex flex-col space-x-1 items-center">
-                      <p class="pb-6">Number of observation sessions</p>
+                      <p class="pb-6">Number of observations</p>
                       <NumberField
                         rawValue={experiment.obs_number_goal}
                         onRawValueChange={(e: any) => {
@@ -272,7 +271,7 @@ export default function NewExperiment() {
                       </NumberField>
                     </div>
                     <div class="flex flex-col space-x-1 items-center">
-                      <p>Cumulative observation session time</p>
+                      <p>Cumulative observations time</p>
                       <DurationForm
                         duration={experiment.obs_time_goal!}
                         setDuration={(

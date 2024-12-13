@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { createEffect, createResource, createSignal, For } from "solid-js";
+import { createEffect, createResource, createSignal, For, onMount } from "solid-js";
 import { fetchExperiment } from "~/api/fetchExperiment";
 import { Button } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
@@ -103,7 +103,7 @@ export default function Dashboards() {
     fetchStatTimeline,
   );
 
-  createEffect(() => {
+  onMount(() => {
     if (experiments()) {
       setExperimentId(experiments()![experiments()!.length-1].experiment_id);
     }

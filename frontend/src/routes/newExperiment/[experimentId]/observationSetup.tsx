@@ -42,7 +42,7 @@ export default function ObservationSetup() {
     <div class="container mx-auto">
       <Heading>New experiment / Observation's attributes</Heading>
       <div class="flex flex-col space-y-2">
-        <div class="border border-primary rounded-md item-center bg-primary/10">
+        <div class="border border-primary rounded-md item-center bg-muted">
           <FormNewAttribute store={store} setStore={setStore} />
         </div>
         <div class="flex flex-row space-x-1">

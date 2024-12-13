@@ -228,7 +228,7 @@ def get_experiments():
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end", "e.name", "duration", "samples_number_goal", "samples_time_goal", "obs_number_goal", "obs_time_goal"]
+    columns = ["e.experiment_id AS experiment_id", "status", "timestamp_start", "timestamp_end", "e.name", "duration", "samples_number_goal", "samples_time_goal", "obs_number_goal", "obs_time_goal", "predefine_subject"]
     for attribute in attribute_names:
         attribute_name = attribute['name']
         # Use double quotes to handle attribute names with spaces or special characters
@@ -356,11 +356,13 @@ def get_observations(experiment_id, sample_id):
     return rows
 
 def get_subjects(experiment_id):
-    """Retrieve all subjects from an experiment (attributes + values)"""
+    """Retrieve all subjects from an experiment (attributes + values)
+       ! return raw results, not jsonified    
+    """
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
-    # Fetch the distinct attribute names for non-custom subjects
+    # Fetch the distinct attribute names for non-custom observations
     attribute_names = db.execute(
         '''
         SELECT DISTINCT name
@@ -370,23 +372,24 @@ def get_subjects(experiment_id):
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["s.subject_id AS subject_id"]
+    columns = ["o.subject_id AS subject_id", "o.name", "o.timestamp_creation"]	
     for attribute in attribute_names:
         attribute_name = attribute['name']
-        columns.append(f"MAX(CASE WHEN sa.name = '{attribute_name}' THEN sav.value END) AS \"{attribute_name}\"")
+        columns.append(f"MAX(CASE WHEN oa.name = '{attribute_name}' THEN oav.value END) AS \"{attribute_name}\"")
 
     columns_str = ", ".join(columns)
+
     pivot_query = f"""
     SELECT {columns_str}
-    FROM subject s
-    LEFT JOIN subject_attributes sa ON s.experiment_id = sa.experiment_id
-    LEFT JOIN subject_attribute_values sav ON sa.subject_attributes_id = sav.attribute_id
-    WHERE s.experiment_id = ?
-    GROUP BY s.subject_id
+    FROM subject o
+    LEFT JOIN subject_attribute_values oav ON o.subject_id = oav.subject_id
+    LEFT JOIN subject_attributes oa ON oav.attribute_id = oa.subject_attributes_id
+    WHERE o.experiment_id = ?
+    GROUP BY o.subject_id
     """
 
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
-    return jsonify(rows)
+    return rows
 
 
 

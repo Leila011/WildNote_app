@@ -3,12 +3,15 @@ import {
   createResource,
   createSignal,
   For,
+  onMount,
   Show,
 } from "solid-js";
 import { fetchExperiments } from "~/api/fetchExperiments";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuGroupLabel,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
@@ -23,51 +26,59 @@ import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
 import { Heading } from "~/components/Heading";
 import { updateValue } from "~/api/updateValue";
-import { getTimestamp, toAttributeValue } from "~/utils/db";
+import {  getTimestamp, toAttributeValue } from "~/utils/db";
 import {
   isAttributesValuesValid,
   isColumnsValuesValid,
 } from "~/utils/dataValidation";
+import NewSubjectForm from "~/components/newItemsForm/NewSubjectForm";
+import { addNewSubject } from "~/api/addNewSubject";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
   const params = useParams();
 
   const [experiments] = createResource<ExperimentDb[]>(fetchExperiments);
-  const [experiment, setExperiment] = createSignal<ExperimentDb>();
-  const [subject, setSubject] = createSignal<SubjectDb>();
+  const [experiment, setExperiment] = createSignal<ExperimentDb|undefined>();
 
-  const [subjects, { refetch: refetchSubject }] = createResource<
-    SubjectDb[] | undefined
-  >(
-    () =>
-      experiment() &&
-      fetchSubjects({ experimentId: experiment()!.experiment_id }),
+  const [subjects] = createResource<SubjectDb[]>(
+    () => experiment() && { experimentId: experiment()!.experiment_id},
+    fetchSubjects
+  );
+  const [subject, setSubject] = createSignal<SubjectDb|undefined>();
+
+  const [data] = createResource<Metadata>(
+    () => experiment() && { experimentId: experiment()!.experiment_id,  level: "sample"},
+    fetchAttributeDescriptions
   );
 
-  const [data, { refetch: refetchAttributes }] = createResource<
-    Metadata | undefined
-  >(
-    () =>
-      experiment() &&
-      fetchAttributeDescriptions({
-        experimentId: experiment()!.experiment_id,
-        level: "sample",
-      }),
+  const [dataSubject] = createResource<Metadata>(
+    () => experiment() && { experimentId: experiment()!.experiment_id,  level: "subject"},
+    fetchAttributeDescriptions
   );
 
-  createEffect(() => {
-    if (experiment()) {
-      refetchSubject();
-      refetchAttributes();
+  const [name, setName] = createSignal<string>("");
+
+  onMount(() => {
+    // open the page for the last experiment
+    if (experiments() && !experiment()) {
+      setExperiment(experiments()![experiments()!.length-1]);
+    }
+    // set subject to the last one
+    if (subjects() && !subject()) {
+      setSubject(subjects()![subjects()!.length-1]);
     }
   });
 
   const [store, setStore] = createStore<AttributeValue[]>([]);
+  const [storeSubject, setStoreSubject] = createStore<AttributeValue[]>([]);
 
   createEffect(() => {
     if (data()) {
       setStore(toAttributeValue(data()!.attributes));
+    }
+    if (dataSubject()) {
+      setStoreSubject(toAttributeValue(dataSubject()!.attributes));
     }
   });
 
@@ -81,44 +92,70 @@ export default function EncodingSample() {
     }
   });
 
-  const handleSubmit = async () => {
-    if (experiment() && (experiment()?.predefine_subject ? subject() : true)) {
-      const dataOut = {
-        columns: {
-          subject_id: subject()?.subject_id ?? undefined,
-          timestamp_start: getTimestamp(),
-        },
-        attributes: store,
-      };
+  async function endSubject() {
+    const dataOut = {
+      attributes: store,
+      columns: { name: name(), timestamp_creation: getTimestamp() },
+    };
 
-      const isNotRequired = experiment()?.predefine_subject
-        ? undefined
-        : ["subject_id"];
-      const isReady =
-        isAttributesValuesValid(dataOut.attributes) &&
-        isColumnsValuesValid(dataOut.columns, isNotRequired);
+    const isReady =
+      isAttributesValuesValid(dataOut.attributes) &&
+      isColumnsValuesValid(dataOut.columns);
 
-      if (isReady) {
-        if (experiment()?.timestamp_start === null) {
-          updateValue({
-            level: "experiment",
-            column_name: "timestamp_start",
-            row_id: experiment()!.experiment_id,
-            value: getTimestamp(),
-          });
-        }
-        const response = await addNewSample({
-          data: dataOut,
-          experimentId: experiment()!.experiment_id,
+    if (isReady) {
+      const response = addNewSubject({
+        data: dataOut,
+        experimentId: Number(params.experimentId),
+      });
+      return response;
+    }
+  }
+
+  async function endSample() {
+    const dataOut = {
+      columns: {
+        subject_id: subject()?.subject_id ?? undefined,
+        timestamp_start: getTimestamp(),
+      },
+      attributes: store,
+    };
+
+    const isNotRequired = experiment()?.predefine_subject
+      ? undefined
+      : ["subject_id"];
+
+    const isReady =
+      isAttributesValuesValid(dataOut.attributes) &&
+      isColumnsValuesValid(dataOut.columns, isNotRequired);
+
+    if (isReady) {
+      if (experiment()?.timestamp_start === null) {
+        updateValue({
+          level: "experiment",
+          column_name: "timestamp_start",
+          row_id: experiment()!.experiment_id,
+          value: getTimestamp(),
         });
+      }
+      const response = await addNewSample({
+        data: dataOut,
+        experimentId: experiment()!.experiment_id,
+      });
+      return response;
+  }
+}
+  const handleSubmit = async () => {
+    if (experiment() && (experiment()?.predefine_subject ?? subject())) {
+      const responseSample =endSample()
+      const responseSubject =endSubject()
 
-        response.sample_id &&
+      responseSample.sample_id &&
           navigate(
             `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
           );
       }
     }
-  };
+  
 
   return (
     <div class="container mx-auto">
@@ -164,7 +201,7 @@ export default function EncodingSample() {
               </DropdownMenu>
             </div>
             <div>
-              <Show when={experiment() && subject.length}>
+              <Show when={subjects()&& subjects().length}>
                 <h1>Choose your subject:</h1>
                 <DropdownMenu>
                   <DropdownMenuTrigger
@@ -173,15 +210,31 @@ export default function EncodingSample() {
                     class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
                   >
                     <div class="flex-grow text-left">
-                      {!subject() ? "Pick your Subject" : subject()!.name}
+                      {subject() ? subject()!.name: 'None'}
                     </div>
                     <IconChevronDown />
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                  <DropdownMenuItem   onSelect={() => {
+                      
+                      setSubject(undefined);
+                    }}>
+                    <span>None</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuGroupLabel>
+                  <span>Existing subjects</span>
+
+                  </DropdownMenuGroupLabel>
+                  </DropdownMenuGroup>
+
+                  <DropdownMenuGroup>
                     <For each={subjects()}>
                       {(option) => (
                         <DropdownMenuItem
                           onSelect={() => {
+                      
                             setSubject(option);
                           }}
                         >
@@ -189,26 +242,41 @@ export default function EncodingSample() {
                         </DropdownMenuItem>
                       )}
                     </For>
+                  </DropdownMenuGroup>
                   </DropdownMenuContent>
+
                 </DropdownMenu>
               </Show>
             </div>
-          </div>
 
-          <Show when={experiment()}>
-            <div class="border border-primary rounded-md item-center bg-primary/10">
-              <h1>Fill out you observation session parameters</h1>
+          </div>
+          <div>
+              <Show when={experiment() && experiment()?.predefine_subject && !subject() && storeSubject.length}>
+              <h1>Add a new subject:</h1>
+                
+                {storeSubject.length &&<NewSubjectForm store={store} setStore={setStore} name={name} setName={setName}></NewSubjectForm>
+              }
+                </Show>
+            </div>
+            <div>
+          <Show when={experiment() && store.length}>
+          <h1>Fill out you observation session parameters</h1>
+            <div class="border border-primary rounded-md item-center bg-muted">
               {store.length && <Form store={store} setStore={setStore}></Form>}
             </div>
             <div>
-              <Button
+
+            </div>
+          </Show>
+          <div class="mt-4">
+          <Button
                 class={buttonVariants({ variant: "accent" })}
                 onClick={handleSubmit}
               >
                 Start an observation
               </Button>
-            </div>
-          </Show>
+              </div>
+          </div>
         </div>
       </div>
     </div>

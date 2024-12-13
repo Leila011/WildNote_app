@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "@solidjs/router";
-import { createEffect, createResource, createSignal } from "solid-js";
+import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Form } from "~/components/Form";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -17,6 +17,7 @@ import {
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { getTimestamp, toAttributeValue } from "~/utils/db";
 import { addNewSubject } from "~/api/addNewSubject";
+import NewSubjectForm from "~/components/newItemsForm/NewSubjectForm";
 
 export default function NewExperiment() {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ export default function NewExperiment() {
   const [store, setStore] = createStore<AttributeValue[]>([]);
   const [name, setName] = createSignal<string>("");
 
+  // Insure the button skip is present only for first subject
+  const [isFirst, setIsFirst] = createSignal<boolean>(true);
   async function endSubject() {
     const dataOut = {
       attributes: store,
@@ -53,13 +56,19 @@ export default function NewExperiment() {
     response && navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
   };
 
+  const handleSubmitSkip = async () => {
+    navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
+  };
+
   const handleSubmitNext = async () => {
     const response = await endSubject();
 
     if (response) {
       // reset the stores (this vaoid a=having to refetch everything)
       setStore(toAttributeValue(data()!.attributes));
-      navigate(`/newExperiment/${params.experimentId}/subjectSetup`);
+      setName("");
+      setIsFirst(false);
+      navigate(`/newExperiment/${params.experimentId}/newSubject`);
     }
   };
 
@@ -74,29 +83,7 @@ export default function NewExperiment() {
       <Heading>New experiment / New Subject</Heading>
 
       <div class="flex flex-col space-y-2">
-        <div class="border border-primary rounded-md item-center bg-primary/10 p-6">
-          <div class="flex flex-col space-y-6 px-5 pb-4">
-            <div class="flex flex-row space-x-3 items-baseline">
-              <p>Subject name:</p>
-              <TextField
-                value={name()}
-                onChange={(e: any) => {
-                  setName(e);
-                }}
-                validationState={name() !== "" && name() ? "valid" : "invalid"}
-              >
-                <TextFieldInput
-                  type={"text"}
-                  class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                />
-                <TextFieldErrorMessage>
-                  This parameter is required, a value must be given.
-                </TextFieldErrorMessage>
-              </TextField>
-            </div>
-          </div>
-          {store && <Form store={store} setStore={setStore}></Form>}
-        </div>
+      <NewSubjectForm store={store} setStore={setStore} name={name} setName={setName}></NewSubjectForm>
         <div class="flex flex-row space-x-1">
           <Button
             class={buttonVariants({ variant: "accent" })}
@@ -110,6 +97,14 @@ export default function NewExperiment() {
           >
             Next
           </Button>
+          <Show when={isFirst()}>
+          <Button
+            class={buttonVariants({ variant: "outline" })}
+            onClick={handleSubmitSkip}
+          >
+            Skip
+          </Button>
+          </Show>
         </div>
       </div>
     </div>
