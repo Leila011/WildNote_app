@@ -133,7 +133,7 @@ export default function NewExperiment() {
             <div class="flex flex-row space-x-10">
               <div class="flex flex-row space-x-10 items-baseline">
                 <p>
-                  Do you want to set a duration for the observation sessions:
+                  Do you want to set a target duration for the observation sessions?
                 </p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
@@ -168,7 +168,7 @@ export default function NewExperiment() {
             </div>
             <div class="flex flex-row space-x-10 pt-16">
               <div class="flex flex-row space-x-10 items-baseline">
-                <p>Do you want to set goals for the observation sessions:</p>
+                <p>Do you want to set goals for the observation sessions?</p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
                   value={hasSampleGoal().toString()}
@@ -190,7 +190,7 @@ export default function NewExperiment() {
               </div>
 
               <div class="-m-5 items-end">
-                <Show when={hasSampleGoal()}>
+                <Show when={hasObservationGoal()}>
                   <div class="flex flex-row space-x-24 -mt-7">
                     <div class="flex flex-col space-x-1 items-center">
                       <p class="pb-6">Number of observation sessions</p>
@@ -227,7 +227,7 @@ export default function NewExperiment() {
             </div>
             <div class="flex flex-row space-x-10 pt-16">
               <div class="flex flex-row space-x-10 items-baseline">
-                <p>Do you want to set goals for the observations:</p>
+                <p>Do you want to set goals for the observations?</p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
                   value={hasObservationGoal().toString()}
@@ -254,7 +254,7 @@ export default function NewExperiment() {
                     <div class="flex flex-col space-x-1 items-center">
                       <p class="pb-6">Number of observation sessions</p>
                       <NumberField
-                        rawValue={experiment.samples_number_goal}
+                        rawValue={experiment.obs_number_goal}
                         onRawValueChange={(e: any) => {
                           const value = Number.isNaN(e) ? null : e;
                           setExperiment("obs_number_goal", value);
