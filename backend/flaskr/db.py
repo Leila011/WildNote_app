@@ -30,9 +30,9 @@ def init_db():
         db.executescript(f.read().decode('utf8'))
 
 # Fill the database with mock data
-def populate_mock():
+def populate_mock(mock_name):
     db = get_db()
-    with current_app.open_resource('mock-large.sql') as f:
+    with current_app.open_resource(mock_name) as f:
         db.executescript(f.read().decode('utf8'))
     db.commit()
 
@@ -42,7 +42,9 @@ def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
     click.echo('Initialized the database.')
-    populate_mock()
+    populate_mock('mock-large.sql')
+    click.echo('Populated the database with mock data.')
+    populate_mock('mock-subjects.sql')
     click.echo('Populated the database with mock data.')
 
 # Register the database functions with the application
