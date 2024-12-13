@@ -289,7 +289,7 @@ def get_samples(experiment_id):
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
 
-    # Fetch the distinct attribute names for non-custom samples
+    # Fetch the distinct attribute names for non-custom observations
     attribute_names = db.execute(
         '''
         SELECT DISTINCT name
@@ -299,19 +299,20 @@ def get_samples(experiment_id):
     ).fetchall()
 
     # Generate the pivot query
-    columns = ["s.sample_id AS sample_id", "status", "timestamp_start", "timestamp_end"]
+    columns = ["o.sample_id AS sample_id", "o.timestamp_start", "o.timestamp_end", "o.experiment_id", "o.status"]	
     for attribute in attribute_names:
         attribute_name = attribute['name']
-        columns.append(f"MAX(CASE WHEN sa.name = '{attribute_name}' THEN sav.value END) AS \"{attribute_name}\"")
+        columns.append(f"MAX(CASE WHEN oa.name = '{attribute_name}' THEN oav.value END) AS \"{attribute_name}\"")
 
     columns_str = ", ".join(columns)
+
     pivot_query = f"""
     SELECT {columns_str}
-    FROM sample s
-    LEFT JOIN sample_attributes sa ON s.experiment_id = sa.experiment_id
-    LEFT JOIN sample_attribute_values sav ON sa.sample_attributes_id = sav.attribute_id
-    WHERE s.experiment_id = ?
-    GROUP BY s.sample_id
+    FROM sample o
+    LEFT JOIN sample_attribute_values oav ON o.sample_id = oav.sample_id
+    LEFT JOIN sample_attributes oa ON oav.attribute_id = oa.sample_attributes_id
+    WHERE o.experiment_id = ?
+    GROUP BY o.sample_id, o.timestamp_start, o.timestamp_end, o.experiment_id, o.status
     """
 
     rows = db.execute(pivot_query, (experiment_id,)).fetchall()
