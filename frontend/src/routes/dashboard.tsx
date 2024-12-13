@@ -43,9 +43,8 @@ export default function Dashboards() {
     undefined,
   );
   const [sampleVariable, setSampleVariable] = createSignal<string>("duration");
-  const [obsVariable, setObsVariable] = createSignal<string | undefined>(
-    undefined,
-  );
+  const [obsVariable, setObsVariable] = createSignal<string>("duration");
+  
   const [experimentData] = createResource<ExperimentDb>(
     () => experimentId() && { experimentId: experimentId() },
     fetchExperiment,
