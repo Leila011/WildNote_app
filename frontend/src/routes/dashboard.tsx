@@ -169,7 +169,7 @@ export default function Dashboards() {
               Observation sessions
             </TabsTrigger>
             <TabsTrigger value="overview-obs">Observations</TabsTrigger>
-            <TabsTrigger value="datasanity">Data quality</TabsTrigger>
+            <TabsTrigger value="subject">Subject</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" class="bg-secondary p-4 rounded-md">
             <div class="flex flex-row space-x-4">
@@ -192,7 +192,7 @@ export default function Dashboards() {
                 <div class="">
                   <Card class="bg-muted">
                     <CardHeader class="py-2">
-                      <CardTitle>Calendar</CardTitle>
+                      <CardTitle>Calendar of the observation sessions</CardTitle>
                     </CardHeader>
                     <CardContent>
                       {calendar() && (
@@ -205,7 +205,7 @@ export default function Dashboards() {
               <div class="flex flex-col space-y-4 w-full">
                 <Card class="bg-muted w-full pb-1">
                   <CardHeader class="py-2">
-                    <CardTitle>Time</CardTitle>
+                    <CardTitle>Distribution of the records accross hours</CardTitle>
                   </CardHeader>
                   <CardContent class="items-center">
                     <div class="flex flex-col space-y-6">
@@ -379,7 +379,7 @@ export default function Dashboards() {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="Subject"></TabsContent>
+          <TabsContent value="subject"></TabsContent>
         </Tabs>
       </div>
     </div>
