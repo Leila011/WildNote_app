@@ -1,5 +1,5 @@
 import { backendUrl } from "~/db";
-import { Level, StatDescriptivesPlot } from "~/types/db";
+import { Level, StatPolar } from "~/types/db";
 
 type Props = {
   level: Level;
@@ -7,7 +7,7 @@ type Props = {
 };
 export async function fetchPlotPolar(
   props: Props,
-): Promise<StatDescriptivesPlot> {
+): Promise<StatPolar> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiment/${props.experimentId}/${props.level}/polarPlot`,

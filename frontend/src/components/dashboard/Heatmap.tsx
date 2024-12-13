@@ -19,7 +19,6 @@ const options = {
             from: -1,
             to: -1,
             color: "white",
-            foreColor: undefined,
             name: "not in study",
           },
           {

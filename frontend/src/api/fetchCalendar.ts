@@ -1,10 +1,10 @@
 import { backendUrl } from "~/db";
-import { ExperimentDb } from "~/types/db";
+import { ExperimentDb, StatCalendar } from "~/types/db";
 
 type Props = {
   experimentId: number;
 };
-export async function fetchCalendar(props: Props): Promise<any> {
+export async function fetchCalendar(props: Props): Promise<StatCalendar[]> {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiment/${props.experimentId}/calendar`,
