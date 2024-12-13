@@ -41,7 +41,7 @@ export default function Dashboards() {
   const [experiments] = createResource<
     { name: string; experiment_id: number }[]
   >(fetchExperimentsIdentification);
-  const [experimentId, setExperimentId] = createSignal<number | undefined>(undefined); //! dev: change back to undefined
+  const [experimentId, setExperimentId] = createSignal<number | undefined>(undefined); 
   const [sampleVariable, setSampleVariable] = createSignal<string>("duration");
   const [obsVariable, setObsVariable] = createSignal<string | undefined>(
     undefined,
@@ -115,22 +115,6 @@ export default function Dashboards() {
     if (samplesStat() && !sampleVariable()) {
       setSampleVariable(Object.keys(samplesStat())[0]);
     }
-    console.log("experimentData", experimentData());
-    console.log("experimentStat", experimentStat());
-    console.log("samplesStat", samplesStat());
-    console.log("ObsStat", obsStat());
-    console.log("samplesPlot", samplesPlot());
-    console.log("ObsPlot", obsPlot());
-    console.log("calendar", calendar());
-    console.log("obsVariable", obsVariable());
-    console.log("sampleVariable", sampleVariable());
-    console.log("samplePolar", samplePolar());
-    console.log("obsPolar", obsPolar());
-    console.log("sampleData", sampleTimeline());
-    console.log("obsData", obsTimeline());
-    samplesStat() &&
-      sampleVariable() &&
-      console.log("stat sample var", samplesStat()[sampleVariable()!]);
   });
 
   return (
@@ -211,12 +195,12 @@ export default function Dashboards() {
 
             </div>
             <div class="flex flex-col space-y-4 w-full">
-            <Card class="bg-muted w-full">
+            <Card class="bg-muted w-full pb-1">
                 <CardHeader class="py-2">
                   <CardTitle>Time</CardTitle>
                 </CardHeader>
                 <CardContent class="items-center">
-                  <div class="flex flex-col space-y-12">
+                  <div class="flex flex-col space-y-6">
                   {samplePolar() && (
                     <PolarPlot
                       data={() => samplePolar()}
@@ -232,9 +216,7 @@ export default function Dashboards() {
                   )}
                   </div>
                 </CardContent>
-              </Card>
-           
-           
+              </Card>           
             </div>
           </div>
         </TabsContent>
@@ -271,7 +253,7 @@ export default function Dashboards() {
             </DropdownMenu>
           </div>
           <div class="flex flex-row space-x-4">
-            <Card class="bg-muted">
+            <Card class="bg-muted w-full">
             <CardHeader class="py-2">
                   <CardTitle>Metrics</CardTitle>
                 </CardHeader>
@@ -346,7 +328,7 @@ export default function Dashboards() {
             
     
           <div class="flex flex-row space-x-4 ">
-            <Card class="bg-muted">
+            <Card class="bg-muted w-full">
             <CardHeader class="py-2">
                   <CardTitle>Metrics</CardTitle>
                 </CardHeader>
