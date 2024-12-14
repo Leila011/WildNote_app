@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { createEffect, createResource, createSignal, For, onMount } from "solid-js";
+import { batch, createEffect, createResource, createSignal, For, onMount, Show } from "solid-js";
 import { fetchExperiment } from "~/api/fetchExperiment";
 import { Button } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
@@ -18,8 +18,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
   ExperimentDb,
   ExperimentStats,
+  StatCalendar,
   StatDescriptives,
   StatDescriptivesPlot,
+  StatPolar,
   StatTimeline,
 } from "~/types/db";
 import Heatmap from "~/components/dashboard/Heatmap";
@@ -44,67 +46,69 @@ export default function Dashboards() {
   );
   const [sampleVariable, setSampleVariable] = createSignal<string>("duration");
   const [obsVariable, setObsVariable] = createSignal<string>("duration");
-  
+	const [selectedTab, setSelectedTab] = createSignal<string>("overview");
+
   const [experimentData] = createResource<ExperimentDb>(
-    () => experimentId() && { experimentId: experimentId() },
-    fetchExperiment,
+    () => experimentId() ? { experimentId: experimentId() } : undefined,
+    fetchExperiment
   );
+
 
   // fetch stat and plot data
   // typescript is not happy but the reason is weird and it works
   const [experimentStat] = createResource<ExperimentStats>(
-    () => experimentId() && { experimentId: experimentId() },
-    fetchStatExperiment,
+    () => experimentId() ? { experimentId: experimentId() } : undefined,
+    fetchStatExperiment
   );
+  
   const [samplesStat] = createResource<StatDescriptives>(
-    () => experimentId() && { level: "sample", experimentId: experimentId() },
-    fetchStatDescriptives,
+    () => experimentId() ? { level: "sample", experimentId: experimentId() } : undefined,
+    fetchStatDescriptives
   );
+  
   const [obsStat] = createResource<StatDescriptives>(
-    () =>
-      experimentId() && { level: "observation", experimentId: experimentId() },
-    fetchStatDescriptives,
+    () => experimentId() ? { level: "observation", experimentId: experimentId() } : undefined,
+    fetchStatDescriptives
   );
+  
   const [samplesPlot] = createResource<StatDescriptivesPlot>(
-    () => experimentId() && { level: "sample", experimentId: experimentId() },
-    fetchPlotDescriptives,
+    () => experimentId() ? { level: "sample", experimentId: experimentId() } : undefined,
+    fetchPlotDescriptives
   );
-
+  
   const [obsPlot] = createResource<StatDescriptivesPlot>(
-    () =>
-      experimentId() && { level: "observation", experimentId: experimentId() },
-    fetchPlotDescriptives,
+    () => experimentId() ? { level: "observation", experimentId: experimentId() } : undefined,
+    fetchPlotDescriptives
   );
-
-  const [calendar] = createResource<any>(
-    () => experimentId() && { experimentId: experimentId() },
-    fetchCalendar,
+  
+  const [calendar] = createResource<StatCalendar[]>(
+    () => experimentId() ? { experimentId: experimentId() } : undefined,
+    fetchCalendar
   );
-
-  const [samplePolar] = createResource<any>(
-    () => experimentId() && { level: "sample", experimentId: experimentId() },
-    fetchPlotPolar,
+  
+  const [samplePolar] = createResource<StatPolar>(
+    () => experimentId() ? { level: "sample", experimentId: experimentId() } : undefined,
+    fetchPlotPolar
   );
-
-  const [obsPolar] = createResource<any>(
-    () =>
-      experimentId() && { level: "observation", experimentId: experimentId() },
-    fetchPlotPolar,
+  
+  const [obsPolar] = createResource<StatPolar>(
+    () => experimentId() ? { level: "observation", experimentId: experimentId() } : undefined,
+    fetchPlotPolar
   );
-
+  
   const [sampleTimeline] = createResource<StatTimeline[]>(
-    () => experimentId() && { experimentId: experimentId(), level: "sample" },
-    fetchStatTimeline,
+    () => experimentId() ? { experimentId: experimentId(), level: "sample" } : undefined,
+    fetchStatTimeline
   );
-
+  
   const [obsTimeline] = createResource<StatTimeline[]>(
-    () =>
-      experimentId() && { experimentId: experimentId(), level: "observation" },
-    fetchStatTimeline,
+    () => experimentId() ? { experimentId: experimentId(), level: "observation" } : undefined,
+    fetchStatTimeline
   );
-
-  onMount(() => {
-    if (experiments()) {
+  
+  createEffect(() => {
+    if (experiments() && !experimentId()) {  
+    
       setExperimentId(experiments()![experiments()!.length-1].experiment_id);
     }
     if (obsStat() && !obsVariable()) {
@@ -113,22 +117,34 @@ export default function Dashboards() {
     if (samplesStat() && !sampleVariable()) {
       setSampleVariable(Object.keys(samplesStat())[0]);
     }
-  });
-
-  const title = () => {
-    if (!experimentData()) {
-      return <Heading class="py-4">No experiment selected</Heading>;
+    if(samplePolar()){
+      setSamplePolarData(samplePolar());
+    } 
+    if(obsPolar()){
+      setObsPolarData(obsPolar());
     }
+   
+  });
+  // fix for the polar plot diseapearing on data change
+  // set to undefined when user change the experience to force the component to rerender
+  const [samplePolarData, setSamplePolarData] = createSignal<StatPolar>();
+  const [obsPolarData, setObsPolarData] = createSignal<StatPolar>();
+
+  const [title, setTitle] = createSignal<string>("No experiment selected");
+
+  createEffect(() => {
+    if (experimentData()) {
     const to = experimentData().timestamp_end
       ? `to ${getDate(experimentData().timestamp_end)}`
       : "(ongoing)";
-    return <Heading class="py-4">{`${experimentData().name} (from ${getDate(experimentData().timestamp_start)} ${to})`}</Heading>
-  }
+    setTitle(`${experimentData().name} (from ${getDate(experimentData().timestamp_start)} ${to})`)
+    }
+})
 
   return (
     <div>
       <div class="flex flex-row justify-between items-baseline px-10">
-        {title()}
+        <Heading class="py-4">{title()}</Heading>
 
         <div>
           <DropdownMenu>
@@ -147,9 +163,18 @@ export default function Dashboards() {
                 {(option) => (
                   <DropdownMenuItem
                     onSelect={() => {
+                      batch(() => {
+                      setObsPolarData(undefined);
+                      setSamplePolarData(undefined);
+
                       setExperimentId(option.experiment_id);
+                      setSelectedTab("overview");
+                      })
+
                     }}
-                  ></DropdownMenuItem>
+                  >
+                    <span>{option.name}</span>
+                  </DropdownMenuItem>
                 )}
               </For>
             </DropdownMenuContent>
@@ -157,7 +182,7 @@ export default function Dashboards() {
         </div>
       </div>
       <div class="px-4">
-        <Tabs defaultValue="overview" class="w-full  rounded-md">
+        <Tabs defaultValue="overview" class="w-full  rounded-md" value={selectedTab()} onChange={setSelectedTab}>
           <TabsList class="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="overview-sample">
@@ -175,12 +200,17 @@ export default function Dashboards() {
                       <CardTitle>Goals</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      {experimentData() && experimentStat() && (
-                        <GoalsCard
-                          experiment={experimentData()!}
-                          stat={experimentStat()!}
+                                        <Show 
+                      when={ experimentData() &&experimentStat()} 
+                      fallback={<div>Loading experiment statistics...</div>}
+                    >
+                      {(stat) => (
+                        <GoalsCard 
+                          experiment={experimentData()!} 
+                          stat={stat()} 
                         />
                       )}
+                    </Show>
                     </CardContent>
                   </Card>
                 </div>
@@ -190,9 +220,21 @@ export default function Dashboards() {
                       <CardTitle>Calendar of the observation sessions</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      {calendar() && (
-                        <Heatmap series={calendar()["2024"].series} />
-                      )}
+         <Show 
+  when={calendar()} 
+  fallback={<div>Loading calendar data...</div>}
+>
+  {(data) => (
+    <For each={Object.keys(data())}>
+      {(year) => (
+        <Heatmap 
+          series={data()[Number(year)].series} 
+          year={Number(year)} 
+        />
+      )}
+    </For>
+  )}
+</Show>
                     </CardContent>
                   </Card>
                 </div>
@@ -204,19 +246,19 @@ export default function Dashboards() {
                   </CardHeader>
                   <CardContent class="items-center">
                     <div class="flex flex-col space-y-6">
-                      {samplePolar() && (
-                        <PolarPlot
-                          data={() => samplePolar()}
-                          level={"sample"}
-                        />
-                      )}
 
-                      {obsPolar() && (
-                        <PolarPlot
-                          data={() => obsPolar()}
-                          level={"observation"}
-                        />
-                      )}
+
+                        <div>
+                    <Show when={samplePolarData()} fallback={<div>Loading...</div>}>
+  {(data) => <PolarPlot data={data} level="sample" />}
+</Show>
+</div>
+<div>
+<Show when={obsPolarData()} fallback={<div>Loading...</div>}>
+  {(data) => <PolarPlot data={data} level="observation"/>}
+</Show>
+                      
+                    </div>
                     </div>
                   </CardContent>
                 </Card>
