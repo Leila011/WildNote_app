@@ -16,8 +16,7 @@ export function isColumnsValuesValid(
 ): boolean {
   let ready = true;
   Object.keys(columns).forEach((column: string) => {
-    console.log(column);
-    console.log(columns[column]);
+
     const isValid = columns[column] !== "" && columns[column] !== undefined;
     const isRequired = notRequired? notRequired?.includes(column): true
     if (!isValid && isRequired) {
@@ -31,6 +30,9 @@ export function isAttributesDefValid(attributes: Attribute[]): boolean {
   let ready = true;
   attributes.forEach((attribute: Attribute) => {
     if (attribute.name === "") {
+      ready = false;
+    }
+    if (attribute.choices.includes("")) {
       ready = false;
     }
   });

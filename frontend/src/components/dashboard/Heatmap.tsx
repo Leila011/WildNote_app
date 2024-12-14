@@ -45,9 +45,6 @@ const options = {
 
 
 export default function Heatmap({ series, year }: HeatmapProps) {
-  createEffect(() => {
-    console.log("Heatmap", series);
-  })
   return (
     <div class="h-full">
       <p>{year}</p>

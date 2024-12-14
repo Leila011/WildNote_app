@@ -146,12 +146,14 @@ export default function EncodingSample() {
 }
   const handleSubmit = async () => {
     if (experiment() && (experiment()?.predefine_subject ?? subject())) {
-      const responseSample =endSample()
-      const responseSubject =endSubject()
+      const responseSample = await endSample()
 
+      if(experiment()?.predefine_subject){
+      const responseSubject = await endSubject()
+      }
       responseSample.sample_id &&
           navigate(
-            `/encoding/experiment/${experiment()!.experiment_id}/sample/${response.sample_id}`,
+            `/encoding/experiment/${experiment()!.experiment_id}/sample/${responseSample.sample_id}`,
           );
       }
     }

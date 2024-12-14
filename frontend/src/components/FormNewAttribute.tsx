@@ -208,7 +208,7 @@ export function FormNewAttribute(props: Props) {
                             : "invalid"
                         }
                         onChange={(e: any) => {
-                          const value = e === "" ? null : e;
+                          const value = e 
                           setStore([index], "choices", choiceIndex, value);
                         }}
                       >
@@ -227,7 +227,7 @@ export function FormNewAttribute(props: Props) {
                 </Index>
 
                 </div>
-                <Button onClick={() => handleAddChoice(index)}>
+                <Button class={`${store[index].choices.length? "mt-2":""}`} onClick={() => handleAddChoice(index)}>
                   Add a new choice
                 </Button>
               </div>
