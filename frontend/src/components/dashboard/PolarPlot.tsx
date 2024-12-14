@@ -1,4 +1,4 @@
-import { createEffect, Show } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 import { PolarAreaChart } from "~/components/ui/charts";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Level } from "~/types/db";
@@ -15,7 +15,7 @@ type Polar = {
 };
 
 export function PolarPlot(props: { data: () => Polar; level: Level }) {
-  const data = (input: { keys: number[]; values: number[] }) => ({
+  const dataFormat = (input: { keys: number[]; values: number[] }) => ({
     datasets: [{ data: input.values }],
     labels: input.keys,
   });
@@ -45,7 +45,8 @@ export function PolarPlot(props: { data: () => Polar; level: Level }) {
   };
   return (
     <div>
-      <Card>
+      {(
+      <Card >
         <CardHeader>
           <CardTitle>
             {props.level === "sample" ? "Observation sessions" : "Observations"}
@@ -56,25 +57,28 @@ export function PolarPlot(props: { data: () => Polar; level: Level }) {
             <div class="flex flex-col items-center space-y-2">
               <p>Day</p>
               <div class="relative h-36">
-                <PolarAreaChart
-                  data={data(props.data().day)}
+              {props.data() &&  <PolarAreaChart
+                  data={dataFormat(props.data().day)}
                   options={options}
                 />
+              }
               </div>
             </div>
 
             <div class="flex flex-col items-center space-y-2 ">
               <p>Night</p>
               <div class="relative h-36">
-                <PolarAreaChart
-                  data={data(props.data().night)}
+              {props.data() && <PolarAreaChart
+                  data={dataFormat(props.data().night)}
                   options={options}
                 />
+              }
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
+            )}
     </div>
   );
 }
