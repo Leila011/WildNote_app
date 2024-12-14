@@ -155,14 +155,13 @@ export type StatTimelineItem = {
 
 export type StatCalendar = {
   year: string;
-  series:  StatCalendarItem[];
-  
-}
+  series: StatCalendarItem[];
+};
 
 export type StatCalendarItem = {
   name: string;
   data: { x: string; y: number }[];
-}
+};
 export type StatPolar = {
   day: {
     keys: number[];

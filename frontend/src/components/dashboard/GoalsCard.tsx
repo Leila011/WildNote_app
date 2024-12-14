@@ -14,7 +14,6 @@ type Props = {
 };
 
 export function GoalsCard({ experiment, stat }: Props) {
-
   return (
     <div class="flex flex-row space-x-3">
       <Card>

@@ -83,7 +83,12 @@ export default function NewExperiment() {
       <Heading>New experiment / New Subject</Heading>
 
       <div class="flex flex-col space-y-2">
-      <NewSubjectForm store={store} setStore={setStore} name={name} setName={setName}></NewSubjectForm>
+        <NewSubjectForm
+          store={store}
+          setStore={setStore}
+          name={name}
+          setName={setName}
+        ></NewSubjectForm>
         <div class="flex flex-row space-x-1">
           <Button
             class={buttonVariants({ variant: "accent" })}
@@ -98,12 +103,12 @@ export default function NewExperiment() {
             Next
           </Button>
           <Show when={isFirst()}>
-          <Button
-            class={buttonVariants({ variant: "outline" })}
-            onClick={handleSubmitSkip}
-          >
-            Skip
-          </Button>
+            <Button
+              class={buttonVariants({ variant: "outline" })}
+              onClick={handleSubmitSkip}
+            >
+              Skip
+            </Button>
           </Show>
         </div>
       </div>

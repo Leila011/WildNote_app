@@ -45,40 +45,44 @@ export function PolarPlot(props: { data: () => Polar; level: Level }) {
   };
   return (
     <div>
-      {(
-      <Card >
-        <CardHeader>
-          <CardTitle>
-            {props.level === "sample" ? "Observation sessions" : "Observations"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div class="flex flex-row space-x-16 justify-center w-full h-44 mb-2">
-            <div class="flex flex-col items-center space-y-2">
-              <p>Day</p>
-              <div class="relative h-36">
-              {props.data() &&  <PolarAreaChart
-                  data={dataFormat(props.data().day)}
-                  options={options}
-                />
-              }
+      {
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {props.level === "sample"
+                ? "Observation sessions"
+                : "Observations"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div class="flex flex-row space-x-16 justify-center w-full h-44 mb-2">
+              <div class="flex flex-col items-center space-y-2">
+                <p>Day</p>
+                <div class="relative h-36">
+                  {props.data() && (
+                    <PolarAreaChart
+                      data={dataFormat(props.data().day)}
+                      options={options}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div class="flex flex-col items-center space-y-2 ">
-              <p>Night</p>
-              <div class="relative h-36">
-              {props.data() && <PolarAreaChart
-                  data={dataFormat(props.data().night)}
-                  options={options}
-                />
-              }
+              <div class="flex flex-col items-center space-y-2 ">
+                <p>Night</p>
+                <div class="relative h-36">
+                  {props.data() && (
+                    <PolarAreaChart
+                      data={dataFormat(props.data().night)}
+                      options={options}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-            )}
+          </CardContent>
+        </Card>
+      }
     </div>
   );
 }

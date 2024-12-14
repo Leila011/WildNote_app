@@ -26,7 +26,7 @@ import { addNewSample } from "~/api/addNewSample";
 import { fetchSubjects } from "~/api/fetchSubjects";
 import { Heading } from "~/components/Heading";
 import { updateValue } from "~/api/updateValue";
-import {  getTimestamp, toAttributeValue } from "~/utils/db";
+import { getTimestamp, toAttributeValue } from "~/utils/db";
 import {
   isAttributesValuesValid,
   isColumnsValuesValid,
@@ -39,22 +39,30 @@ export default function EncodingSample() {
   const params = useParams();
 
   const [experiments] = createResource<ExperimentDb[]>(fetchExperiments);
-  const [experiment, setExperiment] = createSignal<ExperimentDb|undefined>();
+  const [experiment, setExperiment] = createSignal<ExperimentDb | undefined>();
 
   const [subjects] = createResource<SubjectDb[]>(
-    () => experiment() && { experimentId: experiment()!.experiment_id},
-    fetchSubjects
+    () => experiment() && { experimentId: experiment()!.experiment_id },
+    fetchSubjects,
   );
-  const [subject, setSubject] = createSignal<SubjectDb|undefined>();
+  const [subject, setSubject] = createSignal<SubjectDb | undefined>();
 
   const [data] = createResource<Metadata>(
-    () => experiment() && { experimentId: experiment()!.experiment_id,  level: "sample"},
-    fetchAttributeDescriptions
+    () =>
+      experiment() && {
+        experimentId: experiment()!.experiment_id,
+        level: "sample",
+      },
+    fetchAttributeDescriptions,
   );
 
   const [dataSubject] = createResource<Metadata>(
-    () => experiment() && { experimentId: experiment()!.experiment_id,  level: "subject"},
-    fetchAttributeDescriptions
+    () =>
+      experiment() && {
+        experimentId: experiment()!.experiment_id,
+        level: "subject",
+      },
+    fetchAttributeDescriptions,
   );
 
   const [name, setName] = createSignal<string>("");
@@ -62,11 +70,11 @@ export default function EncodingSample() {
   onMount(() => {
     // open the page for the last experiment
     if (experiments() && !experiment()) {
-      setExperiment(experiments()![experiments()!.length-1]);
+      setExperiment(experiments()![experiments()!.length - 1]);
     }
     // set subject to the last one
     if (subjects() && !subject()) {
-      setSubject(subjects()![subjects()!.length-1]);
+      setSubject(subjects()![subjects()!.length - 1]);
     }
   });
 
@@ -142,22 +150,21 @@ export default function EncodingSample() {
         experimentId: experiment()!.experiment_id,
       });
       return response;
+    }
   }
-}
   const handleSubmit = async () => {
     if (experiment() && (experiment()?.predefine_subject ?? subject())) {
-      const responseSample = await endSample()
+      const responseSample = await endSample();
 
-      if(experiment()?.predefine_subject){
-      const responseSubject = await endSubject()
+      if (experiment()?.predefine_subject) {
+        const responseSubject = await endSubject();
       }
       responseSample.sample_id &&
-          navigate(
-            `/encoding/experiment/${experiment()!.experiment_id}/sample/${responseSample.sample_id}`,
-          );
-      }
+        navigate(
+          `/encoding/experiment/${experiment()!.experiment_id}/sample/${responseSample.sample_id}`,
+        );
     }
-  
+  };
 
   return (
     <div class="container mx-auto">
@@ -203,7 +210,7 @@ export default function EncodingSample() {
               </DropdownMenu>
             </div>
             <div>
-              <Show when={subjects()&& subjects().length}>
+              <Show when={subjects() && subjects().length}>
                 <h1>Choose your subject:</h1>
                 <DropdownMenu>
                   <DropdownMenuTrigger
@@ -212,72 +219,82 @@ export default function EncodingSample() {
                     class={`bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start  w-full`}
                   >
                     <div class="flex-grow text-left">
-                      {subject() ? subject()!.name: 'None'}
+                      {subject() ? subject()!.name : "None"}
                     </div>
                     <IconChevronDown />
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent>
-                  <DropdownMenuGroup>
-                  <DropdownMenuItem   onSelect={() => {
-                      
-                      setSubject(undefined);
-                    }}>
-                    <span>None</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuGroupLabel>
-                  <span>Existing subjects</span>
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem
+                        onSelect={() => {
+                          setSubject(undefined);
+                        }}
+                      >
+                        <span>None</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuGroupLabel>
+                        <span>Existing subjects</span>
+                      </DropdownMenuGroupLabel>
+                    </DropdownMenuGroup>
 
-                  </DropdownMenuGroupLabel>
-                  </DropdownMenuGroup>
-
-                  <DropdownMenuGroup>
-                    <For each={subjects()}>
-                      {(option) => (
-                        <DropdownMenuItem
-                          onSelect={() => {
-                      
-                            setSubject(option);
-                          }}
-                        >
-                          <span>{option.name}</span>
-                        </DropdownMenuItem>
-                      )}
-                    </For>
-                  </DropdownMenuGroup>
+                    <DropdownMenuGroup>
+                      <For each={subjects()}>
+                        {(option) => (
+                          <DropdownMenuItem
+                            onSelect={() => {
+                              setSubject(option);
+                            }}
+                          >
+                            <span>{option.name}</span>
+                          </DropdownMenuItem>
+                        )}
+                      </For>
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
-
                 </DropdownMenu>
               </Show>
             </div>
-
           </div>
           <div>
-              <Show when={experiment() && experiment()?.predefine_subject && !subject() && storeSubject.length}>
-              <h1>Add a new subject:</h1>
-                
-                {storeSubject.length &&<NewSubjectForm store={store} setStore={setStore} name={name} setName={setName}></NewSubjectForm>
+            <Show
+              when={
+                experiment() &&
+                experiment()?.predefine_subject &&
+                !subject() &&
+                storeSubject.length
               }
-                </Show>
-            </div>
-            <div>
-          <Show when={experiment() && store.length}>
-          <h1>Fill out you observation session parameters</h1>
-            <div class="border border-primary rounded-md item-center bg-muted">
-              {store.length && <Form store={store} setStore={setStore}></Form>}
-            </div>
-            <div>
+            >
+              <h1>Add a new subject:</h1>
 
-            </div>
-          </Show>
-          <div class="mt-4">
-          <Button
+              {storeSubject.length && (
+                <NewSubjectForm
+                  store={store}
+                  setStore={setStore}
+                  name={name}
+                  setName={setName}
+                ></NewSubjectForm>
+              )}
+            </Show>
+          </div>
+          <div>
+            <Show when={experiment() && store.length}>
+              <h1>Fill out you observation session parameters</h1>
+              <div class="border border-primary rounded-md item-center bg-muted">
+                {store.length && (
+                  <Form store={store} setStore={setStore}></Form>
+                )}
+              </div>
+              <div></div>
+            </Show>
+            <div class="mt-4">
+              <Button
                 class={buttonVariants({ variant: "accent" })}
                 onClick={handleSubmit}
               >
                 Start an observation
               </Button>
-              </div>
+            </div>
           </div>
         </div>
       </div>

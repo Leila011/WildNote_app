@@ -48,10 +48,11 @@ export function FormNewAttribute(props: Props) {
     );
   };
 
-
   const handleRemoveChoice = (attributeIndex: number, index: number) => {
-      const newStore =  store[attributeIndex].choices.filter((_,choiceIndex) => choiceIndex !== index);
-      setStore([attributeIndex], "choices", newStore);
+    const newStore = store[attributeIndex].choices.filter(
+      (_, choiceIndex) => choiceIndex !== index,
+    );
+    setStore([attributeIndex], "choices", newStore);
   };
   return (
     <div class=" flex flex-col  space-y-5 pb-6 pt-2 items-left justify-left  px-5">
@@ -190,44 +191,47 @@ export function FormNewAttribute(props: Props) {
               <div>
                 <h1>choices:</h1>
                 <div class="flex flex-col space-y-2">
-                <Index each={store[index].choices}>
-                  {(choice, choiceIndex) => (
-                    <div class="flex flex-row space-x-1 items-start">
-                                    <Button
-                class={`${buttonVariants({ variant: "secondary" })}`}
-                onClick={() => handleRemoveChoice(index, choiceIndex)}
-              >
-                <ImBin />
-              </Button>
-              <div>
-                      <TextField
-                        value={store[index].choices[choiceIndex]}
-                        validationState={
-                          store[index].choices[choiceIndex] !== "" && store[index].choices[choiceIndex]
-                            ? "valid"
-                            : "invalid"
-                        }
-                        onChange={(e: any) => {
-                          const value = e 
-                          setStore([index], "choices", choiceIndex, value);
-                        }}
-                      >
-                        <TextFieldInput
-                          type={"text"}
-                          placeholder={"Attribute name"}
-                          class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
-                        />
-                        <TextFieldErrorMessage>
-                          This parameter is required, a value must be given.
-                        </TextFieldErrorMessage>
-                      </TextField>
-                    </div>
-                    </div>
-                  )}
-                </Index>
-
+                  <Index each={store[index].choices}>
+                    {(choice, choiceIndex) => (
+                      <div class="flex flex-row space-x-1 items-start">
+                        <Button
+                          class={`${buttonVariants({ variant: "secondary" })}`}
+                          onClick={() => handleRemoveChoice(index, choiceIndex)}
+                        >
+                          <ImBin />
+                        </Button>
+                        <div>
+                          <TextField
+                            value={store[index].choices[choiceIndex]}
+                            validationState={
+                              store[index].choices[choiceIndex] !== "" &&
+                              store[index].choices[choiceIndex]
+                                ? "valid"
+                                : "invalid"
+                            }
+                            onChange={(e: any) => {
+                              const value = e;
+                              setStore([index], "choices", choiceIndex, value);
+                            }}
+                          >
+                            <TextFieldInput
+                              type={"text"}
+                              placeholder={"Attribute name"}
+                              class={`border border-secondary bg-card text-card-foreground h-10 rounded-md pl-2 w-full`}
+                            />
+                            <TextFieldErrorMessage>
+                              This parameter is required, a value must be given.
+                            </TextFieldErrorMessage>
+                          </TextField>
+                        </div>
+                      </div>
+                    )}
+                  </Index>
                 </div>
-                <Button class={`${store[index].choices.length? "mt-2":""}`} onClick={() => handleAddChoice(index)}>
+                <Button
+                  class={`${store[index].choices.length ? "mt-2" : ""}`}
+                  onClick={() => handleAddChoice(index)}
+                >
                   Add a new choice
                 </Button>
               </div>

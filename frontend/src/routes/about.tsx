@@ -197,13 +197,13 @@ export default function About() {
                   </li>
                   <li class="list-disc">
                     <a href="https://solid-ui.com/" target="_blank">
-                    Apexcharts
+                      Apexcharts
                     </a>
                     , a library for charts (heatmap).
                   </li>
                   <li class="list-disc">
                     <a href="https://solid-ui.com/" target="_blank">
-                    Chart.js
+                      Chart.js
                     </a>
                     , a library for charts.
                   </li>

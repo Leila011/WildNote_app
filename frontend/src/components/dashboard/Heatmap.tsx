@@ -36,13 +36,11 @@ const options = {
         ],
       },
     },
-    
-  },yaxis: {
+  },
+  yaxis: {
     reversed: true,
-  }
+  },
 };
-
-
 
 export default function Heatmap({ series, year }: HeatmapProps) {
   return (
