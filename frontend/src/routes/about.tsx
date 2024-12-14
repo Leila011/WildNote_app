@@ -1,10 +1,10 @@
 import { TableOfContent } from "~/components/tableofcontent";
-import { Card } from "~/components/card";
+import { CardAbout } from "~/components/CardAbout";
 import { Heading } from "~/components/Heading";
 
 export default function About() {
   return (
-    <div class="container mx-auto">
+    <div class="container mx-auto my-8">
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-11 space-y-4">
           <Heading>Introduction</Heading>
@@ -32,14 +32,14 @@ export default function About() {
           </ul>
           <div>
             This structured approach, combined with real-time data validation
-            and intuitive user interfaces, ensures a streamlined, error-free,
+            and intuitive user interfaces, ensures an easy, error-free,
             and efficient observation process, reducing the risk of lost data
             and enhancing the reliability of your research outcomes.
           </div>
           <Heading>Functionality</Heading>
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
-              <Card title="Simplified data recording with custom forms">
+              <CardAbout title="Simplified data recording with custom forms">
                 <ul class="ml-5">
                   <li class="list-disc">
                     Specify the parameters recorded during your experiment.
@@ -49,12 +49,12 @@ export default function About() {
                     structure to facilitate recording your data.
                   </li>
                   <li class="list-disc">
-                    Add information about the subjects you are observing ahead
+                    Characterise the subjects you are observing ahead
                     of time or during the observation session.
                   </li>
                 </ul>
-              </Card>
-              <Card title="Data validation and accuracy">
+              </CardAbout>
+              <CardAbout title="Data validation and accuracy">
                 <ul class="ml-5">
                   <li class="list-disc">
                     Define validation rules for each experimental parameters.
@@ -71,8 +71,8 @@ export default function About() {
                     defined, helping you stay aware of the remaining time.
                   </li>
                 </ul>
-              </Card>
-              <Card title="Secure and Accessible Data Storage">
+              </CardAbout>
+              <CardAbout title="Secure and Accessible Data Storage">
                 <ul class="ml-5">
                   <li class="list-disc">
                     All observations and session data are saved in a secure
@@ -87,9 +87,9 @@ export default function About() {
                     the wild
                   </li>
                 </ul>
-              </Card>
+              </CardAbout>
 
-              <Card title="Dashboard for Progress and Insights">
+              <CardAbout title="Dashboard for Progress and Insights">
                 <ul class="ml-5">
                   <li class="list-disc">
                     Visualize your advancement toward observation and session
@@ -99,15 +99,15 @@ export default function About() {
                     Instantly access summaries and key metrics from your data.
                   </li>
                 </ul>
-              </Card>
+              </CardAbout>
             </div>
           </div>
           <Heading>Technologies</Heading>
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
-              <Card title="Flask">
+              <CardAbout title="Flask">
                 <div class="flex flex-wrap items-center">
-                  The backend is built with{" "}
+                  The backend is built with
                   <a
                     href="https://flask.palletsprojects.com/"
                     target="_blank"
@@ -129,8 +129,8 @@ export default function About() {
                     libraries along the way.
                   </li>
                 </ul>
-              </Card>
-              <Card title="SQLite & SQLite3">
+              </CardAbout>
+              <CardAbout title="SQLite & SQLite3">
                 <div class="flex flex-wrap items-center">
                   The database is powered using:
                   <ul class="ml-5">
@@ -164,9 +164,9 @@ export default function About() {
                     Oracle) if necessary.
                   </li>
                 </ul>
-              </Card>
+              </CardAbout>
 
-              <Card title="Solid.js">
+              <CardAbout title="Solid.js">
                 <div class="flex flex-wrap items-center">
                   The UI is built with
                   <a
@@ -179,8 +179,8 @@ export default function About() {
                   a reactive JavaScript library ensuring a fast and interactive
                   user experience.
                 </div>
-              </Card>
-              <Card title="Tailwind CSS & Solid UI">
+              </CardAbout>
+              <CardAbout title="Tailwind CSS & Solid UI">
                 The UI is styled using a combination of:
                 <ul class="ml-5">
                   <li class="list-disc">
@@ -208,34 +208,32 @@ export default function About() {
                     , a library for charts.
                   </li>
                 </ul>
-              </Card>
+              </CardAbout>
             </div>
           </div>
           <Heading>Database structure</Heading>
           <Heading>Future Developments</Heading>
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
-              <Card title="Additional functionalities">
+              <CardAbout title="Additional functionalities">
                 <ul class="ml-5">
                   <li class="list-disc">
-                    Add study type coming with a serie of pre-defined
+                    Add study type coming with pre-defined
                     attributes.
                   </li>
                   <li class="list-disc">
                     Add a map view for visualizing sample locations with GPS
                     data.
                   </li>
-                </ul>
-              </Card>
-              <Card title="User Login and Multiuser Collaboration">
-                <ul class="ml-5">
                   <li class="list-disc">Introduce user loggin.</li>
                   <li class="list-disc">
-                    Implement multi-user mode to collaborate on one experiment.
+                  Implement multi-user mode to collaborate on one experiment.
                   </li>
+
                 </ul>
-              </Card>
-              <Card title="Data Management">
+              </CardAbout>
+
+              <CardAbout title="Data Management">
                 <ul class="ml-5">
                   <li class="list-disc">
                     Export and import experiment setups to replicate study
@@ -251,8 +249,8 @@ export default function About() {
                     Enable synchronisation with a cloud service
                   </li>
                 </ul>
-              </Card>
-              <Card title="To improve">
+              </CardAbout>
+              <CardAbout title="To do list">
                 <ul class="ml-5">
                   <li class="list-disc">
                     Create a experiment-specific id for observations session and
@@ -262,8 +260,46 @@ export default function About() {
                     Allow the user to modify the experiment structure after
                     creation when no recording have been done yet.
                   </li>
+                  <li class="list-disc">
+                   Add dashboard tab for subjects.
+                  </li>
+                  <li class="list-disc">
+                   Allow adding one or multiple subject in an observation.
+                  </li>
+                  <li class="list-disc">
+                   Add description and unit for attributes.
+                  </li>
+                  <li class="list-disc">
+                   Make sure it can be use on different screen size (phone, tablette).
+                  </li>
+                  <li class="list-disc">
+                    Bug to fix: the dashboard fully re-render when switching between experiment.
+                  </li>
                 </ul>
-              </Card>
+              </CardAbout>
+              <CardAbout title="Additional visualisations and analysis">
+              Bi-variate visualisation:
+                <ul class="ml-5">
+                <li class="list-disc">
+                    Correlation matrix + heatmap
+                  </li>
+                  <li class="list-disc">
+                  Whisker plot, scatter plot, bar chart
+                  </li>
+                  </ul>
+                Multi-variate visualisation:
+                <ul class="ml-5">
+                  <li class="list-disc">
+                     PCA
+                  </li>
+                  </ul>
+                  Modelisation:
+                  <ul class="ml-5">
+                  <li class="list-disc">
+                    Mixed-effect model: model data while taking into accoun its hierarchical structure.
+                  </li>
+                </ul>
+              </CardAbout>
             </div>
           </div>
         </div>
