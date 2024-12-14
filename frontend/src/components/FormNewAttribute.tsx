@@ -48,6 +48,11 @@ export function FormNewAttribute(props: Props) {
     );
   };
 
+
+  const handleRemoveChoice = (attributeIndex: number, index: number) => {
+      const newStore =  store[attributeIndex].choices.filter((_,choiceIndex) => choiceIndex !== index);
+      setStore([attributeIndex], "choices", newStore);
+  };
   return (
     <div class=" flex flex-col  space-y-5 pb-6 pt-2 items-left justify-left  px-5">
       <Index each={store}>
@@ -184,11 +189,24 @@ export function FormNewAttribute(props: Props) {
             <Show when={store[index].type === "string"}>
               <div>
                 <h1>choices:</h1>
+                <div class="flex flex-col space-y-2">
                 <Index each={store[index].choices}>
                   {(choice, choiceIndex) => (
-                    <div>
+                    <div class="flex flex-row space-x-1 items-start">
+                                    <Button
+                class={`${buttonVariants({ variant: "secondary" })}`}
+                onClick={() => handleRemoveChoice(index, choiceIndex)}
+              >
+                <ImBin />
+              </Button>
+              <div>
                       <TextField
                         value={store[index].choices[choiceIndex]}
+                        validationState={
+                          store[index].choices[choiceIndex] !== "" && store[index].choices[choiceIndex]
+                            ? "valid"
+                            : "invalid"
+                        }
                         onChange={(e: any) => {
                           const value = e === "" ? null : e;
                           setStore([index], "choices", choiceIndex, value);
@@ -204,8 +222,11 @@ export function FormNewAttribute(props: Props) {
                         </TextFieldErrorMessage>
                       </TextField>
                     </div>
+                    </div>
                   )}
                 </Index>
+
+                </div>
                 <Button onClick={() => handleAddChoice(index)}>
                   Add a new choice
                 </Button>
