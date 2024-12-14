@@ -27,7 +27,7 @@ export default function Samples() {
         <Heading>{`Experiment #${params.experimentId} / Observation sessions`}</Heading>
         <a
           class={buttonVariants({ variant: "accent" })}
-          href={`/experiment/${params.experimentId}/newSample`}
+          href={`/encoding/experiment/${params.experimentId}`}
         >
           Start a new observation session
         </a>
