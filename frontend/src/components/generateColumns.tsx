@@ -68,11 +68,11 @@ export const generateColumns = (
                     level: "experiment",
                     column_name: "status",
                     row_id: props.row.original.experiment_id,
-                    value: "active",
+                    value: "completed",
                   });
                   await updateValue({
                     level: "experiment",
-                    column_name: "timestamp_start",
+                    column_name: "timestamp_end",
                     row_id: props.row.original.experiment_id,
                     value: getTimestamp(),
                   });
