@@ -2,6 +2,7 @@ import { SetStoreFunction, Store, StoreSetter } from "solid-js/store";
 import {
   NumberField,
   NumberFieldDecrementTrigger,
+  NumberFieldErrorMessage,
   NumberFieldIncrementTrigger,
   NumberFieldInput,
 } from "~/components/ui/number-field";
@@ -23,6 +24,11 @@ export function DurationForm(props: {
               props.setDuration("hours", value);
             }}
             minValue={0}
+            validationState={
+              props.duration.hours > 0 || props.duration.minutes > 0 || props.duration.seconds > 0
+                ? "valid"
+                : "invalid"
+            }
           >
             <div class="relative">
               <NumberFieldInput
@@ -45,6 +51,11 @@ export function DurationForm(props: {
               props.setDuration("minutes", value);
             }}
             minValue={0}
+            validationState={
+              props.duration.hours > 0 || props.duration.minutes > 0 || props.duration.seconds > 0
+                ? "valid"
+                : "invalid"
+            }
           >
             <div class="relative">
               <NumberFieldInput
@@ -67,6 +78,11 @@ export function DurationForm(props: {
               props.setDuration("seconds", value);
             }}
             minValue={0}
+            validationState={
+              props.duration.hours > 0 || props.duration.minutes > 0 || props.duration.seconds > 0
+                ? "valid"
+                : "invalid"
+            }
           >
             <div class="relative">
               <NumberFieldInput
