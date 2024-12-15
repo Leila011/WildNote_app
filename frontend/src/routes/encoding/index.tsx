@@ -74,7 +74,6 @@ export default function EncodingSample() {
         (e) => e.status === "active",
       );
       setExperiment(eligibleExperiments[eligibleExperiments!.length - 1]);
-      console.log(eligibleExperiments);
     }
     // set subject to the last one
     if (subjects() && !subject()) {
@@ -158,7 +157,6 @@ export default function EncodingSample() {
   const handleSubmit = async () => {
     if (experiment() && (!experiment()!.predefine_subject || subject())) {
       const responseSample = await endSample();
-      console.log(responseSample);
       if (experiment()?.predefine_subject) {
         const responseSubject = await endSubject();
       }

@@ -17,7 +17,6 @@ export default function Experiments() {
       const formatted = data()!.map((experiment) =>
         ExperimentFromDb(experiment),
       );
-      console.log(formatted);
       setDataFormated(formatted);
     }
   });

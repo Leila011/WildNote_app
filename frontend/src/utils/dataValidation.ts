@@ -1,7 +1,6 @@
 import { Attribute, AttributeValue } from "~/types/db";
 
 export function isAttributesValuesValid(attributes: AttributeValue[]): boolean {
-  console.log(attributes);
   let ready = true;
   attributes.forEach((attribute: AttributeValue) => {
     if (attribute.value === "" && attribute.required) {
@@ -15,7 +14,6 @@ export function isColumnsValuesValid(
   columns: Record<string, any>,
   notRequired?: string[],
 ): boolean {
-  console.log(columns);
 
   let ready = true;
   Object.keys(columns).forEach((column: string) => {
