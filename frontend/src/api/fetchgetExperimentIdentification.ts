@@ -1,7 +1,8 @@
 import { backendUrl } from "~/db";
+import { StatusExperiment } from "~/types/db";
 
 export async function fetchExperimentsIdentification(): Promise<
-  { name: string; experiment_id: number }[]
+  { name: string; experiment_id: number; status: StatusExperiment }[]
 > {
   try {
     const response = await fetch(

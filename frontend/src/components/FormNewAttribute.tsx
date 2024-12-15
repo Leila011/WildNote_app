@@ -93,6 +93,28 @@ export function FormNewAttribute(props: Props) {
               </TextField>
             </div>
             <div>
+              <h1>Required:</h1>
+              <div>
+                {/* Toggle button */}
+                <ToggleGroup
+                  class={`${toggleVariants({ size: "sm", variant: "outline" })} bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start border-secondary w-full md:w-auto`}
+                  value={store[index].required ? "Yes" : "No"}
+                >
+                  <For each={[true, false]}>
+                    {(option) => (
+                      <ToggleGroupItem
+                        class={`${toggleVariants({ size: "sm" })}`}
+                        value={option ? "Yes" : "No"}
+                        onClick={() => setStore([index], "required", option)}
+                      >
+                        {option ? "Yes" : "No"}
+                      </ToggleGroupItem>
+                    )}
+                  </For>
+                </ToggleGroup>
+              </div>
+            </div>
+            <div>
               <h1>type:</h1>
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -109,7 +131,11 @@ export function FormNewAttribute(props: Props) {
                   <For each={typeOptions}>
                     {(choice) => (
                       <DropdownMenuItem
-                        onSelect={() => setStore([index], "type", choice)}
+                        onSelect={() => {
+                          setStore([index], "choices", []);
+                          setStore([index], "default_value", "");
+                          setStore([index], "type", choice);
+                        }}
                       >
                         <span>{choice}</span>
                       </DropdownMenuItem>
@@ -288,24 +314,27 @@ export function FormNewAttribute(props: Props) {
               <div>
                 <h1>default:</h1>
 
-                <ToggleGroup
-                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={store[index].default_value}
-                >
-                  <For each={["true", "false"]}>
-                    {(option) => (
-                      <ToggleGroupItem
-                        class={`${toggleVariants({ size: "sm" })}`}
-                        value={option}
-                        onClick={() => {
-                          setStore([index], "default_value", option);
-                        }}
-                      >
-                        {option}
-                      </ToggleGroupItem>
-                    )}
-                  </For>
-                </ToggleGroup>
+                <div>
+                  {/* Toggle button */}
+                  <ToggleGroup
+                    class={`${toggleVariants({ size: "sm", variant: "outline" })} bg-card text-card-foreground border rounded-md h-10 pl-2 justify-start border-secondary w-full md:w-auto`}
+                    value={store[index].default_value ? "True" : "False"}
+                  >
+                    <For each={[true, false]}>
+                      {(option) => (
+                        <ToggleGroupItem
+                          class={`${toggleVariants({ size: "sm" })}`}
+                          value={option ? "True" : "False"}
+                          onClick={() =>
+                            setStore([index], "default_value", option)
+                          }
+                        >
+                          {option ? "True" : "False"}
+                        </ToggleGroupItem>
+                      )}
+                    </For>
+                  </ToggleGroup>
+                </div>
               </div>
             </Show>
           </div>

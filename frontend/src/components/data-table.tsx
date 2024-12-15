@@ -39,6 +39,7 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  columnVisibilityInit?: VisibilityState;
 }
 
 export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
@@ -48,7 +49,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     [],
   );
   const [columnVisibility, setColumnVisibility] = createSignal<VisibilityState>(
-    {},
+    props.columnVisibilityInit ?? {},
   );
   const [rowSelection, setRowSelection] = createSignal({});
 

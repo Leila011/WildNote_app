@@ -1,6 +1,6 @@
 -- Insert mock data into experiment table
 INSERT INTO experiment (experiment_id, status, timestamp_start, timestamp_end, predefine_subject, name, duration, samples_number_goal, samples_time_goal, obs_number_goal, obs_time_goal) VALUES
-(2, 'active', '2023-01-01 08:00:00', '2023-01-01 18:00:00', 1, 'Experiment with predefined subjects', 600, 10, 600, 20, 1200);
+(2, 'active', '2023-01-01 08:00:00', '2023-01-01 13:30:00', 1, 'Experiment with predefined subjects', 600, 10, 600, 20, 1200);
 
 -- Insert mock data into subject table
 INSERT INTO subject (timestamp_creation, name, experiment_id) VALUES
@@ -37,17 +37,17 @@ INSERT INTO experiment_attributes (experiment_attributes_id, name, label, type, 
 
 -- Insert mock data into sample_attributes table
 INSERT INTO sample_attributes (name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES
-('location', 'Location', 'string', 1, 0, 0, NULL, NULL, 'loc1,loc2,loc3', NULL, 2),
-('group', 'Group', 'string', 1, 0, 0, NULL, NULL, 'group1,group2', NULL, 2);
+('location', 'Location', 'string', 1, 0, 0, NULL, NULL, 'loc1|loc2|loc3', NULL, 2),
+('group', 'Group', 'string', 1, 0, 0, NULL, NULL, 'group1|group2', NULL, 2);
 
 -- Insert mock data into observation_attributes table
 INSERT INTO observation_attributes (name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES
-('behavior', 'Behavior', 'string', 1, 0, 0, NULL, NULL, 'sleep,eat,play,rest', NULL, 2);
+('behavior', 'Behavior', 'string', 1, 0, 0, NULL, NULL, 'sleep|eat|play|rest', NULL, 2);
 
 -- Insert mock data into subject_attributes table
 INSERT INTO subject_attributes (name, label, type, custom, autofill, required, min, max, choices, default_value, experiment_id) VALUES
-('gender', 'Gender', 'string', 1, 0, 0, NULL, NULL, 'male,female', NULL, 2),
-('age', 'Age', 'string', 1, 0, 0, NULL, NULL, 'child,teenager,adult', NULL, 2);
+('gender', 'Gender', 'string', 1, 0, 0, NULL, NULL, 'male|female', NULL, 2),
+('age', 'Age', 'string', 1, 0, 0, NULL, NULL, 'child|teenager|adult', NULL, 2);
 
 -- Insert mock data into experiment_attribute_values table
 INSERT INTO experiment_attribute_values (attribute_id, experiment_id, value) VALUES

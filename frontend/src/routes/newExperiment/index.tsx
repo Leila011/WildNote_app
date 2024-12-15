@@ -47,6 +47,7 @@ export default function NewExperiment() {
     samples_time_goal: { hours: 0, minutes: 0, seconds: 0 },
     obs_number_goal: 0,
     obs_time_goal: { hours: 0, minutes: 0, seconds: 0 },
+    status: "created",
   });
 
   const [attributes, setAttributes] = createStore<AttributeValue[]>([]);
@@ -61,6 +62,9 @@ export default function NewExperiment() {
   const [hasObservationGoal, setHasObservationGoal] =
     createSignal<boolean>(true);
   const handleSubmit = async () => {
+    setExperiment("timestamp_start", new Date().toISOString());
+    setExperiment("status", "created");
+
     const dataOut = {
       attributes: attributes,
       columns: columnToDb(ExperimentToDb(experiment)),

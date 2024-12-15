@@ -36,11 +36,20 @@ export function secondToHMS(seconds: number): DurationHMS {
 
 export function secondToString(seconds: number): string {
   const duration = secondToHMS(seconds);
-  if (duration.hours === 0 && duration.minutes === 0) {
-    return `${duration.seconds}s`;
-  } else if (duration.hours === 0) {
-    return `${duration.minutes}m${duration.seconds}s`;
-  } else {
-    return `${duration.hours}h${duration.minutes}m${duration.seconds}s`;
+  let result = "";
+
+  if (duration.hours > 0) {
+    result += `${duration.hours}h`;
   }
+  if (duration.minutes > 0) {
+    result += `${duration.minutes}m`;
+  }
+  if (
+    duration.seconds > 0 ||
+    (duration.hours === 0 && duration.minutes === 0)
+  ) {
+    result += `${duration.seconds}s`;
+  }
+
+  return result;
 }

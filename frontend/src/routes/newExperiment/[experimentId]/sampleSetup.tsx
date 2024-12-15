@@ -5,7 +5,7 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { Attribute } from "~/types/db";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
-import { newAttribute } from "~/utils/db";
+import { attributeToDb, newAttribute } from "~/utils/db";
 import { Heading } from "~/components/Heading";
 import { isAttributesDefValid } from "~/utils/dataValidation";
 
@@ -19,7 +19,7 @@ export default function SampleSetup() {
 
     if (isReady) {
       const reponse = await addExperimentalSetup({
-        data: store,
+        data: attributeToDb(store),
         experimentId: Number(params.experimentId),
         level: "sample",
       });

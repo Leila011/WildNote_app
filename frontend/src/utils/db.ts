@@ -4,7 +4,9 @@ import {
   AttributeValue,
   AttributeValueDb,
   DurationHMS,
+  ExperimentDb,
 } from "~/types/db";
+import { secondToString } from ".";
 
 export function columnToDb(data: Record<string, any>): Record<string, any> {
   const cleanData: Record<string, any> = {};
@@ -20,6 +22,14 @@ export function ExperimentToDb(data: Record<string, any>): Record<string, any> {
   cleanData["duration"] = toSeconds(data.duration);
   cleanData["samples_time_goal"] = toSeconds(data.samples_time_goal);
   cleanData["obs_time_goal"] = toSeconds(data.obs_time_goal);
+  return cleanData;
+}
+
+export function ExperimentFromDb(data: ExperimentDb): ExperimentDb {
+  const cleanData = JSON.parse(JSON.stringify(data));
+  cleanData["duration"] = secondToString(data.duration);
+  cleanData["samples_time_goal"] = secondToString(data.samples_time_goal);
+  cleanData["obs_time_goal"] = secondToString(data.obs_time_goal);
   return cleanData;
 }
 
@@ -41,7 +51,10 @@ export function attributeToDb(
       default_value:
         attribute.default_value === undefined ? null : attribute.default_value,
     };
-    return newAttribute;
+    if ("value" in attribute) {
+      return newAttribute as AttributeValueDb;
+    }
+    return newAttribute as AttributeDb;
   });
   return cleanAttributes;
 }

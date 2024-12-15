@@ -92,7 +92,7 @@ export type Experiment = {
 export type SampleDb = {
   sample_id: number;
   experiment_id: number;
-  subject_id?: number;
+  subject_id: number | null;
   status: string;
   timestamp_start: string;
   timestamp_end: string;
@@ -114,6 +114,8 @@ export type ObservationDb = {
 };
 
 export type Level = "experiment" | "sample" | "observation" | "subject";
+
+export type StatusExperiment = "created" | "active" | "completed";
 
 export type Metadata = {
   attributes: Attribute[];

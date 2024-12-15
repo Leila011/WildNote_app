@@ -5,7 +5,7 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { Attribute } from "~/types/db";
 import { addExperimentalSetup } from "~/api/addExperimentalSetup";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
-import { newAttribute } from "~/utils/db";
+import { attributeToDb, newAttribute } from "~/utils/db";
 import { updateValue } from "~/api/updateValue";
 import { Heading } from "~/components/Heading";
 import { isAttributesDefValid } from "~/utils/dataValidation";
@@ -20,12 +20,12 @@ export default function ObservationSetup() {
 
     if (isReady) {
       await addExperimentalSetup({
-        data: store,
+        data: attributeToDb(store),
         experimentId: Number(params.experimentId),
         level: "observation",
       });
       await updateValue({
-        level: "observation",
+        level: "experiment",
         column_name: "status",
         row_id: Number(params.experimentId),
         value: "active",
