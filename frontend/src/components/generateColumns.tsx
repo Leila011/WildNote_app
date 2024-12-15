@@ -147,7 +147,7 @@ export const generateColumns = (
 
       return (
         <div>
-          <Show when={props.row.original.status === "active"}>
+          <Show when={props.row.original.status === "active" || props.row.original.status === "created"}>
             <Button
               variant="default"
               onClick={() =>

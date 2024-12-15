@@ -115,7 +115,7 @@ export type ObservationDb = {
 
 export type Level = "experiment" | "sample" | "observation" | "subject";
 
-export type StatusExperiment = "created" | "active" | "completed";
+export type StatusExperiment = "draft" | "created" | "active" | "completed";
 
 export type Metadata = {
   attributes: Attribute[];

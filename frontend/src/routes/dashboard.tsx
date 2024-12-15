@@ -140,7 +140,7 @@ export default function Dashboards() {
   createEffect(() => {
     if (experiments() && !experimentId()) {
       const eligibleExperiments = experiments()!.filter(
-        (e) => e.status !== "created",
+        (e) => e.status === "active"|| e.status === "completed",
       );
       setExperimentId(
         eligibleExperiments[eligibleExperiments!.length - 1].experiment_id,
@@ -173,10 +173,10 @@ export default function Dashboards() {
   createEffect(() => {
     if (experimentData()) {
       const to = experimentData().timestamp_end
-        ? `to ${getDate(experimentData().timestamp_end)}`
-        : "(ongoing)";
+        ? `${getDate(experimentData().timestamp_end)}`
+        : "ongoing";
       setTitle(
-        `${experimentData().name} (from ${getDate(experimentData().timestamp_start)} ${to})`,
+        `${experimentData().name} (${getDate(experimentData().timestamp_start)} - ${to})`,
       );
     }
   });
@@ -199,7 +199,7 @@ export default function Dashboards() {
               <IconChevronDown />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <For each={experiments()?.filter((e) => e.status !== "created")}>
+              <For each={experiments()?.filter((e) => e.status === "active" || e.status === "completed")}>
                 {(option) => (
                   <DropdownMenuItem
                     onSelect={() => {

@@ -28,7 +28,7 @@ export default function ObservationSetup() {
         level: "experiment",
         column_name: "status",
         row_id: Number(params.experimentId),
-        value: "active",
+        value: "created",
       });
       if (destination === "encoding") {
         navigate(`/encoding/experiment/${params.experimentId}`);

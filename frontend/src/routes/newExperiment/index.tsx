@@ -47,7 +47,7 @@ export default function NewExperiment() {
     samples_time_goal: { hours: 0, minutes: 0, seconds: 0 },
     obs_number_goal: 0,
     obs_time_goal: { hours: 0, minutes: 0, seconds: 0 },
-    status: "created",
+    status: "draft",
   });
 
   const [attributes, setAttributes] = createStore<AttributeValue[]>([]);
