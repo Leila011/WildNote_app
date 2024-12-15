@@ -1,2 +1,5 @@
-export const backendUrl = "https://leila011.pythonanywhere.com"
-//"http://127.0.0.1:5000";
+const backendUrl = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_BACKEND_URL_DEV
+  : import.meta.env.VITE_BACKEND_URL_PROD;
+
+export { backendUrl };
