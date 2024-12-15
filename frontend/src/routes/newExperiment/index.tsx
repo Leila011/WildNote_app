@@ -140,18 +140,18 @@ export default function NewExperiment() {
               <p>Do you want to define reusable subjects?</p>
               <ToggleGroup
                 class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                value={experiment.predefine_subject!? "Yes" : "No"}
+                value={experiment.predefine_subject! ? "Yes" : "No"}
               >
                 <For each={[true, false]}>
                   {(option) => (
                     <ToggleGroupItem
                       class={`${toggleVariants({ size: "sm" })}`}
-                      value={option? "Yes" : "No"}
+                      value={option ? "Yes" : "No"}
                       onClick={() => {
                         setExperiment("predefine_subject", option);
                       }}
                     >
-                      {option? "Yes" : "No"}
+                      {option ? "Yes" : "No"}
                     </ToggleGroupItem>
                   )}
                 </For>
@@ -165,18 +165,18 @@ export default function NewExperiment() {
                 </p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasDuration()? "Yes" : "No"}
+                  value={hasDuration() ? "Yes" : "No"}
                 >
-                <For each={[true, false]}>
-                {(option) => (
+                  <For each={[true, false]}>
+                    {(option) => (
                       <ToggleGroupItem
                         class={`${toggleVariants({ size: "sm" })}`}
-                        value={option? "Yes" : "No"}
+                        value={option ? "Yes" : "No"}
                         onClick={() => {
                           setHasDuration(option);
                         }}
                       >
-                        {option? "Yes" : "No"}
+                        {option ? "Yes" : "No"}
                       </ToggleGroupItem>
                     )}
                   </For>
@@ -199,13 +199,13 @@ export default function NewExperiment() {
                 <p>Do you want to set goals for the observation sessions?</p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasSampleGoal()? "Yes" : "No"}
+                  value={hasSampleGoal() ? "Yes" : "No"}
                 >
-                <For each={[true, false]}>
-                {(option) => (
+                  <For each={[true, false]}>
+                    {(option) => (
                       <ToggleGroupItem
                         class={`${toggleVariants({ size: "sm" })}`}
-                        value={option? "Yes" : "No"}
+                        value={option ? "Yes" : "No"}
                         onClick={() => {
                           setHasSampleGoal(option);
                         }}
@@ -263,18 +263,18 @@ export default function NewExperiment() {
                 <p>Do you want to set goals for the observations?</p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasObservationGoal()? "Yes" : "No"}
+                  value={hasObservationGoal() ? "Yes" : "No"}
                 >
-                <For each={[true, false]}>
-                {(option) => (
+                  <For each={[true, false]}>
+                    {(option) => (
                       <ToggleGroupItem
                         class={`${toggleVariants({ size: "sm" })}`}
-                        value={option? "Yes" : "No"}
+                        value={option ? "Yes" : "No"}
                         onClick={() => {
                           setHasObservationGoal(option);
                         }}
                       >
-                        {option? "Yes" : "No"}
+                        {option ? "Yes" : "No"}
                       </ToggleGroupItem>
                     )}
                   </For>
@@ -294,9 +294,7 @@ export default function NewExperiment() {
                         }}
                         minValue={0}
                         validationState={
-                          experiment.obs_number_goal! > 0
-                            ? "valid"
-                            : "invalid"
+                          experiment.obs_number_goal! > 0 ? "valid" : "invalid"
                         }
                       >
                         <div class="relative">

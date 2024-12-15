@@ -25,7 +25,9 @@ export function DurationForm(props: {
             }}
             minValue={0}
             validationState={
-              props.duration.hours > 0 || props.duration.minutes > 0 || props.duration.seconds > 0
+              props.duration.hours > 0 ||
+              props.duration.minutes > 0 ||
+              props.duration.seconds > 0
                 ? "valid"
                 : "invalid"
             }
@@ -52,7 +54,9 @@ export function DurationForm(props: {
             }}
             minValue={0}
             validationState={
-              props.duration.hours > 0 || props.duration.minutes > 0 || props.duration.seconds > 0
+              props.duration.hours > 0 ||
+              props.duration.minutes > 0 ||
+              props.duration.seconds > 0
                 ? "valid"
                 : "invalid"
             }
@@ -79,7 +83,9 @@ export function DurationForm(props: {
             }}
             minValue={0}
             validationState={
-              props.duration.hours > 0 || props.duration.minutes > 0 || props.duration.seconds > 0
+              props.duration.hours > 0 ||
+              props.duration.minutes > 0 ||
+              props.duration.seconds > 0
                 ? "valid"
                 : "invalid"
             }

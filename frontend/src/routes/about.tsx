@@ -12,9 +12,8 @@ export default function About() {
             <div class="grid grid-cols-4 gap-3">
               <CardAbout title="Backend">
                 <div class="flex flex-wrap items-center">
-                <ul class="ml-5 space-y-3">
-
-                  <li class="list-disc">
+                  <ul class="ml-5 space-y-3">
+                    <li class="list-disc">
                       <a
                         href="https://flask.palletsprojects.com/"
                         target="_blank"
@@ -41,9 +40,8 @@ export default function About() {
                       </a>
                     </li>
                   </ul>
-                  </div>
+                </div>
               </CardAbout>
-
 
               <CardAbout title="Frontend">
                 <div class="flex flex-wrap items-center">
@@ -135,7 +133,9 @@ export default function About() {
               <CardAbout title="Functionalities">
                 <ul class="ml-5 space-y-3">
                   <li class="list-disc">
-                    Add study types (e.g. scan, focal and other ethological methods) coming with predefined attributes and specific type of analysis.
+                    Add study types (e.g. scan, focal and other ethological
+                    methods) coming with predefined attributes and specific type
+                    of analysis.
                   </li>
                   <li class="list-disc">
                     Add a map view for visualizing sample locations with GPS
@@ -145,9 +145,7 @@ export default function About() {
                   <li class="list-disc">
                     Implement multi-user mode to collaborate on one experiment.
                   </li>
-                  <li class="list-disc">
-                    Allow user to add pictures.
-                  </li>
+                  <li class="list-disc">Allow user to add pictures.</li>
                 </ul>
               </CardAbout>
 
@@ -171,14 +169,19 @@ export default function About() {
 
               <CardAbout title="Visualisations and analysis">
                 <ul class="ml-5 space-y-3">
-                  <li class="list-disc">Exploring the relationship between two variables (Correlation matrix & heatmap, 
-                  pairwise box-and-whisker plot, scatter plot, bar chart,..)
+                  <li class="list-disc">
+                    Exploring the relationship between two variables
+                    (Correlation matrix & heatmap, pairwise box-and-whisker
+                    plot, scatter plot, bar chart,..)
                   </li>
                   <li class="list-disc">
-                Comparing the occurence of a behavior across groups (Chi-Square test, t-test, Mann-Whitney U Test, ANOVA, Kruskal-Wallis Test,...)
+                    Comparing the occurence of a behavior across groups
+                    (Chi-Square test, t-test, Mann-Whitney U Test, ANOVA,
+                    Kruskal-Wallis Test,...)
                   </li>
                   <li class="list-disc">
-                  Modeling the occurence of a behavior in relation to other variable(s) (Mixed-effect model, GLM,..)
+                    Modeling the occurence of a behavior in relation to other
+                    variable(s) (Mixed-effect model, GLM,..)
                   </li>
                 </ul>
               </CardAbout>
