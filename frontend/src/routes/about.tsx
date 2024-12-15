@@ -78,12 +78,12 @@ export default function About() {
                 <ul class="ml-5 space-y-3">
                   <li class="list-disc">
                     <a href="https://tailwindcss.com/" target="_blank">
-                      Vercel
+                      Vercel (frontend)
                     </a>
                   </li>
                   <li class="list-disc">
                     <a href="https://solid-ui.com/" target="_blank">
-                      PythonAnywhere
+                      PythonAnywhere (backend)
                     </a>
                   </li>
                 </ul>
