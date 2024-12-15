@@ -15,12 +15,12 @@ type Props = {
 
 export function GoalsCard({ experiment, stat }: Props) {
   return (
-    <div class="flex flex-row space-x-3">
-      <Card>
+    <div class="flex flex-row space-x-3 h-full items-center">
+      <Card class= "h-full w-full">
         <CardHeader>
           <CardTitle>Samples</CardTitle>
         </CardHeader>
-        <CardContent class="flex flex-col space-y-5">
+        <CardContent class="flex flex-col space-y-4">
           <Show
             when={
               experiment.samples_number_goal &&
@@ -66,11 +66,11 @@ export function GoalsCard({ experiment, stat }: Props) {
           <p>Median time: {secondToString(stat.sample_time_median)}</p>
         </CardContent>
       </Card>
-      <Card>
+      <Card class= "h-full w-full">
         <CardHeader>
           <CardTitle>Observations</CardTitle>
         </CardHeader>
-        <CardContent class="flex flex-col space-y-5">
+        <CardContent class="flex flex-col space-y-4">
           <Show
             when={experiment.obs_number_goal && experiment.obs_number_goal > 0}
           >

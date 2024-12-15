@@ -158,11 +158,15 @@ export default function Dashboards() {
     if (obsPolar()) {
       setObsPolarData(obsPolar());
     }
-  });
+
+    if (experimentStat()) {
+      setExperimentStatData(experimentStat());
+  }});
   // fix for the polar plot diseapearing on data change
   // set to undefined when user change the experience to force the component to rerender
   const [samplePolarData, setSamplePolarData] = createSignal<StatPolar>();
   const [obsPolarData, setObsPolarData] = createSignal<StatPolar>();
+  const [experimentStatData, setExperimentStatData] = createSignal<ExperimentStats>();
 
   const [title, setTitle] = createSignal<string>("No experiment selected");
 
@@ -200,8 +204,10 @@ export default function Dashboards() {
                   <DropdownMenuItem
                     onSelect={() => {
                       batch(() => {
+                        // fix for the plot diseapearing on data change
                         setObsPolarData(undefined);
                         setSamplePolarData(undefined);
+                        setExperimentStatData(undefined);
 
                         setExperimentId(option.experiment_id);
                         setSelectedTab("overview");
@@ -233,15 +239,15 @@ export default function Dashboards() {
           </TabsList>
           <TabsContent value="overview" class="bg-secondary p-4 rounded-md">
             <div class="flex flex-row space-x-4">
-              <div class="flex flex-col space-y-4">
-                <div class="">
-                  <Card class="bg-muted">
+              <div class="flex flex-col space-y-4 w-full">
+                <div class="h-full">
+                  <Card class="bg-muted h-full">
                     <CardHeader class="py-2">
                       <CardTitle>Goals</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <Show
-                        when={experimentData() && experimentStat()}
+                        when={experimentData() && experimentStatData()}
                         fallback={<div>Loading experiment statistics...</div>}
                       >
                         {(stat) => (
