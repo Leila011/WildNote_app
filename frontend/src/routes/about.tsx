@@ -18,7 +18,8 @@ export default function About() {
             that includes experiment, observation session, and observation
             levels.
           </div>
-          <ul class="ml-5">
+          <ul class="ml-5 space-y-3">
+
             <li class="list-disc">
               For focal sampling: WildNote facilitates focused observations of a
               single subject over a set duration, making it easier to track
@@ -40,7 +41,8 @@ export default function About() {
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
               <CardAbout title="Simplified data recording with custom forms">
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">
                     Specify the parameters recorded during your experiment.
                   </li>
@@ -55,7 +57,8 @@ export default function About() {
                 </ul>
               </CardAbout>
               <CardAbout title="Data validation and accuracy">
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">
                     Define validation rules for each experimental parameter.
                   </li>
@@ -73,7 +76,8 @@ export default function About() {
                 </ul>
               </CardAbout>
               <CardAbout title="Secure and Accessible Data Storage">
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">
                     All observations and session data are saved in a secure
                     database.
@@ -89,7 +93,8 @@ export default function About() {
               </CardAbout>
 
               <CardAbout title="Dashboard for Progress and Insights">
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">
                     Visualize your advancement toward observation and session
                     targets.
@@ -113,11 +118,12 @@ export default function About() {
                     class="ml-1 inline-block"
                   >
                     Flask,
-                  </a>{" "}
+                  </a>
                   a lightweight and flexible web framework in Python.
                 </div>
                 Advantage:
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">
                     'Add what you need' type of framework: easy and fast to
                     configure, which make it suitable for prototype
@@ -132,7 +138,8 @@ export default function About() {
               <CardAbout title="SQLite & SQLite3">
                 <div class="flex flex-wrap items-center">
                   The database is powered using:
-                  <ul class="ml-5">
+                  <ul class="ml-5 space-y-3">
+
                     <li class="list-disc">
                       <a
                         href="https://sqlite.org/"
@@ -156,7 +163,8 @@ export default function About() {
                   </ul>
                 </div>
                 Advantages:
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">Lightweight disk-based database.</li>
                   <li class="list-disc">
                     Easily portable to larger database (e.g., PostgreSQL or
@@ -165,23 +173,17 @@ export default function About() {
                 </ul>
               </CardAbout>
 
-              <CardAbout title="Solid.js">
+              <CardAbout title="Solid.js, Tailwind CSS, Solid UI, Chart.js & Apexcharts">
                 <div class="flex flex-wrap items-center">
-                  The UI is built with
-                  <a
-                    href="https://solidjs.com/"
-                    target="_blank"
-                    class="ml-1 inline-block"
-                  >
+                  The frontend is built and styled with:
+                  <ul class="ml-5 space-y-3">
+                  <li class="list-disc">
+                    <a href="https://tailwindcss.com/" target="_blank">
                     Solid.js,
-                  </a>
-                  a reactive JavaScript library ensuring a fast and interactive
-                  user experience.
-                </div>
-              </CardAbout>
-              <CardAbout title="Tailwind CSS & Solid UI">
-                The UI is styled using a combination of:
-                <ul class="ml-5">
+                    </a>
+                    , a reactive JavaScript library ensuring a fast and interactive
+                    user experience.
+                  </li>
                   <li class="list-disc">
                     <a href="https://tailwindcss.com/" target="_blank">
                       Tailwind CSS
@@ -207,48 +209,37 @@ export default function About() {
                     , a library for charts.
                   </li>
                 </ul>
+                </div>
+              </CardAbout>
+              <CardAbout title="Vercel & PythonAnywhere">
+                The tool is deployed using:
+                <ul class="ml-5 space-y-3">
+
+                  <li class="list-disc">
+                    <a href="https://tailwindcss.com/" target="_blank">
+                      Vercel
+                    </a>
+                    , a cloud-based platform for deploying and hosting frontend web applications.
+                  </li>
+                  <li class="list-disc">
+                    <a href="https://solid-ui.com/" target="_blank">
+                      PythonAnywhere
+                    </a>
+                    , a cloud-based platform for hosting Python applications.
+                  </li>
+                </ul>
               </CardAbout>
             </div>
           </div>
           <Heading>Database structure</Heading>
+          <img src={"db.png"} alt="Hero image" />
+          
           <Heading>Future Developments</Heading>
           <div class="flex flex-col space-y-6">
             <div class="grid grid-cols-4 gap-3">
-              <CardAbout title="Additional functionalities">
-                <ul class="ml-5">
-                  <li class="list-disc">
-                    Add study type coming with pre-defined attributes.
-                  </li>
-                  <li class="list-disc">
-                    Add a map view for visualizing sample locations with GPS
-                    data.
-                  </li>
-                  <li class="list-disc">Add user login.</li>
-                  <li class="list-disc">
-                    Implement multi-user mode to collaborate on one experiment.
-                  </li>
-                </ul>
-              </CardAbout>
+            <CardAbout title="Improvements">
+                <ul class="ml-5 space-y-3">
 
-              <CardAbout title="Data Management">
-                <ul class="ml-5">
-                  <li class="list-disc">
-                    Export and import experiment setups to replicate study
-                    designs.
-                  </li>
-                  <li class="list-disc">
-                    Import external data, such as GPS locations.
-                  </li>
-                  <li class="list-disc">
-                    Duplicate existing setups to use as templates.
-                  </li>
-                  <li class="list-disc">
-                    Enable synchronisation with a cloud service
-                  </li>
-                </ul>
-              </CardAbout>
-              <CardAbout title="To do list">
-                <ul class="ml-5">
                   <li class="list-disc">
                     Create an experiment-specific ID for observations session and
                     observation.
@@ -265,28 +256,73 @@ export default function About() {
                     Add description and unit for attributes.
                   </li>
                   <li class="list-disc">
+                    Define further numerical attributes (e.g. discrete, treat as categorial).
+                  </li>
+                  <li class="list-disc">
                   Adapt for different screen sizes (phone, tablet).
                   </li>
                   <li class="list-disc">
                     Bug to fix: the dashboard fully re-render when switching
                     between experiment.
                   </li>
+                  <li class="list-disc">
+                    Add constraints in the database to ensure data integrity (e.g. NOT NULL ).
+                  </li>
                 </ul>
               </CardAbout>
-              <CardAbout title="Additional visualisations and analysis">
+              <CardAbout title="Functionalities">
+                <ul class="ml-5 space-y-3">
+
+                  <li class="list-disc">
+                    Add study type coming with pre-defined attributes.
+                  </li>
+                  <li class="list-disc">
+                    Add a map view for visualizing sample locations with GPS
+                    data.
+                  </li>
+                  <li class="list-disc">Add user login.</li>
+                  <li class="list-disc">
+                    Implement multi-user mode to collaborate on one experiment.
+                  </li>
+                </ul>
+              </CardAbout>
+
+              <CardAbout title="Data Management">
+                <ul class="ml-5 space-y-3">
+
+                  <li class="list-disc">
+                    Export and import experiment setups to replicate study
+                    designs.
+                  </li>
+                  <li class="list-disc">
+                    Import external data, such as GPS locations.
+                  </li>
+                  <li class="list-disc">
+                    Duplicate existing setups to use as templates.
+                  </li>
+                  <li class="list-disc">
+                    Enable synchronisation with a cloud service.
+                  </li>
+                </ul>
+              </CardAbout>
+
+              <CardAbout title="Visualisations and analysis">
                 Bi-variate visualisation:
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">Correlation matrix + heatmap</li>
                   <li class="list-disc">
-                  Box-and-whisker plot, scatter plot, bar chart
+                  Box-and-whisker plot, scatter plot, bar chart.
                   </li>
                 </ul>
                 Multi-variate visualisation:
-                <ul class="ml-5">
-                  <li class="list-disc">PCA</li>
+                <ul class="ml-5 space-y-3">
+
+                  <li class="list-disc">PCA.</li>
                 </ul>
                 Modeling:
-                <ul class="ml-5">
+                <ul class="ml-5 space-y-3">
+
                   <li class="list-disc">
                     Mixed-effect model: model data while taking into account its
                     hierarchical structure.
