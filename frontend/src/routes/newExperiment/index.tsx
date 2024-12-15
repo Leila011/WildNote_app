@@ -62,22 +62,21 @@ export default function NewExperiment() {
   const [hasObservationGoal, setHasObservationGoal] =
     createSignal<boolean>(true);
 
-
   const getNotRequired = () => {
-    const notRequired = []
+    const notRequired = [];
     if (!hasDuration()) {
-      notRequired.push("duration")
+      notRequired.push("duration");
     }
     if (!hasSampleGoal()) {
-      notRequired.push("samples_number_goal")
-      notRequired.push("samples_time_goal")
+      notRequired.push("samples_number_goal");
+      notRequired.push("samples_time_goal");
     }
     if (!hasObservationGoal()) {
-      notRequired.push("obs_number_goal")
-      notRequired.push("obs_time_goal")
+      notRequired.push("obs_number_goal");
+      notRequired.push("obs_time_goal");
     }
     return notRequired;
-  }
+  };
   const handleSubmit = async () => {
     setExperiment("timestamp_start", new Date().toISOString());
     setExperiment("status", "created");
@@ -87,8 +86,12 @@ export default function NewExperiment() {
       columns: columnToDb(ExperimentToDb(experiment)),
     };
 
-    const notRequired = getNotRequired()
-    const notZero = ["duration", "samples_time_goal", "obs_time_goal, samples_number_goal, obs_number_goal"]
+    const notRequired = getNotRequired();
+    const notZero = [
+      "duration",
+      "samples_time_goal",
+      "obs_time_goal, samples_number_goal, obs_number_goal",
+    ];
 
     const isReady =
       isAttributesValuesValid(dataOut.attributes) &&

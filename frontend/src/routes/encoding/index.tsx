@@ -193,7 +193,9 @@ export default function EncodingSample() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <For
-                    each={experiments()?.filter((e) => e.status === "active" || e.status === "created")}
+                    each={experiments()?.filter(
+                      (e) => e.status === "active" || e.status === "created",
+                    )}
                   >
                     {(option) => (
                       <DropdownMenuItem

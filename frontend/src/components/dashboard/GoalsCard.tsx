@@ -16,7 +16,7 @@ type Props = {
 export function GoalsCard({ experiment, stat }: Props) {
   return (
     <div class="flex flex-row space-x-3 h-full items-center">
-      <Card class= "h-full w-full">
+      <Card class="h-full w-full">
         <CardHeader>
           <CardTitle>Samples</CardTitle>
         </CardHeader>
@@ -66,7 +66,7 @@ export function GoalsCard({ experiment, stat }: Props) {
           <p>Median time: {secondToString(stat.sample_time_median)}</p>
         </CardContent>
       </Card>
-      <Card class= "h-full w-full">
+      <Card class="h-full w-full">
         <CardHeader>
           <CardTitle>Observations</CardTitle>
         </CardHeader>
