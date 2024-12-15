@@ -229,13 +229,12 @@ export default function Dashboards() {
           value={selectedTab()}
           onChange={setSelectedTab}
         >
-          <TabsList class="grid w-full grid-cols-4">
+          <TabsList class="grid w-full grid-cols-3">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="overview-sample">
               Observation sessions
             </TabsTrigger>
             <TabsTrigger value="overview-obs">Observations</TabsTrigger>
-            <TabsTrigger value="subject">Subject</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" class="bg-secondary p-4 rounded-md">
             <div class="flex flex-row space-x-4">
@@ -471,7 +470,6 @@ export default function Dashboards() {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="subject"></TabsContent>
         </Tabs>
       </div>
     </div>
