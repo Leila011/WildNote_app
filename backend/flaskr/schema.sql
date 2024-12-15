@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS subject_attribute_values;
 -- Create core tables
 CREATE TABLE experiment (
     experiment_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    status TEXT DEFAULT 'created',
+    status TEXT DEFAULT 'draft',
     timestamp_start TIMESTAMP,
     timestamp_end TIMESTAMP,
     predefine_subject BOOLEAN DEFAULT 0,

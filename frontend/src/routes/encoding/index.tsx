@@ -71,7 +71,7 @@ export default function EncodingSample() {
     // open the page for the last experiment
     if (experiments() && !experiment()) {
       const eligibleExperiments = experiments()!.filter(
-        (e) => e.status === "active",
+        (e) => e.status === "active" || e.status === "created",
       );
       setExperiment(eligibleExperiments[eligibleExperiments!.length - 1]);
     }
@@ -193,7 +193,7 @@ export default function EncodingSample() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <For
-                    each={experiments()?.filter((e) => e.status === "active")}
+                    each={experiments()?.filter((e) => e.status === "active" || e.status === "created")}
                   >
                     {(option) => (
                       <DropdownMenuItem

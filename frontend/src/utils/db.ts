@@ -92,6 +92,7 @@ export const newAttribute: Attribute = {
 
 export const statusOptions = [
   { value: "draft", label: "Draft" },
+  { value: "created", label: "Created" },
   { value: "active", label: "Active" },
   { value: "completed", label: "Completed" },
 ];

@@ -83,6 +83,13 @@ export default function EncodingObservation() {
       isColumnsValuesValid(dataOut.columns);
 
     if (isReady) {
+      // set experiment to active
+      await updateValue({
+        level: "experiment",
+        column_name: "status",
+        row_id: Number(params.experimentId),
+        value: "active",
+      });
       const response = await addNewObservation({
         data: dataOut,
         sampleId: Number(params.sampleId),

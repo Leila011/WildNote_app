@@ -47,7 +47,7 @@ export default function NewExperiment() {
     samples_time_goal: { hours: 0, minutes: 0, seconds: 0 },
     obs_number_goal: 0,
     obs_time_goal: { hours: 0, minutes: 0, seconds: 0 },
-    status: "created",
+    status: "draft",
   });
 
   const [attributes, setAttributes] = createStore<AttributeValue[]>([]);
@@ -61,6 +61,23 @@ export default function NewExperiment() {
   const [hasSampleGoal, setHasSampleGoal] = createSignal<boolean>(true);
   const [hasObservationGoal, setHasObservationGoal] =
     createSignal<boolean>(true);
+
+
+  const getNotRequired = () => {
+    const notRequired = []
+    if (!hasDuration()) {
+      notRequired.push("duration")
+    }
+    if (!hasSampleGoal()) {
+      notRequired.push("samples_number_goal")
+      notRequired.push("samples_time_goal")
+    }
+    if (!hasObservationGoal()) {
+      notRequired.push("obs_number_goal")
+      notRequired.push("obs_time_goal")
+    }
+    return notRequired;
+  }
   const handleSubmit = async () => {
     setExperiment("timestamp_start", new Date().toISOString());
     setExperiment("status", "created");
@@ -70,9 +87,12 @@ export default function NewExperiment() {
       columns: columnToDb(ExperimentToDb(experiment)),
     };
 
+    const notRequired = getNotRequired()
+    const notZero = ["duration", "samples_time_goal", "obs_time_goal, samples_number_goal, obs_number_goal"]
+
     const isReady =
       isAttributesValuesValid(dataOut.attributes) &&
-      isColumnsValuesValid(dataOut.columns);
+      isColumnsValuesValid(dataOut.columns, notRequired, notZero);
     if (isReady) {
       const response = await addNewExperiment({ data: dataOut });
       if (dataOut.columns.predefine_subject) {

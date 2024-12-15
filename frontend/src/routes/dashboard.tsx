@@ -140,7 +140,7 @@ export default function Dashboards() {
   createEffect(() => {
     if (experiments() && !experimentId()) {
       const eligibleExperiments = experiments()!.filter(
-        (e) => e.status !== "created",
+        (e) => e.status === "active"|| e.status === "completed",
       );
       setExperimentId(
         eligibleExperiments[eligibleExperiments!.length - 1].experiment_id,
@@ -158,21 +158,25 @@ export default function Dashboards() {
     if (obsPolar()) {
       setObsPolarData(obsPolar());
     }
-  });
+
+    if (experimentStat()) {
+      setExperimentStatData(experimentStat());
+  }});
   // fix for the polar plot diseapearing on data change
   // set to undefined when user change the experience to force the component to rerender
   const [samplePolarData, setSamplePolarData] = createSignal<StatPolar>();
   const [obsPolarData, setObsPolarData] = createSignal<StatPolar>();
+  const [experimentStatData, setExperimentStatData] = createSignal<ExperimentStats>();
 
   const [title, setTitle] = createSignal<string>("No experiment selected");
 
   createEffect(() => {
     if (experimentData()) {
       const to = experimentData().timestamp_end
-        ? `to ${getDate(experimentData().timestamp_end)}`
-        : "(ongoing)";
+        ? `${getDate(experimentData().timestamp_end)}`
+        : "ongoing";
       setTitle(
-        `${experimentData().name} (from ${getDate(experimentData().timestamp_start)} ${to})`,
+        `${experimentData().name} (${getDate(experimentData().timestamp_start)} - ${to})`,
       );
     }
   });
@@ -195,13 +199,15 @@ export default function Dashboards() {
               <IconChevronDown />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <For each={experiments()?.filter((e) => e.status !== "created")}>
+              <For each={experiments()?.filter((e) => e.status === "active" || e.status === "completed")}>
                 {(option) => (
                   <DropdownMenuItem
                     onSelect={() => {
                       batch(() => {
+                        // fix for the plot diseapearing on data change
                         setObsPolarData(undefined);
                         setSamplePolarData(undefined);
+                        setExperimentStatData(undefined);
 
                         setExperimentId(option.experiment_id);
                         setSelectedTab("overview");
@@ -223,25 +229,24 @@ export default function Dashboards() {
           value={selectedTab()}
           onChange={setSelectedTab}
         >
-          <TabsList class="grid w-full grid-cols-4">
+          <TabsList class="grid w-full grid-cols-3">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="overview-sample">
               Observation sessions
             </TabsTrigger>
             <TabsTrigger value="overview-obs">Observations</TabsTrigger>
-            <TabsTrigger value="subject">Subject</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" class="bg-secondary p-4 rounded-md">
             <div class="flex flex-row space-x-4">
-              <div class="flex flex-col space-y-4">
-                <div class="">
-                  <Card class="bg-muted">
+              <div class="flex flex-col space-y-4 w-full">
+                <div class="h-full">
+                  <Card class="bg-muted h-full">
                     <CardHeader class="py-2">
                       <CardTitle>Goals</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <Show
-                        when={experimentData() && experimentStat()}
+                        when={experimentData() && experimentStatData()}
                         fallback={<div>Loading experiment statistics...</div>}
                       >
                         {(stat) => (
@@ -465,7 +470,6 @@ export default function Dashboards() {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="subject"></TabsContent>
         </Tabs>
       </div>
     </div>
