@@ -91,6 +91,7 @@ export const generateColumns = (
                 });
                 refetch && refetch();
               }}
+              disabled = {["experiment", "sample"].includes(table) && [1,2].includes(props.row.original.experiment_id) || table === "observation" && props.row.original.observation_id <=250}
             >
               Delete
             </DropdownMenuItem>
