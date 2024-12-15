@@ -139,8 +139,12 @@ export default function Dashboards() {
 
   createEffect(() => {
     if (experiments() && !experimentId()) {
-      const eligibleExperiments = experiments()!.filter((e) => e.status !== "created")
-      setExperimentId(eligibleExperiments[eligibleExperiments!.length - 1].experiment_id);
+      const eligibleExperiments = experiments()!.filter(
+        (e) => e.status !== "created",
+      );
+      setExperimentId(
+        eligibleExperiments[eligibleExperiments!.length - 1].experiment_id,
+      );
     }
     if (obsStat() && !obsVariable()) {
       setObsVariable(Object.keys(obsStat())[0]);

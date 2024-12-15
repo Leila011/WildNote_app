@@ -62,7 +62,6 @@ export default function NewExperiment() {
   const [hasObservationGoal, setHasObservationGoal] =
     createSignal<boolean>(true);
   const handleSubmit = async () => {
-
     setExperiment("timestamp_start", new Date().toISOString());
     setExperiment("status", "created");
 

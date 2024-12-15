@@ -70,9 +70,11 @@ export default function EncodingSample() {
   createEffect(() => {
     // open the page for the last experiment
     if (experiments() && !experiment()) {
-      const eligibleExperiments = experiments()!.filter((e) => e.status === "active")
+      const eligibleExperiments = experiments()!.filter(
+        (e) => e.status === "active",
+      );
       setExperiment(eligibleExperiments[eligibleExperiments!.length - 1]);
-      console.log(eligibleExperiments)
+      console.log(eligibleExperiments);
     }
     // set subject to the last one
     if (subjects() && !subject()) {
@@ -193,9 +195,7 @@ export default function EncodingSample() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <For
-                    each={experiments()?.filter(
-                      (e) => e.status === "active",
-                    )}
+                    each={experiments()?.filter((e) => e.status === "active")}
                   >
                     {(option) => (
                       <DropdownMenuItem

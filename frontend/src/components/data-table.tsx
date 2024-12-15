@@ -49,7 +49,7 @@ export function DataTable<TData, TValue>(props: DataTableProps<TData, TValue>) {
     [],
   );
   const [columnVisibility, setColumnVisibility] = createSignal<VisibilityState>(
-    props.columnVisibilityInit?? {},
+    props.columnVisibilityInit ?? {},
   );
   const [rowSelection, setRowSelection] = createSignal({});
 

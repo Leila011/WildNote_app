@@ -8,20 +8,19 @@ import { ExperimentDb } from "~/types/db";
 import { ExperimentFromDb } from "~/utils/db";
 
 export default function Experiments() {
-  const [data, { refetch }] =
-    createResource<ExperimentDb[]>(fetchExperiments);
+  const [data, { refetch }] = createResource<ExperimentDb[]>(fetchExperiments);
 
   const [dataFormated, setDataFormated] = createSignal<ExperimentDb[]>([]);
 
-
   createEffect(() => {
-
-    if(data() && data()?.length){
-      const formatted = data()!.map((experiment) => ExperimentFromDb(experiment));
-      console.log(formatted)
-      setDataFormated(formatted)
+    if (data() && data()?.length) {
+      const formatted = data()!.map((experiment) =>
+        ExperimentFromDb(experiment),
+      );
+      console.log(formatted);
+      setDataFormated(formatted);
     }
-  })
+  });
 
   function getColumnNames(data: ExperimentDb[]) {
     return Object.keys(data![0]).map((key) => ({ name: key }));
@@ -60,7 +59,7 @@ export default function Experiments() {
             samples_time_goal: false,
             obs_number_goal: false,
             obs_time_goal: false,
-        }}
+          }}
         />
       )}
       <Show when={data() && !data()?.length}>

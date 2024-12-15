@@ -32,9 +32,9 @@ export default function About() {
           </ul>
           <div>
             This structured approach, combined with real-time data validation
-            and intuitive user interfaces, ensures an easy, error-free,
-            and efficient observation process, reducing the risk of lost data
-            and enhancing the reliability of your research outcomes.
+            and intuitive user interfaces, ensures an easy, error-free, and
+            efficient observation process, reducing the risk of lost data and
+            enhancing the reliability of your research outcomes.
           </div>
           <Heading>Functionality</Heading>
           <div class="flex flex-col space-y-6">
@@ -49,8 +49,8 @@ export default function About() {
                     structure to facilitate recording your data.
                   </li>
                   <li class="list-disc">
-                    Characterise the subjects you are observing ahead
-                    of time or during the observation session.
+                    Characterise the subjects you are observing ahead of time or
+                    during the observation session.
                   </li>
                 </ul>
               </CardAbout>
@@ -218,8 +218,7 @@ export default function About() {
               <CardAbout title="Additional functionalities">
                 <ul class="ml-5">
                   <li class="list-disc">
-                    Add study type coming with pre-defined
-                    attributes.
+                    Add study type coming with pre-defined attributes.
                   </li>
                   <li class="list-disc">
                     Add a map view for visualizing sample locations with GPS
@@ -227,9 +226,8 @@ export default function About() {
                   </li>
                   <li class="list-disc">Introduce user loggin.</li>
                   <li class="list-disc">
-                  Implement multi-user mode to collaborate on one experiment.
+                    Implement multi-user mode to collaborate on one experiment.
                   </li>
-
                 </ul>
               </CardAbout>
 
@@ -260,43 +258,40 @@ export default function About() {
                     Allow the user to modify the experiment structure after
                     creation when no recording have been done yet.
                   </li>
+                  <li class="list-disc">Add dashboard tab for subjects.</li>
                   <li class="list-disc">
-                   Add dashboard tab for subjects.
+                    Allow adding one or multiple subject in an observation.
                   </li>
                   <li class="list-disc">
-                   Allow adding one or multiple subject in an observation.
+                    Add description and unit for attributes.
                   </li>
                   <li class="list-disc">
-                   Add description and unit for attributes.
+                    Make sure it can be use on different screen size (phone,
+                    tablette).
                   </li>
                   <li class="list-disc">
-                   Make sure it can be use on different screen size (phone, tablette).
-                  </li>
-                  <li class="list-disc">
-                    Bug to fix: the dashboard fully re-render when switching between experiment.
+                    Bug to fix: the dashboard fully re-render when switching
+                    between experiment.
                   </li>
                 </ul>
               </CardAbout>
               <CardAbout title="Additional visualisations and analysis">
-              Bi-variate visualisation:
+                Bi-variate visualisation:
                 <ul class="ml-5">
-                <li class="list-disc">
-                    Correlation matrix + heatmap
-                  </li>
+                  <li class="list-disc">Correlation matrix + heatmap</li>
                   <li class="list-disc">
-                  Whisker plot, scatter plot, bar chart
+                    Whisker plot, scatter plot, bar chart
                   </li>
-                  </ul>
+                </ul>
                 Multi-variate visualisation:
                 <ul class="ml-5">
+                  <li class="list-disc">PCA</li>
+                </ul>
+                Modelisation:
+                <ul class="ml-5">
                   <li class="list-disc">
-                     PCA
-                  </li>
-                  </ul>
-                  Modelisation:
-                  <ul class="ml-5">
-                  <li class="list-disc">
-                    Mixed-effect model: model data while taking into accoun its hierarchical structure.
+                    Mixed-effect model: model data while taking into accoun its
+                    hierarchical structure.
                   </li>
                 </ul>
               </CardAbout>
