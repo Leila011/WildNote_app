@@ -28,6 +28,7 @@ import { columnToDb, ExperimentToDb, toAttributeValue } from "~/utils/db";
 import {
   NumberField,
   NumberFieldDecrementTrigger,
+  NumberFieldErrorMessage,
   NumberFieldIncrementTrigger,
   NumberFieldInput,
 } from "~/components/ui/number-field";
@@ -62,22 +63,21 @@ export default function NewExperiment() {
   const [hasObservationGoal, setHasObservationGoal] =
     createSignal<boolean>(true);
 
-
   const getNotRequired = () => {
-    const notRequired = []
+    const notRequired = [];
     if (!hasDuration()) {
-      notRequired.push("duration")
+      notRequired.push("duration");
     }
     if (!hasSampleGoal()) {
-      notRequired.push("samples_number_goal")
-      notRequired.push("samples_time_goal")
+      notRequired.push("samples_number_goal");
+      notRequired.push("samples_time_goal");
     }
     if (!hasObservationGoal()) {
-      notRequired.push("obs_number_goal")
-      notRequired.push("obs_time_goal")
+      notRequired.push("obs_number_goal");
+      notRequired.push("obs_time_goal");
     }
     return notRequired;
-  }
+  };
   const handleSubmit = async () => {
     setExperiment("timestamp_start", new Date().toISOString());
     setExperiment("status", "created");
@@ -87,8 +87,12 @@ export default function NewExperiment() {
       columns: columnToDb(ExperimentToDb(experiment)),
     };
 
-    const notRequired = getNotRequired()
-    const notZero = ["duration", "samples_time_goal", "obs_time_goal, samples_number_goal, obs_number_goal"]
+    const notRequired = getNotRequired();
+    const notZero = [
+      "duration",
+      "samples_time_goal",
+      "obs_time_goal, samples_number_goal, obs_number_goal",
+    ];
 
     const isReady =
       isAttributesValuesValid(dataOut.attributes) &&
@@ -136,18 +140,18 @@ export default function NewExperiment() {
               <p>Do you want to define reusable subjects?</p>
               <ToggleGroup
                 class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                value={experiment.predefine_subject!.toString()}
+                value={experiment.predefine_subject! ? "Yes" : "No"}
               >
-                <For each={["true", "false"]}>
+                <For each={[true, false]}>
                   {(option) => (
                     <ToggleGroupItem
                       class={`${toggleVariants({ size: "sm" })}`}
-                      value={option}
+                      value={option ? "Yes" : "No"}
                       onClick={() => {
-                        setExperiment("predefine_subject", option === "true");
+                        setExperiment("predefine_subject", option);
                       }}
                     >
-                      {option}
+                      {option ? "Yes" : "No"}
                     </ToggleGroupItem>
                   )}
                 </For>
@@ -161,18 +165,18 @@ export default function NewExperiment() {
                 </p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasDuration().toString()}
+                  value={hasDuration() ? "Yes" : "No"}
                 >
-                  <For each={["true", "false"]}>
+                  <For each={[true, false]}>
                     {(option) => (
                       <ToggleGroupItem
                         class={`${toggleVariants({ size: "sm" })}`}
-                        value={option}
+                        value={option ? "Yes" : "No"}
                         onClick={() => {
-                          setHasDuration(option === "true");
+                          setHasDuration(option);
                         }}
                       >
-                        {option}
+                        {option ? "Yes" : "No"}
                       </ToggleGroupItem>
                     )}
                   </For>
@@ -195,18 +199,18 @@ export default function NewExperiment() {
                 <p>Do you want to set goals for the observation sessions?</p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasSampleGoal().toString()}
+                  value={hasSampleGoal() ? "Yes" : "No"}
                 >
-                  <For each={["true", "false"]}>
+                  <For each={[true, false]}>
                     {(option) => (
                       <ToggleGroupItem
                         class={`${toggleVariants({ size: "sm" })}`}
-                        value={option}
+                        value={option ? "Yes" : "No"}
                         onClick={() => {
-                          setHasSampleGoal(option === "true");
+                          setHasSampleGoal(option);
                         }}
                       >
-                        {option}
+                        {option ? "Yes" : "No"}
                       </ToggleGroupItem>
                     )}
                   </For>
@@ -214,7 +218,7 @@ export default function NewExperiment() {
               </div>
 
               <div class="-m-5 items-end">
-                <Show when={hasObservationGoal()}>
+                <Show when={hasSampleGoal()}>
                   <div class="flex flex-row space-x-24 -mt-7">
                     <div class="flex flex-col space-x-1 items-center">
                       <p class="pb-6">Number of observation sessions</p>
@@ -225,6 +229,11 @@ export default function NewExperiment() {
                           setExperiment("samples_number_goal", value);
                         }}
                         minValue={0}
+                        validationState={
+                          experiment.samples_number_goal! > 0
+                            ? "valid"
+                            : "invalid"
+                        }
                       >
                         <div class="relative">
                           <NumberFieldInput
@@ -254,18 +263,18 @@ export default function NewExperiment() {
                 <p>Do you want to set goals for the observations?</p>
                 <ToggleGroup
                   class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasObservationGoal().toString()}
+                  value={hasObservationGoal() ? "Yes" : "No"}
                 >
-                  <For each={["true", "false"]}>
+                  <For each={[true, false]}>
                     {(option) => (
                       <ToggleGroupItem
                         class={`${toggleVariants({ size: "sm" })}`}
-                        value={option}
+                        value={option ? "Yes" : "No"}
                         onClick={() => {
-                          setHasObservationGoal(option === "true");
+                          setHasObservationGoal(option);
                         }}
                       >
-                        {option}
+                        {option ? "Yes" : "No"}
                       </ToggleGroupItem>
                     )}
                   </For>
@@ -284,6 +293,9 @@ export default function NewExperiment() {
                           setExperiment("obs_number_goal", value);
                         }}
                         minValue={0}
+                        validationState={
+                          experiment.obs_number_goal! > 0 ? "valid" : "invalid"
+                        }
                       >
                         <div class="relative">
                           <NumberFieldInput

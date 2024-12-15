@@ -91,6 +91,7 @@ export const generateColumns = (
                 });
                 refetch && refetch();
               }}
+              disabled = {["experiment", "sample"].includes(table) && [1,2].includes(props.row.original.experiment_id) || table === "observation" && props.row.original.observation_id <=250}
             >
               Delete
             </DropdownMenuItem>
@@ -147,7 +148,12 @@ export const generateColumns = (
 
       return (
         <div>
-          <Show when={props.row.original.status === "active" || props.row.original.status === "created"}>
+          <Show
+            when={
+              props.row.original.status === "active" ||
+              props.row.original.status === "created"
+            }
+          >
             <Button
               variant="default"
               onClick={() =>

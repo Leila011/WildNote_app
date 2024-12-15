@@ -119,23 +119,6 @@ export default function Home() {
               </ul>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-5">
-            <AccordionTrigger>
-              Secure and Reliable for Fieldwork
-            </AccordionTrigger>
-            <AccordionContent>
-              <ul class="list-disc list-inside space-y-3">
-                <li>
-                  Safe Data Storage: All your data is securely stored, giving
-                  you peace of mind.
-                </li>
-                <li>
-                  Offline Capability: Continue working in remote areas without
-                  internet access.
-                </li>
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
       </div>
     </main>

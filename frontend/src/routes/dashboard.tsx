@@ -140,7 +140,7 @@ export default function Dashboards() {
   createEffect(() => {
     if (experiments() && !experimentId()) {
       const eligibleExperiments = experiments()!.filter(
-        (e) => e.status === "active"|| e.status === "completed",
+        (e) => e.status === "active" || e.status === "completed",
       );
       setExperimentId(
         eligibleExperiments[eligibleExperiments!.length - 1].experiment_id,
@@ -161,12 +161,14 @@ export default function Dashboards() {
 
     if (experimentStat()) {
       setExperimentStatData(experimentStat());
-  }});
+    }
+  });
   // fix for the polar plot diseapearing on data change
   // set to undefined when user change the experience to force the component to rerender
   const [samplePolarData, setSamplePolarData] = createSignal<StatPolar>();
   const [obsPolarData, setObsPolarData] = createSignal<StatPolar>();
-  const [experimentStatData, setExperimentStatData] = createSignal<ExperimentStats>();
+  const [experimentStatData, setExperimentStatData] =
+    createSignal<ExperimentStats>();
 
   const [title, setTitle] = createSignal<string>("No experiment selected");
 
@@ -199,7 +201,11 @@ export default function Dashboards() {
               <IconChevronDown />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <For each={experiments()?.filter((e) => e.status === "active" || e.status === "completed")}>
+              <For
+                each={experiments()?.filter(
+                  (e) => e.status === "active" || e.status === "completed",
+                )}
+              >
                 {(option) => (
                   <DropdownMenuItem
                     onSelect={() => {
