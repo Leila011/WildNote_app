@@ -213,7 +213,7 @@ def get_experiments_identification():
     """Retrieve the name and id of the experiment"""
     db = get_db()
     db.row_factory = make_dicts  # Ensure the data is converted to dictionaries when queried
-    ids = db.execute(f'SELECT experiment_id, name, status, FROM experiment').fetchall()
+    ids = db.execute(f'SELECT experiment_id, name, status FROM experiment').fetchall()
     return jsonify(ids)
 
 def get_experiments():

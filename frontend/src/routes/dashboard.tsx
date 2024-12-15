@@ -31,6 +31,7 @@ import {
   StatDescriptivesPlot,
   StatPolar,
   StatTimeline,
+  StatusExperiment,
 } from "~/types/db";
 import Heatmap from "~/components/dashboard/Heatmap";
 import { fetchCalendar } from "~/api/fetchCalendar";
@@ -45,8 +46,9 @@ import Timeline from "~/components/dashboard/Timeline";
 
 export default function Dashboards() {
   const [experiments] = createResource<
-    { name: string; experiment_id: number }[]
+    { name: string; experiment_id: number; status: StatusExperiment }[]
   >(fetchExperimentsIdentification);
+
   const [experimentId, setExperimentId] = createSignal<number | undefined>(
     undefined,
   );
@@ -137,7 +139,8 @@ export default function Dashboards() {
 
   createEffect(() => {
     if (experiments() && !experimentId()) {
-      setExperimentId(experiments()![experiments()!.length - 1].experiment_id);
+      const eligibleExperiments = experiments()!.filter((e) => e.status !== "created")
+      setExperimentId(eligibleExperiments[eligibleExperiments!.length - 1].experiment_id);
     }
     if (obsStat() && !obsVariable()) {
       setObsVariable(Object.keys(obsStat())[0]);
@@ -188,7 +191,7 @@ export default function Dashboards() {
               <IconChevronDown />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <For each={experiments()}>
+              <For each={experiments()?.filter((e) => e.status !== "created")}>
                 {(option) => (
                   <DropdownMenuItem
                     onSelect={() => {

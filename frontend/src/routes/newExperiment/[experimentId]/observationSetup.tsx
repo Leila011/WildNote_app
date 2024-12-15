@@ -25,7 +25,7 @@ export default function ObservationSetup() {
         level: "observation",
       });
       await updateValue({
-        level: "observation",
+        level: "experiment",
         column_name: "status",
         row_id: Number(params.experimentId),
         value: "active",

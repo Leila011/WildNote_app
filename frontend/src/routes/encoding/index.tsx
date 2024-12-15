@@ -67,10 +67,11 @@ export default function EncodingSample() {
 
   const [name, setName] = createSignal<string>("");
 
-  onMount(() => {
+  createEffect(() => {
     // open the page for the last experiment
     if (experiments() && !experiment()) {
-      setExperiment(experiments()![experiments()!.length - 1]);
+      const eligibleExperiments = experiments()!.filter((e) => e.status === "active")
+      setExperiment(eligibleExperiments[eligibleExperiments!.length - 1]);
     }
     // set subject to the last one
     if (subjects() && !subject()) {
@@ -193,7 +194,7 @@ export default function EncodingSample() {
                 <DropdownMenuContent>
                   <For
                     each={experiments()?.filter(
-                      (item) => item.status !== "completed",
+                      (e) => e.status === "active",
                     )}
                   >
                     {(option) => (
