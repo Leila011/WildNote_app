@@ -57,7 +57,7 @@ export default function About() {
               <CardAbout title="Data validation and accuracy">
                 <ul class="ml-5">
                   <li class="list-disc">
-                    Define validation rules for each experimental parameters.
+                    Define validation rules for each experimental parameter.
                   </li>
                   <li class="list-disc">
                     Real-time checks reduce errors during data input.
@@ -83,8 +83,7 @@ export default function About() {
                     place.
                   </li>
                   <li class="list-disc">
-                    Usable offline which make it perfect for osbervation trip in
-                    the wild
+                    Usable offline which make it perfect for a remote field trip.
                   </li>
                 </ul>
               </CardAbout>
@@ -160,7 +159,7 @@ export default function About() {
                 <ul class="ml-5">
                   <li class="list-disc">Lightweight disk-based database.</li>
                   <li class="list-disc">
-                    Easily portable to larger database (e.i., PostgreSQL or
+                    Easily portable to larger database (e.g., PostgreSQL or
                     Oracle) if necessary.
                   </li>
                 </ul>
@@ -224,7 +223,7 @@ export default function About() {
                     Add a map view for visualizing sample locations with GPS
                     data.
                   </li>
-                  <li class="list-disc">Introduce user loggin.</li>
+                  <li class="list-disc">Add user login.</li>
                   <li class="list-disc">
                     Implement multi-user mode to collaborate on one experiment.
                   </li>
@@ -251,7 +250,7 @@ export default function About() {
               <CardAbout title="To do list">
                 <ul class="ml-5">
                   <li class="list-disc">
-                    Create a experiment-specific id for observations session and
+                    Create an experiment-specific ID for observations session and
                     observation.
                   </li>
                   <li class="list-disc">
@@ -266,8 +265,7 @@ export default function About() {
                     Add description and unit for attributes.
                   </li>
                   <li class="list-disc">
-                    Make sure it can be use on different screen size (phone,
-                    tablette).
+                  Adapt for different screen sizes (phone, tablet).
                   </li>
                   <li class="list-disc">
                     Bug to fix: the dashboard fully re-render when switching
@@ -280,17 +278,17 @@ export default function About() {
                 <ul class="ml-5">
                   <li class="list-disc">Correlation matrix + heatmap</li>
                   <li class="list-disc">
-                    Whisker plot, scatter plot, bar chart
+                  Box-and-whisker plot, scatter plot, bar chart
                   </li>
                 </ul>
                 Multi-variate visualisation:
                 <ul class="ml-5">
                   <li class="list-disc">PCA</li>
                 </ul>
-                Modelisation:
+                Modeling:
                 <ul class="ml-5">
                   <li class="list-disc">
-                    Mixed-effect model: model data while taking into accoun its
+                    Mixed-effect model: model data while taking into account its
                     hierarchical structure.
                   </li>
                 </ul>
