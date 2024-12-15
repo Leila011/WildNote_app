@@ -57,7 +57,7 @@ export default function EncodingObservation() {
 
   // calculate the time passing while the time is not expired
   setInterval(() => {
-    if (timePassed() < duration()) {
+    if (duration() !== 0 && timePassed() < duration()) {
       setTimePassed(getTimePassed(startTime));
     }
   }, 1000);
@@ -175,7 +175,7 @@ export default function EncodingObservation() {
             <Button
               class={buttonVariants({ variant: "accent" })}
               onClick={handleSubmitNext}
-              disabled={timePassed() >= duration()}
+              disabled={duration() !== 0 && timePassed() >= duration()}
             >
               Next observation
             </Button>

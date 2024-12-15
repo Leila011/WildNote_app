@@ -51,7 +51,8 @@ export function attributeToDb(
       default_value:
         attribute.default_value === undefined ? null : attribute.default_value,
     };
-    return newAttribute;
+    if("value" in attribute){ return newAttribute as AttributeValueDb};
+    return newAttribute as AttributeDb;
   });
   return cleanAttributes;
 }

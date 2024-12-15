@@ -92,7 +92,7 @@ export type Experiment = {
 export type SampleDb = {
   sample_id: number;
   experiment_id: number;
-  subject_id?: number;
+  subject_id: number | null;
   status: string;
   timestamp_start: string;
   timestamp_end: string;

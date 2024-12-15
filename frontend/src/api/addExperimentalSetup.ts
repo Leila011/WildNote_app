@@ -1,9 +1,9 @@
 import { backendUrl } from "~/db";
-import { Attribute, Level } from "~/types/db";
+import { AttributeDb, Level } from "~/types/db";
 import { attributeToDb } from "~/utils/db";
 
 type Props = {
-  data: Attribute[];
+  data: AttributeDb[];
   experimentId: number;
   level: Level;
 };
@@ -15,7 +15,7 @@ export async function addExperimentalSetup(props: Props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(attributeToDb(props.data)),
+      body: JSON.stringify(props.data),
     },
   );
   if (!response.ok) {

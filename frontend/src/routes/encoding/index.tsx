@@ -72,6 +72,7 @@ export default function EncodingSample() {
     if (experiments() && !experiment()) {
       const eligibleExperiments = experiments()!.filter((e) => e.status === "active")
       setExperiment(eligibleExperiments[eligibleExperiments!.length - 1]);
+      console.log(eligibleExperiments)
     }
     // set subject to the last one
     if (subjects() && !subject()) {
@@ -123,12 +124,11 @@ export default function EncodingSample() {
   async function endSample() {
     const dataOut = {
       columns: {
-        subject_id: subject()?.subject_id ?? undefined,
+        subject_id: subject()?.subject_id ?? null,
         timestamp_start: getTimestamp(),
       },
       attributes: store,
     };
-
     const isNotRequired = experiment()?.predefine_subject
       ? undefined
       : ["subject_id"];
@@ -154,9 +154,9 @@ export default function EncodingSample() {
     }
   }
   const handleSubmit = async () => {
-    if (experiment() && (experiment()?.predefine_subject ?? subject())) {
+    if (experiment() && (!experiment()!.predefine_subject || subject())) {
       const responseSample = await endSample();
-
+      console.log(responseSample);
       if (experiment()?.predefine_subject) {
         const responseSubject = await endSubject();
       }
