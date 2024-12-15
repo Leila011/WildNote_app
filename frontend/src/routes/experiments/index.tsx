@@ -1,14 +1,27 @@
 import { DataTable } from "~/components/data-table";
-import { createResource, Show } from "solid-js";
+import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { generateColumns } from "~/components/generateColumns";
 import { fetchExperiments } from "~/api/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";
 import { ExperimentDb } from "~/types/db";
+import { ExperimentFromDb } from "~/utils/db";
 
 export default function Experiments() {
-  const [dataAttributes, { refetch }] =
+  const [data, { refetch }] =
     createResource<ExperimentDb[]>(fetchExperiments);
+
+  const [dataFormated, setDataFormated] = createSignal<ExperimentDb[]>([]);
+
+
+  createEffect(() => {
+
+    if(data() && data()?.length){
+      const formatted = data()!.map((experiment) => ExperimentFromDb(experiment));
+      console.log(formatted)
+      setDataFormated(formatted)
+    }
+  })
 
   function getColumnNames(data: ExperimentDb[]) {
     return Object.keys(data![0]).map((key) => ({ name: key }));
@@ -27,17 +40,30 @@ export default function Experiments() {
         </a>
       </div>
 
-      {dataAttributes()?.length && (
+      {dataFormated()?.length && (
         <DataTable
           columns={generateColumns(
-            getColumnNames(dataAttributes() || []),
+            getColumnNames(dataFormated() || []),
             "experiment",
             refetch,
           )}
-          data={dataAttributes() || []}
+          data={dataFormated() || []}
+          columnVisibilityInit={{
+            experiment_id: false,
+            name: true,
+            status: true,
+            predefine_subject: false,
+            timestamp_start: true,
+            timestamp_end: true,
+            duration: false,
+            samples_number_goal: false,
+            samples_time_goal: false,
+            obs_number_goal: false,
+            obs_time_goal: false,
+        }}
         />
       )}
-      <Show when={dataAttributes() && !dataAttributes()?.length}>
+      <Show when={data() && !data()?.length}>
         <div>There is no experiments yet!</div>
       </Show>
     </div>
