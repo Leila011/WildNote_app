@@ -15,7 +15,6 @@ export function isColumnsValuesValid(
   notRequired?: string[],
   notZero?: string[],
 ): boolean {
-
   let ready = true;
   Object.keys(columns).forEach((column: string) => {
     const isTimeHMSzero =

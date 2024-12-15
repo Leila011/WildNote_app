@@ -114,6 +114,10 @@ export default function About() {
                     Add description and unit for attributes.
                   </li>
                   <li class="list-disc">
+                    Show which attributes are created by default when
+                    configuring a new experiment.
+                  </li>
+                  <li class="list-disc">
                     Define further numerical attributes (e.g. discrete, treat as
                     categorial).
                   </li>
@@ -126,7 +130,8 @@ export default function About() {
                   </li>
                   <li class="list-disc">
                     Add constraints in the database to ensure data integrity
-                    (e.g. NOT NULL ).
+                    (e.g. NOT NULL, UNIQUE ) and madapt the frontend to respect
+                    them.
                   </li>
                 </ul>
               </CardAbout>
@@ -163,6 +168,11 @@ export default function About() {
                   </li>
                   <li class="list-disc">
                     Enable synchronisation with a cloud service.
+                  </li>
+                  <li class="list-disc">Export data.</li>
+                  <li class="list-disc">
+                    Export a printable report with the information from the
+                    dashboard.
                   </li>
                 </ul>
               </CardAbout>
