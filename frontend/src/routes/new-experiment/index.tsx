@@ -32,7 +32,8 @@ import {
   NumberFieldInput,
 } from "~/components/ui/number-field";
 import { Experiment, Metadata } from "~/types/db";
-import { DurationHMSForm } from "~/components/form/DurationHMSForm";
+import { DurationHMSField } from "~/components/form-fields/DurationHMSField";
+import {ToggleYesNo} from "~/components/form-fields/ToggleYesNo";
 
 const ExperimentInit: Partial<Experiment> ={
   name: "",
@@ -51,7 +52,7 @@ const notZeroAttributes = [
   "obs_time_goal, samples_number_goal, obs_number_goal",
 ];
 
-export const NewExperiment = () => {
+const NewExperiment = () => {
   const navigate = useNavigate();
   const [predefinedMetadata] = createResource<Metadata>(() =>
     fetchExperimentPredefinedMetadata(),
@@ -60,6 +61,7 @@ export const NewExperiment = () => {
   const [attributesValue, setAttributeValues] = createStore<AttributeValue[]>([]);
 
   createEffect(() => {
+    console.log(hasSampleGoal());
     if (predefinedMetadata()) {
       setAttributeValues(toAttributeValue(predefinedMetadata()!.attributes));
     }
@@ -165,28 +167,11 @@ export const NewExperiment = () => {
                   Do you want to set a target duration for the observation
                   sessions?
                 </p>
-                <ToggleGroup
-                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasDuration() ? "Yes" : "No"}
-                >
-                  <For each={[true, false]}>
-                    {(option) => (
-                      <ToggleGroupItem
-                        class={`${toggleVariants({ size: "sm" })}`}
-                        value={option ? "Yes" : "No"}
-                        onClick={() => {
-                          setHasDuration(option);
-                        }}
-                      >
-                        {option ? "Yes" : "No"}
-                      </ToggleGroupItem>
-                    )}
-                  </For>
-                </ToggleGroup>
+                <ToggleYesNo signal={hasDuration} setSignal={setHasDuration} />
               </div>
               <div class="-m-5">
                 <Show when={hasDuration()}>
-                  <DurationHMSForm
+                  <DurationHMSField
                     duration={experiment.duration!}
                     setDuration={(
                       key: Partial<keyof DurationHMS>,
@@ -199,24 +184,7 @@ export const NewExperiment = () => {
             <div class="flex flex-row space-x-10 pt-16">
               <div class="flex flex-row space-x-10 items-baseline">
                 <p>Do you want to set goals for the observation sessions?</p>
-                <ToggleGroup
-                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasSampleGoal() ? "Yes" : "No"}
-                >
-                  <For each={[true, false]}>
-                    {(option) => (
-                      <ToggleGroupItem
-                        class={`${toggleVariants({ size: "sm" })}`}
-                        value={option ? "Yes" : "No"}
-                        onClick={() => {
-                          setHasSampleGoal(option);
-                        }}
-                      >
-                        {option ? "Yes" : "No"}
-                      </ToggleGroupItem>
-                    )}
-                  </For>
-                </ToggleGroup>
+                <ToggleYesNo signal={()=>hasSampleGoal()} setSignal={setHasSampleGoal} />
               </div>
 
               <div class="-m-5 items-end">
@@ -248,7 +216,7 @@ export const NewExperiment = () => {
                     </div>
                     <div class="flex flex-col space-x-1 items-center">
                       <p>Cumulative observation session time</p>
-                      <DurationHMSForm
+                      <DurationHMSField
                         duration={experiment.samples_time_goal!}
                         setDuration={(
                           key: Partial<keyof DurationHMS>,
@@ -263,24 +231,7 @@ export const NewExperiment = () => {
             <div class="flex flex-row space-x-10 pt-16">
               <div class="flex flex-row space-x-10 items-baseline">
                 <p>Do you want to set goals for the observations?</p>
-                <ToggleGroup
-                  class={`${toggleVariants({ size: "lg", variant: "outline" })}`}
-                  value={hasObservationGoal() ? "Yes" : "No"}
-                >
-                  <For each={[true, false]}>
-                    {(option) => (
-                      <ToggleGroupItem
-                        class={`${toggleVariants({ size: "sm" })}`}
-                        value={option ? "Yes" : "No"}
-                        onClick={() => {
-                          setHasObservationGoal(option);
-                        }}
-                      >
-                        {option ? "Yes" : "No"}
-                      </ToggleGroupItem>
-                    )}
-                  </For>
-                </ToggleGroup>
+                <ToggleYesNo signal={hasObservationGoal} setSignal={setHasObservationGoal} />
               </div>
 
               <div class="-m-5 items-end">
@@ -310,7 +261,7 @@ export const NewExperiment = () => {
                     </div>
                     <div class="flex flex-col space-x-1 items-center">
                       <p>Cumulative observations time</p>
-                      <DurationHMSForm
+                      <DurationHMSField
                         duration={experiment.obs_time_goal!}
                         setDuration={(
                           key: Partial<keyof DurationHMS>,
