@@ -1,7 +1,7 @@
 import { DataTable } from "~/data-table/data-table";
 import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { generateColumns } from "~/data-table/generateColumns";
-import { fetchExperiments } from "~/api/fetchExperiments";
+import { fetchExperiments } from "~/api/experiments/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";
 import { ExperimentDb } from "~/types/db";

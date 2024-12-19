@@ -1,12 +1,12 @@
 import { createEffect, createResource, createSignal, Show } from "solid-js";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { AttributeValue, DurationHMS, Metadata } from "~/types/db";
-import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
+import { fetchItemMetadata } from "~/api/common/fetchItemMetadata";
 import { Form } from "~/components/Form";
 import { createStore } from "solid-js/store";
 import { useNavigate, useParams } from "@solidjs/router";
-import { addNewObservation } from "~/api/addNewObservation";
-import { updateValue } from "~/api/updateValue";
+import { createObservation } from "~/api/observations/createObservation";
+import { updateItemColumnValue } from "~/api/common/updateItemColumnValue";
 import { Heading } from "~/components/Heading";
 import { getTimestamp, toAttributeValue } from "~/utils/db";
 import {
@@ -19,7 +19,7 @@ import {
   getTimePassed,
   secondToString,
 } from "~/utils";
-import { fetchDuration } from "~/api/fetchDuration";
+import { fetchDuration } from "~/api/fetchSessionDuration";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -36,7 +36,7 @@ export default function EncodingObservation() {
   const [open, setOpen] = createSignal<string>("closed");
 
   const [data] = createResource<Metadata>(() =>
-    fetchAttributeDescriptions({
+    fetchItemMetadata({
       experimentId: Number(params.experimentId),
       level: "observation",
     }),
@@ -84,13 +84,13 @@ export default function EncodingObservation() {
 
     if (isReady) {
       // set experiment to active
-      await updateValue({
+      await updateItemColumnValue({
         level: "experiment",
         column_name: "status",
         row_id: Number(params.experimentId),
         value: "active",
       });
-      const response = await addNewObservation({
+      const response = await createObservation({
         data: dataOut,
         sampleId: Number(params.sampleId),
       });
@@ -99,13 +99,13 @@ export default function EncodingObservation() {
   };
 
   const endSample = async () => {
-    await updateValue({
+    await updateItemColumnValue({
       level: "sample",
       column_name: "status",
       row_id: Number(params.sampleId),
       value: "completed",
     });
-    await updateValue({
+    await updateItemColumnValue({
       level: "sample",
       column_name: "timestamp_end",
       row_id: Number(params.sampleId),

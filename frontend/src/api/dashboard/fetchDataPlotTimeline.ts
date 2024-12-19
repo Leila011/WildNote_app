@@ -1,11 +1,20 @@
 import { backendUrl } from "~/db";
-import { Level, ObservationDb, StatTimeline } from "~/types/db";
+import { Level } from "~/types/db";
 
 type Props = {
   experimentId: number;
   level: Level;
 };
-export async function fetchStatTimeline(props: Props): Promise<StatTimeline[]> {
+
+type DataPlotTimeline = Record<string, DataPlotTimelineItem>;
+
+type DataPlotTimelineItem = {
+  type: "categorical" | "continuous";
+  dates: string[];
+  data: Record<string, number[]>;
+};
+
+const fetchDataPlotTimeline = async (props: Props): Promise<DataPlotTimeline[]> => {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/${props.experimentId}/${props.level}/timeline`,
@@ -19,4 +28,10 @@ export async function fetchStatTimeline(props: Props): Promise<StatTimeline[]> {
   } catch (error) {
     throw error;
   }
+}
+
+export {
+  fetchDataPlotTimeline,
+  type DataPlotTimeline,
+  type DataPlotTimelineItem,
 }

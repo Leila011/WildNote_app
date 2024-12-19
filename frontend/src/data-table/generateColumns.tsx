@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "@solidjs/router";
 import { ColumnDef } from "@tanstack/solid-table";
 import { Show } from "solid-js";
-import { deleteRow } from "~/api/deleteRow";
-import { updateValue } from "~/api/updateValue";
+import { deleteItem } from "~/api/common/deleteItem";
+import { updateItemColumnValue } from "~/api/common/updateItemColumnValue";
 import { IconDots } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -64,13 +64,13 @@ export const generateColumns = (
             <Show when={table === "experiment"}>
               <DropdownMenuItem
                 onClick={async () => {
-                  await updateValue({
+                  await updateItemColumnValue({
                     level: "experiment",
                     column_name: "status",
                     row_id: props.row.original.experiment_id,
                     value: "completed",
                   });
-                  await updateValue({
+                  await updateItemColumnValue({
                     level: "experiment",
                     column_name: "timestamp_end",
                     row_id: props.row.original.experiment_id,
@@ -85,7 +85,7 @@ export const generateColumns = (
             </Show>
             <DropdownMenuItem
               onClick={async () => {
-                const response = await deleteRow({
+                const response = await deleteItem({
                   level: table,
                   row_id: props.row.original[table + "_id"],
                 });

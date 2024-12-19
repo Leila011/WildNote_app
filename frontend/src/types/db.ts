@@ -89,7 +89,7 @@ export type Experiment = {
   obs_time_goal: DurationHMS;
 };
 
-export type SampleDb = {
+export type SessionDb = {
   sample_id: number;
   experiment_id: number;
   subject_id: number | null;
@@ -128,49 +128,12 @@ export type DurationHMS = {
   seconds: number;
 };
 
-export interface ExperimentStats {
-  sample_nb: number;
-  sample_time_tot: number;
-  sample_time_mean: number;
-  sample_time_median: number;
-  sample_incomplete_nb: number;
-  sample_short_nb?: number;
-  sample_empty_nb: number;
-  obs_nb: number;
-  obs_time_tot: number;
-  obs_time_mean: number;
-  obs_time_median: number;
-  obs_incomplete_nb: number;
-}
 
-export type StatDescriptives = Record<string, any>;
 
-export type StatDescriptivesPlot = Record<string, any>;
 
-export type StatTimeline = Record<string, StatTimelineItem>;
 
-export type StatTimelineItem = {
-  type: "categorical" | "continuous";
-  dates: string[];
-  data: Record<string, number[]>;
-};
 
-export type StatCalendar = {
-  year: string;
-  series: StatCalendarItem[];
-};
 
-export type StatCalendarItem = {
-  name: string;
-  data: { x: string; y: number }[];
-};
-export type StatPolar = {
-  day: {
-    keys: number[];
-    values: number[];
-  };
-  night: {
-    keys: number[];
-    values: number[];
-  };
-};
+
+
+

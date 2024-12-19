@@ -8,7 +8,11 @@ type Props = {
   value: any;
 };
 
-export async function addAttributeValue(props: Props) {
+type Response = {
+  attributeValueId: number;
+};
+
+export const addItemAttributeValue = async(props: Props): Promise<Response> =>{
   const response = await fetch(
     `${backendUrl}/api/updateAttributeValue/${props.level}/${props.attribute_id}/${props.item_id}`,
     {

@@ -2,18 +2,18 @@ import { useParams } from "@solidjs/router";
 import { createResource, Show } from "solid-js";
 import { DataTable } from "~/data-table/data-table";
 import { generateColumns } from "~/data-table/generateColumns";
-import { fetchSamples } from "~/api/fetchSamples";
+import { fetchSessions } from "~/api/sessions/fetchSessions";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";
-import { SampleDb } from "~/types/db";
+import { SessionDb } from "~/types/db";
 
 export default function Samples() {
   const params = useParams();
-  const [data, { refetch }] = createResource<SampleDb[]>(() =>
-    fetchSamples({ experimentId: Number(params.experimentId) }),
+  const [data, { refetch }] = createResource<SessionDb[]>(() =>
+    fetchSessions({ experimentId: Number(params.experimentId) }),
   );
 
-  function getColumnNames(data: SampleDb[]) {
+  function getColumnNames(data: SessionDb[]) {
     if (data) {
       return Object.keys(data![0]).map((key) => ({ name: key }));
     } else {

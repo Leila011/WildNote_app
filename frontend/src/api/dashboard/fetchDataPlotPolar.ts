@@ -1,11 +1,23 @@
 import { backendUrl } from "~/db";
-import { Level, StatPolar } from "~/types/db";
+import { Level } from "~/types/db";
 
 type Props = {
   level: Level;
   experimentId: number;
 };
-export async function fetchPlotPolar(props: Props): Promise<StatPolar> {
+
+type DataPolar = {
+  day: {
+    keys: number[];
+    values: number[];
+  };
+  night: {
+    keys: number[];
+    values: number[];
+  };
+};
+
+const fetchDataPlotPolar = async (props: Props): Promise<DataPolar> => {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiment/${props.experimentId}/${props.level}/polarPlot`,
@@ -18,4 +30,9 @@ export async function fetchPlotPolar(props: Props): Promise<StatPolar> {
   } catch (error) {
     throw error;
   }
+}
+
+export {
+  fetchDataPlotPolar as fetchPlotPolar,
+  type DataPolar as Polar
 }

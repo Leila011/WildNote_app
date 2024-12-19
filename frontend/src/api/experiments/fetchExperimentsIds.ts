@@ -1,10 +1,12 @@
 import { backendUrl } from "~/db";
-import { ExperimentDb } from "~/types/db";
+import { StatusExperiment } from "~/types/db";
 
-export async function fetchExperiments(): Promise<ExperimentDb[]> {
+export async function fetchExperimentsIds(): Promise<
+  { name: string; experiment_id: number; status: StatusExperiment }[]
+> {
   try {
     const response = await fetch(
-      `${backendUrl}/api/experiments/attributeValues`,
+      `${backendUrl}/api/experiments/identification`,
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch experiments: ${response.statusText}`);

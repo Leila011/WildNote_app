@@ -7,7 +7,12 @@ type Props = {
   experimentId: number;
   level: Level;
 };
-export async function addExperimentalSetup(props: Props) {
+
+type Response = {
+  attributeId: number;
+};
+
+export const createItemAttributes = async(props: Props): Promise<Response> =>{
   const response = await fetch(
     `${backendUrl}/api/experiment/${props.experimentId}/${props.level}`,
     {

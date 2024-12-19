@@ -7,11 +7,11 @@ import {
   Show,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { fetchAttributeDescriptionsExperiments } from "~/api/fetchAttributeDescriptionsExperiments";
+import { fetchExperimentPredefinedMetadata } from "~/api/experiments/fetchExperimentPredefinedMetadata";
 import { Form } from "~/components/Form";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { AttributeValue, DurationHMS as DurationHMS } from "~/types/db";
-import { addNewExperiment } from "~/api/addNewExperiment";
+import { createExperiment } from "~/api/experiments/createExperiment";
 import { Heading } from "~/components/Heading";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import { toggleVariants } from "~/components/ui/toggle";
@@ -38,7 +38,7 @@ import { DurationHMSForm } from "~/components/DurationHMSForm";
 export default function NewExperiment() {
   const navigate = useNavigate();
   const [data] = createResource<Metadata>(() =>
-    fetchAttributeDescriptionsExperiments(),
+    fetchExperimentPredefinedMetadata(),
   );
   const [experiment, setExperiment] = createStore<Partial<Experiment>>({
     name: "",
@@ -98,7 +98,7 @@ export default function NewExperiment() {
       isAttributesValuesValid(dataOut.attributes) &&
       isColumnsValuesValid(dataOut.columns, notRequired, notZero);
     if (isReady) {
-      const response = await addNewExperiment({ data: dataOut });
+      const response = await createExperiment({ data: dataOut });
       if (dataOut.columns.predefine_subject) {
         navigate(`/newExperiment/${response.experiment_id}/subjectSetup`);
       } else {

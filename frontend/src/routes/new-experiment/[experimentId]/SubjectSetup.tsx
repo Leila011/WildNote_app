@@ -3,7 +3,7 @@ import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Attribute } from "~/types/db";
-import { addExperimentalSetup } from "~/api/addExperimentalSetup";
+import { createItemAttributes } from "~/api/common/createItemAttributes";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
 import { attributeToDb, newAttribute } from "~/utils/db";
 import { Heading } from "~/components/Heading";
@@ -19,7 +19,7 @@ export default function newSubject() {
     setReady(isAttributesDefValid(store));
 
     if (ready()) {
-      addExperimentalSetup({
+      createItemAttributes({
         data: attributeToDb(store),
         experimentId: Number(params.experimentId),
         level: "subject",

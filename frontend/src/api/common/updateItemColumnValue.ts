@@ -7,7 +7,7 @@ type Props = {
   value: any;
 };
 
-export async function updateValue(props: Props) {
+export const updateItemColumnValue = async(props: Props): Promise<string> =>{
   const response = await fetch(
     `${backendUrl}/api/updateValue/${props.level}/${props.column_name}/${props.row_id}`,
     {

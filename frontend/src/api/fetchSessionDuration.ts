@@ -3,7 +3,7 @@ type Props = {
   experimentId: number;
 };
 
-export async function fetchDuration(props: Props): Promise<number> {
+export const fetchSessionDuration = async(props: Props): Promise<number> =>{
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/${props.experimentId}/duration`,

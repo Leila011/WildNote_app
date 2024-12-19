@@ -1,13 +1,16 @@
 import { backendUrl } from "~/db";
-import { Level, StatDescriptives } from "~/types/db";
+import { Level } from "~/types/db";
 
 type Props = {
   level: Level;
   experimentId: number;
 };
-export async function fetchStatDescriptives(
+
+type DataStatDescriptives = Record<string, any>;
+
+const fetchDataStatDescriptives = async (
   props: Props,
-): Promise<StatDescriptives> {
+): Promise<DataStatDescriptives> => {
   try {
     const response = await fetch(
       `${backendUrl}/api/experiments/${props.experimentId}/${props.level}/descriptiveStat`,
@@ -22,4 +25,9 @@ export async function fetchStatDescriptives(
   } catch (error) {
     throw error;
   }
+}
+
+export {
+  fetchDataStatDescriptives as fetchStatDescriptives,
+  type DataStatDescriptives
 }

@@ -6,7 +6,7 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import { fetchExperiments } from "~/api/fetchExperiments";
+import { fetchExperiments } from "~/api/experiments/fetchExperiments";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,21 +18,21 @@ import {
 import { Button, buttonVariants } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
 import { ExperimentDb, SubjectDb, AttributeValue, Metadata } from "~/types/db";
-import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
+import { fetchItemMetadata } from "~/api/common/fetchItemMetadata";
 import { Form } from "~/components/Form";
 import { createStore } from "solid-js/store";
 import { useNavigate, useParams } from "@solidjs/router";
-import { addNewSample } from "~/api/addNewSample";
-import { fetchSubjects } from "~/api/fetchSubjects";
+import { createSession } from "~/api/sessions/createSession";
+import { fetchSubjects } from "~/api/subjects/fetchSubjects";
 import { Heading } from "~/components/Heading";
-import { updateValue } from "~/api/updateValue";
+import { updateItemColumnValue } from "~/api/common/updateItemColumnValue";
 import { getTimestamp, toAttributeValue } from "~/utils/db";
 import {
   isAttributesValuesValid,
   isColumnsValuesValid,
 } from "~/utils/dataValidation";
 import NewSubjectForm from "~/components/new-items-form/NewSubjectForm";
-import { addNewSubject } from "~/api/addNewSubject";
+import { createSubject } from "~/api/subjects/createSubject";
 
 export default function EncodingSample() {
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ export default function EncodingSample() {
         experimentId: experiment()!.experiment_id,
         level: "sample",
       },
-    fetchAttributeDescriptions,
+    fetchItemMetadata,
   );
 
   const [dataSubject] = createResource<Metadata>(
@@ -62,7 +62,7 @@ export default function EncodingSample() {
         experimentId: experiment()!.experiment_id,
         level: "subject",
       },
-    fetchAttributeDescriptions,
+    fetchItemMetadata,
   );
 
   const [name, setName] = createSignal<string>("");
@@ -114,7 +114,7 @@ export default function EncodingSample() {
       isColumnsValuesValid(dataOut.columns);
 
     if (isReady) {
-      const response = addNewSubject({
+      const response = createSubject({
         data: dataOut,
         experimentId: Number(params.experimentId),
       });
@@ -140,14 +140,14 @@ export default function EncodingSample() {
 
     if (isReady) {
       if (experiment()?.timestamp_start === null) {
-        updateValue({
+        updateItemColumnValue({
           level: "experiment",
           column_name: "timestamp_start",
           row_id: experiment()!.experiment_id,
           value: getTimestamp(),
         });
       }
-      const response = await addNewSample({
+      const response = await createSession({
         data: dataOut,
         experimentId: experiment()!.experiment_id,
       });

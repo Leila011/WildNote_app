@@ -13,15 +13,15 @@ import {
   onMount,
   Show,
 } from "solid-js";
-import { fetchExperiment } from "~/api/fetchExperiment";
+import { fetchExperiment } from "~/api/experiments/fetchExperiment";
 import { Button } from "~/components/ui/button";
 import { IconChevronDown } from "~/components/icons";
 import { GoalsCard } from "~/components/dashboard/GoalsCard";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { fetchStatExperiment } from "~/api/fetchStatExperiment";
-import { fetchPlotDescriptives } from "~/api/fetchPlotDescriptives";
-import { fetchStatDescriptives } from "~/api/fetchStatDescriptives";
-import { fetchExperimentsIdentification } from "~/api/fetchgetExperimentIdentification";
+import { fetchStatExperiment } from "~/api/dashboard/fetchDataOverview";
+import { fetchPlotDescriptives } from "~/api/dashboard/fetchDataPlotDescriptives";
+import { fetchStatDescriptives } from "~/api/dashboard/fetchDataStatDescriptives";
+import { fetchExperimentsIds } from "~/api/experiments/fetchExperimentsIds";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
   ExperimentDb,
@@ -34,20 +34,20 @@ import {
   StatusExperiment,
 } from "~/types/db";
 import Heatmap from "~/components/dashboard/Heatmap";
-import { fetchCalendar } from "~/api/fetchCalendar";
+import { fetchCalendar } from "~/api/dashboard/fetchDataCalendar";
 import { DescriptiveStatPlot } from "~/components/dashboard/DescriptiveStatPlot";
 import { DescriptiveStatTable } from "~/components/dashboard/DescriptiveStatTable";
-import { fetchPlotPolar } from "~/api/fetchPlotPolar";
+import { fetchPlotPolar } from "~/api/dashboard/fetchDataPlotPolar";
 import { PolarPlot } from "~/components/dashboard/PolarPlot";
 import { Heading } from "~/components/Heading";
 import { getDate } from "~/utils/db";
-import { fetchStatTimeline } from "~/api/fetchStatTimeline";
+import { fetchDataPlotTimeline } from "~/api/dashboard/fetchDataPlotTimeline";
 import Timeline from "~/components/dashboard/Timeline";
 
 export default function Dashboards() {
   const [experiments] = createResource<
     { name: string; experiment_id: number; status: StatusExperiment }[]
-  >(fetchExperimentsIdentification);
+  >(fetchExperimentsIds);
 
   const [experimentId, setExperimentId] = createSignal<number | undefined>(
     undefined,
@@ -126,7 +126,7 @@ export default function Dashboards() {
       experimentId()
         ? { experimentId: experimentId(), level: "sample" }
         : undefined,
-    fetchStatTimeline,
+    fetchDataPlotTimeline,
   );
 
   const [obsTimeline] = createResource<StatTimeline[]>(
@@ -134,7 +134,7 @@ export default function Dashboards() {
       experimentId()
         ? { experimentId: experimentId(), level: "observation" }
         : undefined,
-    fetchStatTimeline,
+    fetchDataPlotTimeline,
   );
 
   createEffect(() => {

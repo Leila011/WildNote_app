@@ -3,10 +3,10 @@ import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Attribute } from "~/types/db";
-import { addExperimentalSetup } from "~/api/addExperimentalSetup";
+import { createItemAttributes } from "~/api/common/createItemAttributes";
 import { FormNewAttribute } from "~/components/FormNewAttribute";
 import { attributeToDb, newAttribute } from "~/utils/db";
-import { updateValue } from "~/api/updateValue";
+import { updateItemColumnValue } from "~/api/common/updateItemColumnValue";
 import { Heading } from "~/components/Heading";
 import { isAttributesDefValid } from "~/utils/dataValidation";
 
@@ -19,12 +19,12 @@ export default function ObservationSetup() {
     const isReady = isAttributesDefValid(store);
 
     if (isReady) {
-      await addExperimentalSetup({
+      await createItemAttributes({
         data: attributeToDb(store),
         experimentId: Number(params.experimentId),
         level: "observation",
       });
-      await updateValue({
+      await updateItemColumnValue({
         level: "experiment",
         column_name: "status",
         row_id: Number(params.experimentId),

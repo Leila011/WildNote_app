@@ -14,16 +14,16 @@ import {
   TextFieldErrorMessage,
   TextFieldInput,
 } from "~/components/ui/text-field";
-import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
+import { fetchItemMetadata } from "~/api/common/fetchItemMetadata";
 import { getTimestamp, toAttributeValue } from "~/utils/db";
-import { addNewSubject } from "~/api/addNewSubject";
+import { createSubject } from "~/api/subjects/createSubject";
 import NewSubjectForm from "~/components/new-items-form/NewSubjectForm";
 
 export default function NewExperiment() {
   const navigate = useNavigate();
   const params = useParams();
   const [data] = createResource<Metadata>(() =>
-    fetchAttributeDescriptions({
+    fetchItemMetadata({
       experimentId: Number(params.experimentId),
       level: "subject",
     }),
@@ -44,7 +44,7 @@ export default function NewExperiment() {
       isColumnsValuesValid(dataOut.columns);
 
     if (isReady) {
-      const response = addNewSubject({
+      const response = createSubject({
         data: dataOut,
         experimentId: Number(params.experimentId),
       });

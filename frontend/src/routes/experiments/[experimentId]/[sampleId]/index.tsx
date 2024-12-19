@@ -2,7 +2,7 @@ import { useParams } from "@solidjs/router";
 import { createResource, Show } from "solid-js";
 import { DataTable } from "~/data-table/data-table";
 import { generateColumns } from "~/data-table/generateColumns";
-import { fetchObservations } from "~/api/fetchObservations";
+import { fetchObservations } from "~/api/observations/fetchObservations";
 import { Heading } from "~/components/Heading";
 import { ObservationDb } from "~/types/db";
 
