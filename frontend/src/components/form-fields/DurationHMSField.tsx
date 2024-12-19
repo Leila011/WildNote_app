@@ -1,14 +1,12 @@
-import { SetStoreFunction, Store, StoreSetter } from "solid-js/store";
 import {
   NumberField,
   NumberFieldDecrementTrigger,
-  NumberFieldErrorMessage,
   NumberFieldIncrementTrigger,
   NumberFieldInput,
 } from "~/components/ui/number-field";
 import { DurationHMS } from "~/types/db";
 
-export function DurationHMSForm(props: {
+export function DurationHMSField(props: {
   duration: DurationHMS;
   setDuration: (key: Partial<keyof DurationHMS>, value: number) => void;
 }) {
