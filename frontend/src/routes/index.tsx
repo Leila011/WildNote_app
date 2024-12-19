@@ -12,7 +12,7 @@ export default function Home() {
         title="WildNote"
         primaryButton={{
           text: "Get started",
-          href: "/newExperiment",
+          href: "/new-experiment",
         }}
         size="md"
         width="1/2"

@@ -24,7 +24,7 @@ export default function newSubject() {
         experimentId: Number(params.experimentId),
         level: "subject",
       });
-      navigate(`/newExperiment/${params.experimentId}/newSubject`);
+      navigate(`/new-experiment/${params.experimentId}/newSubject`);
     }
   };
 

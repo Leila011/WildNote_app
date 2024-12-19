@@ -28,33 +28,40 @@ import { columnToDb, ExperimentToDb, toAttributeValue } from "~/utils/db";
 import {
   NumberField,
   NumberFieldDecrementTrigger,
-  NumberFieldErrorMessage,
   NumberFieldIncrementTrigger,
   NumberFieldInput,
 } from "~/components/ui/number-field";
 import { Experiment, Metadata } from "~/types/db";
-import { DurationHMSForm } from "~/components/DurationHMSForm";
+import { DurationHMSForm } from "~/components/form/DurationHMSForm";
 
-export default function NewExperiment() {
+const ExperimentInit: Partial<Experiment> ={
+  name: "",
+  predefine_subject: false,
+  duration: { hours: 0, minutes: 0, seconds: 0 },
+  samples_number_goal: 0,
+  samples_time_goal: { hours: 0, minutes: 0, seconds: 0 },
+  obs_number_goal: 0,
+  obs_time_goal: { hours: 0, minutes: 0, seconds: 0 },
+  status: "draft",
+}
+
+const notZeroAttributes = [
+  "duration",
+  "samples_time_goal",
+  "obs_time_goal, samples_number_goal, obs_number_goal",
+];
+
+export const NewExperiment = () => {
   const navigate = useNavigate();
-  const [data] = createResource<Metadata>(() =>
+  const [predefinedMetadata] = createResource<Metadata>(() =>
     fetchExperimentPredefinedMetadata(),
   );
-  const [experiment, setExperiment] = createStore<Partial<Experiment>>({
-    name: "",
-    predefine_subject: false,
-    duration: { hours: 0, minutes: 0, seconds: 0 },
-    samples_number_goal: 0,
-    samples_time_goal: { hours: 0, minutes: 0, seconds: 0 },
-    obs_number_goal: 0,
-    obs_time_goal: { hours: 0, minutes: 0, seconds: 0 },
-    status: "draft",
-  });
+  const [experiment, setExperiment] = createStore<Partial<Experiment>>(ExperimentInit);
+  const [attributesValue, setAttributeValues] = createStore<AttributeValue[]>([]);
 
-  const [attributes, setAttributes] = createStore<AttributeValue[]>([]);
   createEffect(() => {
-    if (data()) {
-      setAttributes(toAttributeValue(data()!.attributes));
+    if (predefinedMetadata()) {
+      setAttributeValues(toAttributeValue(predefinedMetadata()!.attributes));
     }
   });
 
@@ -63,46 +70,41 @@ export default function NewExperiment() {
   const [hasObservationGoal, setHasObservationGoal] =
     createSignal<boolean>(true);
 
-  const getNotRequired = () => {
-    const notRequired = [];
+  const getOmittedAttributes = (): string[] => {
+    const omittedAttributes: string[] = [];
     if (!hasDuration()) {
-      notRequired.push("duration");
+      omittedAttributes.concat("duration");
     }
     if (!hasSampleGoal()) {
-      notRequired.push("samples_number_goal");
-      notRequired.push("samples_time_goal");
+      omittedAttributes.concat("samples_number_goal");
+      omittedAttributes.concat("samples_time_goal");
     }
     if (!hasObservationGoal()) {
-      notRequired.push("obs_number_goal");
-      notRequired.push("obs_time_goal");
+      omittedAttributes.concat("obs_number_goal");
+      omittedAttributes.concat("obs_time_goal");
     }
-    return notRequired;
+    return omittedAttributes;
   };
+
   const handleSubmit = async () => {
     setExperiment("timestamp_start", new Date().toISOString());
     setExperiment("status", "created");
 
-    const dataOut = {
-      attributes: attributes,
+    const data = {
+      attributes: attributesValue,
       columns: columnToDb(ExperimentToDb(experiment)),
     };
 
-    const notRequired = getNotRequired();
-    const notZero = [
-      "duration",
-      "samples_time_goal",
-      "obs_time_goal, samples_number_goal, obs_number_goal",
-    ];
+    const isDataValid =
+      isAttributesValuesValid(data.attributes) &&
+      isColumnsValuesValid(data.columns, getOmittedAttributes(), notZeroAttributes);
 
-    const isReady =
-      isAttributesValuesValid(dataOut.attributes) &&
-      isColumnsValuesValid(dataOut.columns, notRequired, notZero);
-    if (isReady) {
-      const response = await createExperiment({ data: dataOut });
-      if (dataOut.columns.predefine_subject) {
-        navigate(`/newExperiment/${response.experiment_id}/subjectSetup`);
+    if (isDataValid) {
+      const response = await createExperiment({ data: data });
+      if (data.columns.predefine_subject) {
+        navigate(`/new-experiment/${response.experiment_id}/subjectSetup`);
       } else {
-        navigate(`/newExperiment/${response.experiment_id}/sampleSetup`);
+        navigate(`/new-experiment/${response.experiment_id}/sampleSetup`);
       }
     }
   };
@@ -321,8 +323,8 @@ export default function NewExperiment() {
               </div>
             </div>
 
-            {attributes && (
-              <Form store={attributes} setStore={setAttributes}></Form>
+            {attributesValue && (
+              <Form store={attributesValue} setStore={setAttributeValues}></Form>
             )}
           </div>
         </div>
@@ -338,3 +340,5 @@ export default function NewExperiment() {
     </div>
   );
 }
+
+export default NewExperiment;

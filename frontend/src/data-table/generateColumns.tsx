@@ -167,7 +167,7 @@ export const generateColumns = (
             <Button
               variant="secondary"
               onClick={() =>
-                navigate(`/newExperiment/${props.row.original[idColumnName]}`)
+                navigate(`/new-experiment/${props.row.original[idColumnName]}`)
               }
             >
               Complete the setup

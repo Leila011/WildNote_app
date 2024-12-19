@@ -24,7 +24,7 @@ export default function SampleSetup() {
         level: "sample",
       });
       reponse &&
-        navigate(`/newExperiment/${params.experimentId}/observationSetup`);
+        navigate(`/new-experiment/${params.experimentId}/observationSetup`);
     }
   };
 

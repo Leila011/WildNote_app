@@ -89,7 +89,7 @@ export type Experiment = {
   obs_time_goal: DurationHMS;
 };
 
-export type SessionDb = {
+export type SampleDb = {
   sample_id: number;
   experiment_id: number;
   subject_id: number | null;

@@ -19,7 +19,7 @@ import { getTimestamp, toAttributeValue } from "~/utils/db";
 import { createSubject } from "~/api/subjects/createSubject";
 import NewSubjectForm from "~/components/new-items-form/NewSubjectForm";
 
-export default function NewExperiment() {
+export default function NewSubject() {
   const navigate = useNavigate();
   const params = useParams();
   const [data] = createResource<Metadata>(() =>
@@ -53,11 +53,11 @@ export default function NewExperiment() {
   }
   const handleSubmitToSample = async () => {
     const response = await endSubject();
-    response && navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
+    response && navigate(`/new-experiment/${params.experimentId}/sampleSetup`);
   };
 
   const handleSubmitSkip = async () => {
-    navigate(`/newExperiment/${params.experimentId}/sampleSetup`);
+    navigate(`/new-experiment/${params.experimentId}/sampleSetup`);
   };
 
   const handleSubmitNext = async () => {
@@ -68,7 +68,7 @@ export default function NewExperiment() {
       setStore(toAttributeValue(data()!.attributes));
       setName("");
       setIsFirst(false);
-      navigate(`/newExperiment/${params.experimentId}/newSubject`);
+      navigate(`/new-experiment/${params.experimentId}/newSubject`);
     }
   };
 

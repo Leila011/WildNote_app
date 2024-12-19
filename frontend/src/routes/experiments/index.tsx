@@ -32,7 +32,7 @@ export default function Experiments() {
 
         <a
           class={buttonVariants({ variant: "accent" })}
-          href={`/newExperiment`}
+          href={`/new-experiment`}
         >
           Create a new experiment
         </a>
