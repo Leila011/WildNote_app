@@ -8,7 +8,7 @@ import {
 } from "~/components/ui/number-field";
 import { DurationHMS } from "~/types/db";
 
-export function DurationForm(props: {
+export function DurationHMSForm(props: {
   duration: DurationHMS;
   setDuration: (key: Partial<keyof DurationHMS>, value: number) => void;
 }) {

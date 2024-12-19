@@ -18,8 +18,8 @@ export default function Nav() {
         <li class={`border-b-2 ${active("/dashboard")} mx-1.5 sm:mx-6`}>
           <a href="/dashboard">Dashboard</a>
         </li>
-        <li class={`border-b-2 ${active("/experimentSetup")} mx-1.5 sm:mx-6`}>
-          <a href="/newExperiment">New experiment</a>
+        <li class={`border-b-2 ${active("/new-experiment")} mx-1.5 sm:mx-6`}>
+          <a href="/new-experiment">New experiment</a>
         </li>
         <li class={`border-b-2 ${active("/encoding")} mx-1.5 sm:mx-6`}>
           <a href="/encoding">Start encoding</a>

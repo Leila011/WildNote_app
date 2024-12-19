@@ -17,7 +17,7 @@ import {
 import { fetchAttributeDescriptions } from "~/api/fetchAttributeDescriptions";
 import { getTimestamp, toAttributeValue } from "~/utils/db";
 import { addNewSubject } from "~/api/addNewSubject";
-import NewSubjectForm from "~/components/newItemsForm/NewSubjectForm";
+import NewSubjectForm from "~/components/new-items-form/NewSubjectForm";
 
 export default function NewExperiment() {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
-import { DataTable } from "~/components/data-table";
+import { DataTable } from "~/data-table/data-table";
 import { createEffect, createResource, createSignal, Show } from "solid-js";
-import { generateColumns } from "~/components/generateColumns";
+import { generateColumns } from "~/data-table/generateColumns";
 import { fetchExperiments } from "~/api/fetchExperiments";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";

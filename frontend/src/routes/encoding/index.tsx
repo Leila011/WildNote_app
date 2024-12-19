@@ -31,7 +31,7 @@ import {
   isAttributesValuesValid,
   isColumnsValuesValid,
 } from "~/utils/dataValidation";
-import NewSubjectForm from "~/components/newItemsForm/NewSubjectForm";
+import NewSubjectForm from "~/components/new-items-form/NewSubjectForm";
 import { addNewSubject } from "~/api/addNewSubject";
 
 export default function EncodingSample() {

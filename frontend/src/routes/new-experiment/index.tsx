@@ -33,7 +33,7 @@ import {
   NumberFieldInput,
 } from "~/components/ui/number-field";
 import { Experiment, Metadata } from "~/types/db";
-import { DurationForm } from "~/components/durationForm";
+import { DurationHMSForm } from "~/components/DurationHMSForm";
 
 export default function NewExperiment() {
   const navigate = useNavigate();
@@ -184,7 +184,7 @@ export default function NewExperiment() {
               </div>
               <div class="-m-5">
                 <Show when={hasDuration()}>
-                  <DurationForm
+                  <DurationHMSForm
                     duration={experiment.duration!}
                     setDuration={(
                       key: Partial<keyof DurationHMS>,
@@ -246,7 +246,7 @@ export default function NewExperiment() {
                     </div>
                     <div class="flex flex-col space-x-1 items-center">
                       <p>Cumulative observation session time</p>
-                      <DurationForm
+                      <DurationHMSForm
                         duration={experiment.samples_time_goal!}
                         setDuration={(
                           key: Partial<keyof DurationHMS>,
@@ -308,7 +308,7 @@ export default function NewExperiment() {
                     </div>
                     <div class="flex flex-col space-x-1 items-center">
                       <p>Cumulative observations time</p>
-                      <DurationForm
+                      <DurationHMSForm
                         duration={experiment.obs_time_goal!}
                         setDuration={(
                           key: Partial<keyof DurationHMS>,

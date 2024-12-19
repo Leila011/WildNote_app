@@ -1,7 +1,7 @@
 import { useParams } from "@solidjs/router";
 import { createResource, Show } from "solid-js";
-import { DataTable } from "~/components/data-table";
-import { generateColumns } from "~/components/generateColumns";
+import { DataTable } from "~/data-table/data-table";
+import { generateColumns } from "~/data-table/generateColumns";
 import { fetchSamples } from "~/api/fetchSamples";
 import { buttonVariants } from "~/components/ui/button";
 import { Heading } from "~/components/Heading";

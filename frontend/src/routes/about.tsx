@@ -1,4 +1,4 @@
-import { TableOfContent } from "~/components/tableofcontent";
+import { TableOfContent } from "~/components/Tableofcontent";
 import { CardAbout } from "~/components/CardAbout";
 import { Heading } from "~/components/Heading";
 

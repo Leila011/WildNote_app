@@ -35,8 +35,8 @@ import {
 } from "~/types/db";
 import Heatmap from "~/components/dashboard/Heatmap";
 import { fetchCalendar } from "~/api/fetchCalendar";
-import { DescriptiveStatPlot } from "~/components/dashboard/descriptiveStatPlot";
-import { DescriptiveStatTable } from "~/components/dashboard/descriptiveStatTable";
+import { DescriptiveStatPlot } from "~/components/dashboard/DescriptiveStatPlot";
+import { DescriptiveStatTable } from "~/components/dashboard/DescriptiveStatTable";
 import { fetchPlotPolar } from "~/api/fetchPlotPolar";
 import { PolarPlot } from "~/components/dashboard/PolarPlot";
 import { Heading } from "~/components/Heading";
